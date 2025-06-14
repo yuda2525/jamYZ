@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Y&Z Portfolio Site</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0d0d1a;
+      --bg-light: #f5f5f5;
+      --accent: #00e0ff;
+      --text-dark: #111;
+      --text-light: #eee;
+      --glow: 0 0 12px rgba(0, 224, 255, 0.6);
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      text-align: center;
+      padding: 100px 20px;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      animation: fadeIn 1s ease;
+    }
+    header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      color: var(--accent);
+      text-shadow: var(--glow);
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      background: rgba(13, 13, 26, 0.95);
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 12px 0;
+      backdrop-filter: blur(8px);
+      z-index: 999;
+    }
+    nav a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    section {
+      padding: 80px 20px;
+      max-width: 1100px;
+      margin: auto;
+      animation: fadeInUp 1s ease;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-family: 'Orbitron';
+      margin-bottom: 30px;
+      color: var(--accent);
+      text-align: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 20px;
+      backdrop-filter: blur(6px);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--glow);
+    }
+    .owner-img {
+      display: block;
+      width: 120px;
+      height: 120px;
+      margin: auto;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      object-fit: cover;
+    }
+    .float-icons {
+      position: fixed;
+      top: 50%;
+      right: 16px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 1000;
+    }
+    .float-icons a img {
+      width: 42px;
+      filter: drop-shadow(var(--glow));
+      transition: transform 0.3s;
+    }
+    .float-icons a:hover img {
+      transform: scale(1.2);
+    }
+    footer {
+      text-align: center;
+      padding: 24px;
+      background: #101020;
+      color: #ccc;
+    }
+    .toggle-theme {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: var(--accent);
+      color: black;
+      border: none;
+      padding: 10px 14px;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-theme" onclick="toggleTheme()">Mode Terang / Gelap</button>
+  <div class="float-icons">
+    <a href="https://wa.me/+6285720906090" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+    <a href="mailto:yudabastard84@gmail.com" target="_blank"><img src="https://www.svgrepo.com/show/303161/gmail-icon-logo.svg" alt="Gmail"></a>
+    <a href="https://youtube.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube"></a>
+    <a href="https://tiktok.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok"></a>
+  </div>
+  <nav>
+    <a href="#tentang">Tentang</a>
+    <a href="#layanan">Layanan</a>
+    <a href="#portofolio">Portofolio</a>
+    <a href="#testimoni">Testimoni</a>
+    <a href="#vlog">Vlog</a>
+    <a href="#faq">Q&A</a>
+    <a href="#kontak">Kontak</a>
+  </nav>
+
+  <header>
+    <h1>Selamat Datang di Y&Z</h1>
+    <p>Kami membantu bisnis lokal tampil profesional secara digital.</p>
+  </header>
+
+  <section id="tentang">
+    <div class="section-title">Tentang Kami</div>
+    <img src="https://i.ibb.co/xsHZhjc/exec-anime.jpg" alt="Owner" class="owner-img">
+    <p style="text-align:center;max-width:600px;margin:auto;">Kami tim desain digital dengan fokus pada branding, AI kreatif, dan web interaktif untuk UMKM dan brand baru yang ingin naik kelas.</p>
+  </section>
+
+  <section id="layanan">
+    <div class="section-title">Layanan & Paket</div>
+    <div class="grid">
+      <div class="card">
+        <h3>Basic</h3><p>Landing Page 1 Halaman</p><p>Tanpa animasi</p><p>Rp 150.000</p>
+      </div>
+      <div class="card">
+        <h3>Pro</h3><p>3 Halaman Interaktif</p><p>Scroll Animasi</p><p>Rp 350.000</p>
+      </div>
+      <div class="card">
+        <h3>Premium</h3><p>7+ Halaman</p><p>AI & 3D Interactive Design</p><p>Rp 700.000+</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="portofolio">
+    <div class="section-title">Portofolio</div>
+    <div class="grid">
+      <div class="card"><h4>UMKM Makanan</h4><p>Katalog Digital + Order</p></div>
+      <div class="card"><h4>Landing Franchise</h4><p>Promosi sistem kemitraan</p></div>
+      <div class="card"><h4>Jasa Video</h4><p>Portofolio editing & reels</p></div>
+    </div>
+  </section>
+
+  <section id="testimoni">
+    <div class="section-title">Testimoni</div>
+    <div class="grid">
+      <div class="card"><p>"Cepat, rapi, dan kreatif!"<br>- Ibu Rina, Owner KopiNusantara</p></div>
+      <div class="card"><p>"Desainnya modern banget!"<br>- Reza, Content Creator</p></div>
+    </div>
+  </section>
+
+  <section id="vlog">
+    <div class="section-title">Vlog</div>
+    <p style="text-align:center">Tonton behind-the-scenes kami di YouTube atau TikTok!</p>
+  </section>
+
+  <section id="faq">
+    <div class="section-title">Q&A</div>
+    <div class="card">
+      <h4>Berapa lama pengerjaan?</h4>
+      <p>Umumnya 2-5 hari kerja tergantung paket dan revisi.</p>
+    </div>
+    <div class="card">
+      <h4>Pembayaran bisa via apa?</h4>
+      <p>Dana, GoPay, Bank Transfer, dan QRIS.</p>
+    </div>
+  </section>
+
+  <section id="kontak">
+    <div class="section-title">Hubungi Kami</div>
+    <p style="text-align:center">WhatsApp: <a href="https://wa.me/+6285720906090">+62 857-2090-6090</a><br>Email: <a href="mailto:yudabastard84@gmail.com">yudabastard84@gmail.com</a></p>
+  </section>
+
+  <footer>
+    &copy; 2025 Y&Z. Semua hak cipta dilindungi.
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const root = document.documentElement;
+      const isDark = root.style.getPropertyValue('--bg-dark') === '#ffffff';
+      root.style.setProperty('--bg-dark', isDark ? '#0d0d1a' : '#ffffff');
+      root.style.setProperty('--text-light', isDark ? '#eee' : '#111');
+      root.style.setProperty('--text-dark', isDark ? '#111' : '#eee');
+    }
+  </script>
+</body>
+</html>
