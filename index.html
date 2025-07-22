@@ -54,6 +54,14 @@
   pointer-events: none; /* kalau konten bukan interaktif */
 }
 
+.outlined {  
+  text-shadow:  
+    -1px -1px 1px #000,  
+     1px -1px 1px #000,  
+    -1px  1px 1px #000,  
+     1px  1px 1px #000;  
+}  
+
     .center {
       position: absolute;
       width: 12px;
@@ -136,12 +144,16 @@ text-shadow:
     }
 
 svg text {
+  font-weight: 500;
   fill: #111; 
-  font-weight: 700;
+  text-shadow: 
+  0 0 1px #000;
+  0 0 4px rgba(255, 255, 255, 0.2);
   font-size: 14px;
   font-family: 'Great Vibes', cursive;
   letter-spacing: 3px;
 }
+
 
     .pulse-ring {
       position: absolute;
