@@ -49,6 +49,10 @@
   text-shadow: 0 0 10px cyan; /* biar glow kayak jam digital */
 }
 
+.container {
+  background-color: transparent;
+}
+
     .center {
       position: absolute;
       width: 12px;
@@ -213,6 +217,9 @@
       <div class="date-info" id="dateInfo"></div>
     </div>
   </div>
+
+<!-- Input file disembunyikan -->
+<input type="file" id="bgUpload" accept="image/*" style="display: none;">
 </body>
 </html>
   <script>
@@ -274,6 +281,39 @@ numerals.forEach(num => {
 
     setInterval(updateClock, 1000);
     updateClock();
+    
+// Deteksi double-tap di body
+let lastTap = 0;
+
+document.body.addEventListener('touchend', (e) => {
+  const currentTime = new Date().getTime();
+  const tapLength = currentTime - lastTap;
+
+  if (tapLength < 300 && tapLength > 0) {
+    // Double tap terdeteksi → buka file input
+    document.getElementById('bgUpload').click();
+  }
+
+  lastTap = currentTime;
+});
+
+// Ganti background ketika gambar dipilih
+document.getElementById('bgUpload').addEventListener('change', function (event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.body.style.backgroundImage = `url('${e.target.result}')`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+document.body.addEventListener('dblclick', () => {
+  document.getElementById('bgUpload').click();
+});
     
 
   if ('serviceWorker' in navigator) {
