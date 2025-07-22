@@ -40,7 +40,7 @@
       width: 280px;
       height: 280px;
       border-radius: 50%;
-      backdrop-filter: blur(15px);
+      backdrop-filter: blur(2px);
       box-shadow: 0 8px 30px rgba(255,255,255,0.08), inset 0 0 25px rgba(255,255,255,0.08);
       border: 4px solid rgba(255,255,255,0.1);
   background-color: transparent;
@@ -97,12 +97,9 @@
       bottom: 14px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.08);
       padding: 5px 10px;
-      border-radius: 8px;
       font-size: 12px;
       color: #fff;
-      backdrop-filter: blur(4px);
       font-family: 'Cormorant Garamond', serif;
       letter-spacing: 0.5px;
     }
@@ -114,7 +111,11 @@
       transform: translateX(-50%);
       font-size: 30px;
       font-weight: 500;
-      color: #5e503f;
+color: #e5e5e5;
+text-shadow:
+  0 0 3px #fff,
+  0 0 5px #aaa,
+  1px 1px 2px rgba(0,0,0,0.6);
       font-family: 'Cinzel Decorative', cursive;
     }
 
@@ -219,7 +220,15 @@
   </div>
 
 <!-- Input file disembunyikan -->
-<input type="file" id="bgUpload" accept="image/*" style="visibility:hidden; position:absolute; width:0; height:0;">
+<input type="file" id="bgUpload" accept="image/*" style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;
+  z-index: 9999;
+">
 </body>
 </html>
   <script>
@@ -313,6 +322,40 @@ document.getElementById('bgUpload').addEventListener('change', function (event) 
 
 document.body.addEventListener('dblclick', () => {
   document.getElementById('bgUpload').click();
+});
+
+function isInStandaloneMode() {
+  return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone);
+}
+
+if (isInStandaloneMode()) {
+  // Biarkan input file full screen transparan terlihat oleh sistem
+  document.getElementById('bgUpload').style.display = 'block';
+} else {
+  // Jalankan click() dari tap dua kali
+  let lastTap = 0;
+  document.body.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTap < 300) {
+      document.getElementById('bgUpload').click();
+    }
+    lastTap = now;
+  });
+}
+
+document.getElementById('bgUpload').addEventListener('change', function (event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.body.style.backgroundImage = `url('${e.target.result}')`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+    };
+    reader.readAsDataURL(file);
+    // Sembunyikan input lagi setelah dipakai
+    this.style.display = 'none';
+  }
 });
     
 
