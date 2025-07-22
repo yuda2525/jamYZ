@@ -147,10 +147,12 @@ text-shadow:
 
 svg text {
   font-weight: 600;
-  fill: #111; /* Teks gelap */
+  fill: #111; /* Hitam gelap */
   text-shadow:
-    0 0 3px rgba(255, 255, 255, 0.7),  /* Cahaya putih sekitar teks */
-    0 0 6px rgba(255, 255, 255, 0.4);  /* Glow putih lebih besar */
+    -1px -1px 0 #fff,
+     1px -1px 0 #fff,
+    -1px  1px 0 #fff,
+     1px  1px 0 #fff;
   font-size: 14px;
   font-family: 'Great Vibes', cursive;
   letter-spacing: 3px;
