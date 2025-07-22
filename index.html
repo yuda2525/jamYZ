@@ -220,15 +220,7 @@ text-shadow:
   </div>
 
 <!-- Input file disembunyikan -->
-<input type="file" id="bgUpload" accept="image/*" style="
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  opacity: 0;
-  z-index: 9999;
-">
+<input type="file" id="bgUpload" accept="image/*" style="display: none;">
 </body>
 </html>
   <script>
@@ -294,69 +286,40 @@ numerals.forEach(num => {
 // Deteksi double-tap di body
 let lastTap = 0;
 
+// Double-tap deteksi untuk PWA dan browser
 document.body.addEventListener('touchend', (e) => {
-  const currentTime = new Date().getTime();
-  const tapLength = currentTime - lastTap;
-
-  if (tapLength < 300 && tapLength > 0) {
-    // Double tap terdeteksi → buka file input
+  const now = Date.now();
+  if (now - lastTap < 300) {
     document.getElementById('bgUpload').click();
   }
-
-  lastTap = currentTime;
+  lastTap = now;
 });
 
-// Ganti background ketika gambar dipilih
+// Deteksi background file dipilih → tampilkan sebagai background
 document.getElementById('bgUpload').addEventListener('change', function (event) {
   const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      document.body.style.backgroundImage = `url('${e.target.result}')`;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-    };
-    reader.readAsDataURL(file);
-  }
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const bg = e.target.result;
+    document.body.style.backgroundImage = `url('${bg}')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundRepeat = 'no-repeat';
+  };
+  reader.readAsDataURL(file);
 });
 
-document.body.addEventListener('dblclick', () => {
-  document.getElementById('bgUpload').click();
-});
-
+// Deteksi apakah sedang diinstall (PWA mode)
 function isInStandaloneMode() {
-  return (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone);
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 }
 
+// Kalau PWA, tetap sembunyikan inputnya
 if (isInStandaloneMode()) {
-  // Biarkan input file full screen transparan terlihat oleh sistem
-  document.getElementById('bgUpload').style.display = 'block';
-} else {
-  // Jalankan click() dari tap dua kali
-  let lastTap = 0;
-  document.body.addEventListener('touchend', (e) => {
-    const now = Date.now();
-    if (now - lastTap < 300) {
-      document.getElementById('bgUpload').click();
-    }
-    lastTap = now;
-  });
+  document.getElementById('bgUpload').style.display = 'none';
 }
-
-document.getElementById('bgUpload').addEventListener('change', function (event) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      document.body.style.backgroundImage = `url('${e.target.result}')`;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-    };
-    reader.readAsDataURL(file);
-    // Sembunyikan input lagi setelah dipakai
-    this.style.display = 'none';
-  }
-});
     
 
   if ('serviceWorker' in navigator) {
