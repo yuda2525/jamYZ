@@ -2,242 +2,266 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Y&Z Portfolio Site</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YudaTime® Neon Glass</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-dark: #0d0d1a;
-      --bg-light: #f5f5f5;
-      --accent: #00e0ff;
-      --text-dark: #111;
-      --text-light: #eee;
-      --glow: 0 0 12px rgba(0, 224, 255, 0.6);
-    }
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-    html {
-      scroll-behavior: smooth;
-    }
     body {
-      font-family: 'Poppins', sans-serif;
       margin: 0;
-      padding: 0;
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-      transition: background 0.3s, color 0.3s;
-    }
-    header {
-      text-align: center;
-      padding: 100px 20px;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      animation: fadeIn 1s ease;
-    }
-    header h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 3rem;
-      color: var(--accent);
-      text-shadow: var(--glow);
-    }
-    nav {
-      position: sticky;
-      top: 0;
-      background: rgba(13, 13, 26, 0.95);
+      background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
       display: flex;
       justify-content: center;
-      gap: 20px;
-      padding: 12px 0;
-      backdrop-filter: blur(8px);
-      z-index: 999;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Cormorant Garamond', serif;
+      overflow: hidden;
     }
-    nav a {
-      color: var(--text-light);
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s;
+
+    .wrapper {
+      position: relative;
     }
-    nav a:hover {
-      color: var(--accent);
-    }
-    section {
-      padding: 80px 20px;
-      max-width: 1100px;
-      margin: auto;
-      animation: fadeInUp 1s ease;
-    }
-    .section-title {
-      font-size: 2rem;
-      font-family: 'Orbitron';
-      margin-bottom: 30px;
-      color: var(--accent);
-      text-align: center;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
-    .card {
-      background: rgba(255,255,255,0.05);
-      border-radius: 16px;
-      padding: 20px;
-      backdrop-filter: blur(6px);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--glow);
-    }
-    .owner-img {
-      display: block;
-      width: 120px;
-      height: 120px;
-      margin: auto;
+
+    .clock {
+      position: relative;
+      width: 280px;
+      height: 280px;
       border-radius: 50%;
-      border: 3px solid var(--accent);
-      object-fit: cover;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 8px 30px rgba(255,255,255,0.08), inset 0 0 25px rgba(255,255,255,0.08);
+      border: 4px solid rgba(255,255,255,0.1);
     }
-    .float-icons {
-      position: fixed;
+
+    .center {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 50%;
       top: 50%;
-      right: 16px;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      z-index: 1000;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
     }
-    .float-icons a img {
-      width: 42px;
-      filter: drop-shadow(var(--glow));
-      transition: transform 0.3s;
+
+    .hand {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: bottom center;
+      transform: rotate(0deg);
+      border-radius: 4px;
     }
-    .float-icons a:hover img {
-      transform: scale(1.2);
+
+    .hour {
+      width: 6px;
+      height: 60px;
+      z-index: 3;
     }
-    footer {
-      text-align: center;
-      padding: 24px;
-      background: #101020;
-      color: #ccc;
+    
+     .hour, .minute {
+      background: #0ff;
+      box-shadow: 0 0 8px #0ff;
     }
-    .toggle-theme {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: var(--accent);
-      color: black;
-      border: none;
-      padding: 10px 14px;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
-      z-index: 1000;
+
+    .minute {
+      width: 4px;
+      height: 90px;
+      z-index: 2;
     }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .date-info {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #fff;
+      backdrop-filter: blur(4px);
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: 0.5px;
     }
+
+    .brand-name {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 30px;
+      font-weight: 500;
+      color: #5e503f;
+      font-family: 'Cinzel Decorative', cursive;
+    }
+
+    .circular-text {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .circular-text svg {
+      transform-origin: center;
+    }
+
+    svg text {
+      fill: #ccc;
+      font-size: 14px;
+      font-family: 'Great Vibes', cursive;
+      letter-spacing: 3px;
+    }
+
+    .pulse-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+       box-shadow: none;
+      animation: none;
+    }
+    
+.numeral {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  font-weight: bold;
+  color: #0ff;
+  font-size: 14px;
+  font-family: 'Cinzel Decorative', cursive;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 6px #0ff;
+  will-change: text-shadow;
+}
+
+.clock::after {
+  content: "";
+  position: absolute;
+  top: 28px;
+  left: 28px;
+  width: 48%;
+  height: 16%;
+  background: radial-gradient(ellipse at top left, rgba(255,255,255,0.04), transparent);
+  border-radius: 50%;
+  filter: blur(0.5px);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0% {
+    text-shadow: 0 0 6px #0ff;
+    opacity: 0.8;
+  }
+  50% {
+    text-shadow: 0 0 14px #0ff;
+    opacity: 1;
+  }
+  100% {
+    text-shadow: 0 0 6px #0ff;
+    opacity: 0.8;
+  }
+}
+
   </style>
 </head>
 <body>
-  <button class="toggle-theme" onclick="toggleTheme()">Mode Terang / Gelap</button>
-  <div class="float-icons">
-    <a href="https://wa.me/+6285720906090" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
-    <a href="mailto:yudabastard84@gmail.com" target="_blank"><img src="https://www.svgrepo.com/show/303161/gmail-icon-logo.svg" alt="Gmail"></a>
-    <a href="https://youtube.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube"></a>
-    <a href="https://tiktok.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok"></a>
+  <div class="wrapper">
+    <div class="circular-text" id="circularText">
+      <svg viewBox="0 0 400 400">
+        <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>
+        <text>
+          <textPath xlink:href="#circlePath">
+            ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ since 2025  Y&Z@
+          </textPath>
+        </text>
+      </svg>
+    </div>
+
+    <div class="clock">
+      <div class="pulse-ring"></div>
+      <div class="center"></div>
+      <div class="hand hour" id="hourHand"></div>
+      <div class="hand minute" id="minuteHand"></div>
+      <div id="numerals"></div>
+      <div class="brand-name">Y&Z®</div>
+      <div class="date-info" id="dateInfo"></div>
+    </div>
   </div>
-  <nav>
-    <a href="#tentang">Tentang</a>
-    <a href="#layanan">Layanan</a>
-    <a href="#portofolio">Portofolio</a>
-    <a href="#testimoni">Testimoni</a>
-    <a href="#vlog">Vlog</a>
-    <a href="#faq">Q&A</a>
-    <a href="#kontak">Kontak</a>
-  </nav>
-
-  <header>
-    <h1>Selamat Datang di Y&Z</h1>
-    <p>Kami membantu bisnis lokal tampil profesional secara digital.</p>
-  </header>
-
-  <section id="tentang">
-    <div class="section-title">Tentang Kami</div>
-    <img src="https://i.ibb.co/xsHZhjc/exec-anime.jpg" alt="Owner" class="owner-img">
-    <p style="text-align:center;max-width:600px;margin:auto;">Kami tim desain digital dengan fokus pada branding, AI kreatif, dan web interaktif untuk UMKM dan brand baru yang ingin naik kelas.</p>
-  </section>
-
-  <section id="layanan">
-    <div class="section-title">Layanan & Paket</div>
-    <div class="grid">
-      <div class="card">
-        <h3>Basic</h3><p>Landing Page 1 Halaman</p><p>Tanpa animasi</p><p>Rp 150.000</p>
-      </div>
-      <div class="card">
-        <h3>Pro</h3><p>3 Halaman Interaktif</p><p>Scroll Animasi</p><p>Rp 350.000</p>
-      </div>
-      <div class="card">
-        <h3>Premium</h3><p>7+ Halaman</p><p>AI & 3D Interactive Design</p><p>Rp 700.000+</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="portofolio">
-    <div class="section-title">Portofolio</div>
-    <div class="grid">
-      <div class="card"><h4>UMKM Makanan</h4><p>Katalog Digital + Order</p></div>
-      <div class="card"><h4>Landing Franchise</h4><p>Promosi sistem kemitraan</p></div>
-      <div class="card"><h4>Jasa Video</h4><p>Portofolio editing & reels</p></div>
-    </div>
-  </section>
-
-  <section id="testimoni">
-    <div class="section-title">Testimoni</div>
-    <div class="grid">
-      <div class="card"><p>"Cepat, rapi, dan kreatif!"<br>- Ibu Rina, Owner KopiNusantara</p></div>
-      <div class="card"><p>"Desainnya modern banget!"<br>- Reza, Content Creator</p></div>
-    </div>
-  </section>
-
-  <section id="vlog">
-    <div class="section-title">Vlog</div>
-    <p style="text-align:center">Tonton behind-the-scenes kami di YouTube atau TikTok!</p>
-  </section>
-
-  <section id="faq">
-    <div class="section-title">Q&A</div>
-    <div class="card">
-      <h4>Berapa lama pengerjaan?</h4>
-      <p>Umumnya 2-5 hari kerja tergantung paket dan revisi.</p>
-    </div>
-    <div class="card">
-      <h4>Pembayaran bisa via apa?</h4>
-      <p>Dana, GoPay, Bank Transfer, dan QRIS.</p>
-    </div>
-  </section>
-
-  <section id="kontak">
-    <div class="section-title">Hubungi Kami</div>
-    <p style="text-align:center">WhatsApp: <a href="https://wa.me/+6285720906090">+62 857-2090-6090</a><br>Email: <a href="mailto:yudabastard84@gmail.com">yudabastard84@gmail.com</a></p>
-  </section>
-
-  <footer>
-    &copy; 2025 Y&Z. Semua hak cipta dilindungi.
-  </footer>
-
+</body>
+</html>
   <script>
-    function toggleTheme() {
-      const root = document.documentElement;
-      const isDark = root.style.getPropertyValue('--bg-dark') === '#ffffff';
-      root.style.setProperty('--bg-dark', isDark ? '#0d0d1a' : '#ffffff');
-      root.style.setProperty('--text-light', isDark ? '#eee' : '#111');
-      root.style.setProperty('--text-dark', isDark ? '#111' : '#eee');
-    }
+  	window.addEventListener("error", e => console.error("❌ Global Error:", e.message));
+const romanNumerals = [
+  "I", "II", "III", "IV", "V", "", // kosongin VI
+  "VII", "VIII", "IX", "X", "XI", "XII"
+];
+
+    const numeralContainer = document.getElementById("numerals");
+
+    romanNumerals.forEach((num, i) => {
+      const angle = (i * 30 - 60) * Math.PI / 180;
+      const radius = 115;
+      const x = 140 + radius * Math.cos(angle);
+      const y = 140 + radius * Math.sin(angle);
+
+      const div = document.createElement("div");
+      div.className = "numeral";
+      div.style.left = `${x}px`;
+      div.style.top = `${y}px`;
+      div.innerText = num;
+      numeralContainer.appendChild(div);
+    });
+
+function updateClock() {
+  const now = new Date();
+  const sec = now.getSeconds();
+  const min = now.getMinutes();
+  const hr = now.getHours() % 12;
+
+  const minAngle = min * 6 + sec * 0.1;
+  const hrAngle = hr * 30 + min * 0.5;
+
+  document.getElementById('minuteHand').style.transform = `translate(-50%, -100%) rotate(${minAngle}deg)`;
+  document.getElementById('hourHand').style.transform = `translate(-50%, -100%) rotate(${hrAngle}deg)`;
+
+  // Rotate circular quote per detik (sync)
+  const rotateDegree = sec * 6;
+  document.querySelector('.circular-text svg').style.transform = `rotate(${rotateDegree}deg)`;
+
+// Trigger pulse on numerals every second
+const numerals = document.querySelectorAll('.numeral');
+numerals.forEach(num => {
+  num.style.animation = 'none';
+  num.offsetHeight; // Trigger reflow
+  num.style.animation = 'pulse 1s ease-in-out';
+});
+
+  // Date
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  const day = days[now.getDay()];
+  const date = now.getDate();
+  const month = months[now.getMonth()];
+  const year = now.getFullYear();
+  document.getElementById('dateInfo').innerText = `${day}, ${date} ${month} ${year}`;
+}
+
+    setInterval(updateClock, 1000);
+    updateClock();
+    
+    console.log("✅ Script Loaded");
   </script>
 </body>
 </html>
+</html>
+
+
