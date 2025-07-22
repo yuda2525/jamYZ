@@ -51,6 +51,15 @@
 
 .container {
   background-color: transparent;
+  pointer-events: none; /* kalau konten bukan interaktif */
+}
+
+.outlined {
+  text-shadow:
+    -1px -1px 1px #000,
+     1px -1px 1px #000,
+    -1px  1px 1px #000,
+     1px  1px 1px #000;
 }
 
     .center {
@@ -102,8 +111,7 @@
   font-family: 'Cormorant Garamond', serif;
   letter-spacing: 0.5px;
 font-weight: 700;
-color: #000;
-text-shadow: 0 0 4px #fff; /* Teks gelap dengan bayangan putih */
+text-shadow: 0 0 4px #000; 
 }
 
     .brand-name {
@@ -113,7 +121,7 @@ text-shadow: 0 0 4px #fff; /* Teks gelap dengan bayangan putih */
       transform: translateX(-50%);
       font-size: 30px;
       font-weight: 500;
-color: #e5e5e5;
+color: #f5f5f5; 
 text-shadow:
   0 0 3px #fff,
   0 0 5px #aaa,
@@ -135,14 +143,14 @@ text-shadow:
       transform-origin: center;
     }
 
-    svg text {
-font-weight: 600;
-color: #fff;
-text-shadow: 0 0 4px #000; /* Teks terang dengan bayangan hitam → aman di semua background */
-      font-size: 14px;
-      font-family: 'Great Vibes', cursive;
-      letter-spacing: 3px;
-    }
+svg text {
+  font-weight: 500;
+  fill: #f5f5f5; /* ganti 'color' jadi 'fill' */
+  text-shadow: 0 0 4px #000;
+  font-size: 14px;
+  font-family: 'Great Vibes', cursive;
+  letter-spacing: 3px;
+}
 
     .pulse-ring {
       position: absolute;
