@@ -357,13 +357,16 @@ document.getElementById('bgUpload').addEventListener('change', function (event) 
   if (!file) return;  
   
   const reader = new FileReader();  
-  reader.onload = function (e) {  
-    const bg = e.target.result;  
-    document.body.style.backgroundImage = `url('${bg}')`;  
-    document.body.style.backgroundSize = 'cover';  
-    document.body.style.backgroundPosition = 'center';  
-    document.body.style.backgroundRepeat = 'no-repeat';  
-  };  
+reader.onload = function (e) {  
+  const bg = e.target.result;  
+  document.body.style.backgroundImage = `url('${bg}')`;  
+  document.body.style.backgroundSize = 'cover';  
+  document.body.style.backgroundPosition = 'center';  
+  document.body.style.backgroundRepeat = 'no-repeat';  
+
+  // Masuk fullscreen lagi setelah ganti background
+  goFullscreen();  
+};
   reader.readAsDataURL(file);  
 });  
   
