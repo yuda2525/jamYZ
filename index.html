@@ -29,7 +29,9 @@
       width: 100%;  
       font-family: sans-serif;  
       overflow: hidden;  
-  background: radial-gradient(ellipse at center, #111 0%, #000 100%);    
+    margin: 0;
+    padding: 0;
+    background: black;
 }    
     
   .fullscreen-wrapper {    
@@ -68,16 +70,74 @@
   padding-right: env(safe-area-inset-right);  
 }  
 
-  body::before {
-    content: "";
-    position: absolute;
+body::before {
+  content: "";
+      position: absolute;
     inset: 0;
     background: inherit;
     filter: brightness(1.2) contrast(1.25) saturate(1.5) drop-shadow(0 0 20px rgba(255,255,255,0.3));
     z-index: -1;
     transform: scale(1.02);
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: -1;
+  background: linear-gradient(
+    145deg,
+    rgba(0, 255, 255, 0.07),
+    rgba(255, 0, 255, 0.06),
+    rgba(255, 255, 0, 0.04)
+  );
+  backdrop-filter:
+    saturate(1.4)
+    brightness(1.15)
+    contrast(1.2)
+    blur(1.5px);
+  mix-blend-mode: hard-light;
+  pointer-events: none;
+  animation: vividShift 15s ease-in-out infinite alternate;
+}
+
+@keyframes vividShift {
+  0% {
+    backdrop-filter: saturate(1.3) brightness(1.1) contrast(1.1) blur(1px);
   }
-  
+  100% {
+    backdrop-filter: saturate(1.5) brightness(1.2) contrast(1.3) blur(2px);
+  }
+}
+
+  .bg-vivid {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: url('your-image.jpg') center/cover no-repeat;
+    filter: brightness(1.3) contrast(1.4) saturate(1.6)
+            drop-shadow(0 0 60px rgba(0,255,255,0.15))
+            blur(0.5px);
+    transform: perspective(1000px) translateZ(-20px) scale(1.05);
+    transition: all 2s ease-in-out;
+    z-index: -2;
+    animation: shift 15s infinite alternate ease-in-out;
+  }
+
+  @keyframes shift {
+    0% { transform: perspective(1000px) translateZ(-20px) translateY(0) scale(1.05); opacity: 1; }
+    50% { transform: perspective(1000px) translateZ(-10px) translateY(-10px) scale(1.1); opacity: 0.9; }
+    100% { transform: perspective(1000px) translateZ(-30px) translateY(5px) scale(1.04); opacity: 1; }
+  }
+
+  .glass-mask {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(4px) saturate(150%);
+    -webkit-backdrop-filter: blur(4px) saturate(150%);
+    z-index: -1;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
     .clock {    
       position: relative;    
       width: 280px;    
