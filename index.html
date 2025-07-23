@@ -55,6 +55,12 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
 
     .clock {
       position: relative;
@@ -365,10 +371,23 @@ function isInStandaloneMode() {
 if (isInStandaloneMode()) {
   document.getElementById('bgUpload').style.display = 'none';
 }
-    
-   document.body.addEventListener('click', () => {
-  if (document.documentElement.requestFullscreen) {
-    document.documentElement.requestFullscreen();
+
+function goFullscreen() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) {
+    el.requestFullscreen();
+  } else if (el.webkitRequestFullscreen) { // Safari
+    el.webkitRequestFullscreen();
+  } else if (el.msRequestFullscreen) { // IE/Edge lama
+    el.msRequestFullscreen();
+  }
+}
+
+document.addEventListener("click", function () {
+  if (!document.fullscreenElement &&
+      !document.webkitFullscreenElement &&
+      !document.msFullscreenElement) {
+    goFullscreen();
   }
 });
 
