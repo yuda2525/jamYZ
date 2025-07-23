@@ -30,15 +30,13 @@
   padding: 0;
   width: 100vw;
   height: 100vh;
-      height: 100%;  
-      width: 100%;  
       overflow: hidden;  
   background: radial-gradient(ellipse at center, #111 0%, #000 100%);    
 }    
     
   .fullscreen-wrapper {    
-  width: 100vw;    
-  height: 100vh;    
+      height: 100%;  
+      width: 100%; 
   display: flex;    
   justify-content: center;    
   align-items: center;    
@@ -379,7 +377,7 @@ function isInStandaloneMode() {
 if (isInStandaloneMode()) {
   document.getElementById('bgUpload').style.display = 'none';
 }
-    
+
   
     // 🔁 Fullscreen on start  
     function goFullscreen() {  
