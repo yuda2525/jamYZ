@@ -359,6 +359,11 @@ reader.onload = function (e) {
   document.body.style.backgroundImage = `url(${base64})`;
 };
 reader.readAsDataURL(file); // file dari input type=file
+
+const savedBg = localStorage.getItem("bgImage");
+if (savedBg) {
+  document.body.style.backgroundImage = `url(${savedBg})`;
+}
 });
 
 // Deteksi apakah sedang diinstall (PWA mode)
@@ -372,8 +377,14 @@ if (isInStandaloneMode()) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  const bg = 'assets/bg.jpg'; // pastikan file-nya ada
-  document.body.style.backgroundImage = `url('${bg}')`;
+  const savedBg = localStorage.getItem("bgImage");
+  if (savedBg) {
+    document.body.style.backgroundImage = `url(${savedBg})`;
+  } else {
+    const bg = 'assets/bg.jpg'; // fallback default
+    document.body.style.backgroundImage = `url('${bg}')`;
+  }
+
   document.body.style.backgroundColor = "black";
   document.body.style.backgroundSize = 'cover';
   document.body.style.backgroundRepeat = 'no-repeat';
