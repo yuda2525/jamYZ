@@ -54,6 +54,15 @@
   pointer-events: none; /* kalau konten bukan interaktif */
 }
 
+.outlined {
+  color: #111; /* atau fill: #111 jika SVG */
+  text-shadow:
+    -1px -1px 1px #fff,
+     1px -1px 1px #fff,
+    -1px  1px 1px #fff,
+     1px  1px 1px #fff;
+}
+
     .center {
       position: absolute;
       width: 12px;
@@ -144,7 +153,7 @@ svg text {
   
   text-shadow:
     0 0 1px #000, /* menjaga tajam di bg gelap */
- 
+
   font-size: 14px;
   font-family: 'Great Vibes', cursive;
   letter-spacing: 3px;
