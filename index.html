@@ -339,6 +339,33 @@ numerals.forEach(num => {
     
     setInterval(updateClock, 1000);    
     updateClock();    
+    
+        // 🔁 Fullscreen on start  
+    function goFullscreen() {  
+      const docElm = document.documentElement;  
+      if (docElm.requestFullscreen) docElm.requestFullscreen();  
+      else if (docElm.webkitRequestFullscreen) docElm.webkitRequestFullscreen();  
+      else if (docElm.mozRequestFullScreen) docElm.mozRequestFullScreen();  
+      else if (docElm.msRequestFullscreen) docElm.msRequestFullscreen();  
+    }  
+  
+    // 🧠 Keep fullscreen alive  
+    function ensureFullscreen() {  
+      if (!document.fullscreenElement) goFullscreen();  
+    }  
+  
+    // ⏱ Start fullscreen once user interacts  
+    document.addEventListener("click", () => {  
+      goFullscreen();  
+    }, { once: true });  
+  
+      // 🔄 Auto-check if fullscreen hilang  
+    document.addEventListener("fullscreenchange", () => {  
+      if (!document.fullscreenElement) {  
+        console.warn("Fullscreen hilang! Nyoba masuk lagi...");  
+        setTimeout(goFullscreen, 500);  
+      }  
+    });  
         
 // Deteksi double-tap di body  
 let lastTap = 0;  
