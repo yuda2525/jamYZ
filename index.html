@@ -297,10 +297,10 @@ svg text {
     opacity: 0.8;    
   }    
 }    
-    
-  </style>  
-</head>  
-<body onclick="enterFullScreen()" style="margin:0; overflow:hidden;">  
+    </style>    
+</head>    
+<body onclick="enterFullScreen()" style="margin:0; overflow:hidden;">    
+  
 	<div class="bg-vivid"></div>
 <div class="glass-mask"></div>
 	    <div class="fullscreen-wrapper">  
@@ -414,11 +414,23 @@ numerals.forEach(num => {
     }
   });
 
-  // 🧼 Opsional: Tambah trigger dari gesture lain
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "f") enterFullScreen(); // Tekan 'f' buat masuk lagi
-  });
-
+    // 🧠 Keep fullscreen alive      
+    function ensureFullscreen() {      
+      if (!document.fullscreenElement) goFullscreen();      
+    }      
+      
+    // ⏱ Start fullscreen once user interacts      
+    document.addEventListener("click", () => {      
+      goFullscreen();      
+    }, { once: true });      
+      
+      // 🔄 Auto-check if fullscreen hilang      
+    document.addEventListener("fullscreenchange", () => {      
+      if (!document.fullscreenElement) {      
+        console.warn("Fullscreen hilang! Nyoba masuk lagi...");      
+        setTimeout(goFullscreen, 500);      
+      }      
+    });      
 
 
 // Deteksi double-tap di body  
