@@ -45,24 +45,21 @@ html, body {
   align-items: center;
   border-radius: 0;
 }
-    body {
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: 'Cormorant Garamond', serif;
-      overflow: hidden;
-  background-color: transparent; /* Bikin bening */
-  overflow: hidden; /* cegah geser */
-}
-
 body {
-  background-image: url('assets/wallpaper.jpg');
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center, #111 0%, #000 100%);
+  background-image: url('assets/wallpaper.jpg'); /* default bg */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  font-family: 'Cormorant Garamond', serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
     .clock {
@@ -250,7 +247,7 @@ svg text {
   <div class="wrapper">
       
   <div class="fullscreen-wrapper">
-  	<body onclick="requestFullScreen()">
+
 
     <div class="circular-text" id="circularText">
       <svg viewBox="0 0 400 400">
@@ -359,7 +356,7 @@ document.getElementById('bgUpload').addEventListener('change', function (event) 
   const reader = new FileReader();
   reader.onload = function (e) {
     const bg = e.target.result;
-    document.body.style.backgroundImage = `url('${bg}')`;
+    document.body.style.setProperty('background-image', `url('${bg}')`, 'important');
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundRepeat = 'no-repeat';
@@ -378,22 +375,17 @@ if (isInStandaloneMode()) {
 }
 
 
-
 function goFullscreen() {
   const el = document.documentElement;
-  if (el.requestFullscreen) {
-    el.requestFullscreen();
-  } else if (el.webkitRequestFullscreen) {
-    el.webkitRequestFullscreen();
-  } else if (el.msRequestFullscreen) {
-    el.msRequestFullscreen();
-  }
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.msRequestFullscreen) el.msRequestFullscreen();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener('click', function onceClick() {
     goFullscreen();
-    document.body.removeEventListener('click', onceClick); // Biar nggak dobel-dobel fullscreen
+    document.body.removeEventListener('click', onceClick); // supaya nggak dobel-dobel
   });
 });
 
