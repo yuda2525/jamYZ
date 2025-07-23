@@ -82,110 +82,108 @@ body {
   pointer-events: none; /* kalau konten bukan interaktif */  
 }  
   
-.outlined {  
-  color: #111; /* atau fill: #111 jika SVG */  
-  text-shadow:  
-    -1px -1px 1px #fff,  
-     1px -1px 1px #fff,  
-    -1px  1px 1px #fff,  
-     1px  1px 1px #fff;  
-}  
-  
-    .center {  
-      position: absolute;  
-      width: 12px;  
-      height: 12px;  
-      background: #fff;  
-      border: 2px solid #000;  
-      border-radius: 50%;  
-      top: 50%;  
-      left: 50%;  
-      transform: translate(-50%, -50%);  
-      z-index: 10;  
-    }  
-  
-    .hand {  
-      position: absolute;  
-      top: 50%;  
-      left: 50%;  
-      transform-origin: bottom center;  
-      transform: rotate(0deg);  
-      border-radius: 4px;  
-    }  
-  
-    .hour {  
-      width: 6px;  
-      height: 60px;  
-      z-index: 3;  
-    }  
-      
-     .hour, .minute {  
-      background: #0ff;  
-      box-shadow: 0 0 8px #0ff;  
-    }  
-  
-    .minute {  
-      width: 4px;  
-      height: 90px;  
-      z-index: 2;  
-    }  
-  
-.date-info {  
-  position: absolute;  
-  bottom: 14px;  
-  left: 50%;  
-  transform: translateX(-50%);  
-  padding: 5px 10px;  
-  font-size: 12px;  
-  font-family: 'Cormorant Garamond', serif;  
-  letter-spacing: 0.5px;  
-font-weight: 600;  
-text-shadow: 0 0 4px #000;   
-}  
-  
-    .brand-name {  
-      position: absolute;  
-      top: 50px;  
-      left: 50%;  
-      transform: translateX(-50%);  
-      font-size: 30px;  
-      font-weight: 500;  
-color: #f5f5f5;   
-text-shadow:  
-  0 0 3px #fff,  
-  0 0 5px #aaa,  
-  1px 1px 2px rgba(0,0,0,0.6);  
-      font-family: 'Cinzel Decorative', cursive;  
-    }  
-  
-    .circular-text {  
-      position: absolute;  
-      width: 400px;  
-      height: 400px;  
-      top: 50%;  
-      left: 50%;  
-      transform: translate(-50%, -50%);  
-      pointer-events: none;  
-    }  
-  
-    .circular-text svg {  
-      transform-origin: center;  
-    }  
-  
-svg text {  
-  font-weight: 600;  
-  fill: #111; /* warna utama huruf */  
-      stroke: rgba(255, 255, 255, 0.3); /* putih transparan */  
-  stroke-width: 0.1px;  
-  paint-order: stroke;  
+.outlined {    
+  color: #111; /* atau fill: #111 jika SVG */    
+  text-shadow:    
+    -1px -1px 1px #fff,    
+     1px -1px 1px #fff,    
+    -1px  1px 1px #fff,    
+     1px  1px 1px #fff;    
+}    
     
-  text-shadow:  
-    0 0 1px #000, /* menjaga tajam di bg gelap */  
-  
-  font-size: 14px;  
-  font-family: 'Great Vibes', cursive;  
-  letter-spacing: 3px;  
-}  
+    .center {    
+      position: absolute;    
+      width: 12px;    
+      height: 12px;    
+      background: #fff;    
+      border: 2px solid #000;    
+      border-radius: 50%;    
+      top: 50%;    
+      left: 50%;    
+      transform: translate(-50%, -50%);    
+      z-index: 10;    
+    }    
+    
+    .hand {    
+      position: absolute;    
+      top: 50%;    
+      left: 50%;    
+      transform-origin: bottom center;    
+      transform: rotate(0deg);    
+      border-radius: 4px;    
+    }    
+    
+    .hour {    
+      width: 6px;    
+      height: 60px;    
+      z-index: 3;    
+    }    
+        
+     .hour, .minute {    
+      background: #0ff;    
+      box-shadow: 0 0 8px #0ff;    
+    }    
+    
+    .minute {    
+      width: 4px;    
+      height: 90px;    
+      z-index: 2;    
+    }    
+    
+.date-info {    
+  position: absolute;    
+  bottom: 14px;    
+  left: 50%;    
+  transform: translateX(-50%);    
+  padding: 5px 10px;    
+  font-size: 12px;    
+  font-family: 'Cormorant Garamond', serif;    
+  letter-spacing: 0.5px;    
+font-weight: 600;    
+text-shadow: 0 0 4px #000;     
+}    
+    
+    .brand-name {    
+      position: absolute;    
+      top: 50px;    
+      left: 50%;    
+      transform: translateX(-50%);    
+      font-size: 30px;    
+      font-weight: 500;    
+color: #f5f5f5;     
+text-shadow:    
+  0 0 3px #fff,    
+  0 0 5px #aaa,    
+  1px 1px 2px rgba(0,0,0,0.6);    
+      font-family: 'Cinzel Decorative', cursive;    
+    }    
+    
+    .circular-text {    
+      position: absolute;    
+      width: 400px;    
+      height: 400px;    
+      top: 50%;    
+      left: 50%;    
+      transform: translate(-50%, -50%);    
+      pointer-events: none;    
+    }    
+    
+    .circular-text svg {    
+      transform-origin: center;    
+    }    
+    
+svg text {    
+  font-weight: 600;    
+  fill: #111; /* warna utama huruf */    
+      stroke: rgba(255, 255, 255, 0.3); /* putih transparan */    
+  stroke-width: 0.1px;    
+  paint-order: stroke;    
+  text-shadow:    
+    0 0 1px #000, /* menjaga tajam di bg gelap */    
+  font-size: 14px;    
+  font-family: 'Great Vibes', cursive;    
+  letter-spacing: 3px;    
+}    
   
     .pulse-ring {  
       position: absolute;  
@@ -374,34 +372,7 @@ if (isInStandaloneMode()) {
   document.getElementById('bgUpload').style.display = 'none';  
 }  
   
-  
-    // 🔁 Fullscreen on start  
-    function goFullscreen() {  
-      const docElm = document.documentElement;  
-      if (docElm.requestFullscreen) docElm.requestFullscreen();  
-      else if (docElm.webkitRequestFullscreen) docElm.webkitRequestFullscreen();  
-      else if (docElm.mozRequestFullScreen) docElm.mozRequestFullScreen();  
-      else if (docElm.msRequestFullscreen) docElm.msRequestFullscreen();  
-    }  
-  
-    // 🧠 Keep fullscreen alive  
-    function ensureFullscreen() {  
-      if (!document.fullscreenElement) goFullscreen();  
-    }  
-  
-    // ⏱ Start fullscreen once user interacts  
-    document.addEventListener("click", () => {  
-      goFullscreen();  
-    }, { once: true });  
-  
-      // 🔄 Auto-check if fullscreen hilang  
-    document.addEventListener("fullscreenchange", () => {  
-      if (!document.fullscreenElement) {  
-        console.warn("Fullscreen hilang! Nyoba masuk lagi...");  
-        setTimeout(goFullscreen, 500);  
-      }  
-    });  
-  
+
   
   if ('serviceWorker' in navigator) {  
     navigator.serviceWorker.register('sw.js')  
