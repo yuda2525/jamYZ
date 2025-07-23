@@ -56,15 +56,17 @@ html, body {
   background-color: transparent; /* Bikin bening */    
   overflow: hidden; /* cegah geser */    
   background-image: url('assets/wallpaper.jpg');    
-  background-size: cover;    
-  background-position: center;    
-  background-repeat: no-repeat;    
   background-attachment: fixed;    
   padding-top: env(safe-area-inset-top);  
   padding-bottom: env(safe-area-inset-bottom);  
   padding-left: env(safe-area-inset-left);  
   padding-right: env(safe-area-inset-right);  
-}  
+  background-image: url('https://yuda2525.github.io/jamY-Z/wall-clock-icon.png');
+  background-color: black;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
   
     .clock {    
       position: relative;    
@@ -390,7 +392,11 @@ localStorage.setItem("bgImage", "assets/custom1.jpg");
       console.log("Default digunakan:", defaultBg);
       document.body.style.backgroundImage = `url('${defaultBg}')`;
     }
-
+    
+    const bg = "https://yuda2525.github.io/jamY-Z/wall-clock-icon.png";
+  document.addEventListener('DOMContentLoaded', () => {
+    const bg = "https://yuda2525.github.io/jamY-Z/wall-clock-icon.png";
+    document.body.style.backgroundImage = `url('${bg}')`;
     document.body.style.backgroundColor = "black";
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundRepeat = 'no-repeat';
