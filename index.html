@@ -71,6 +71,18 @@ body {
   align-items: center;
 }
 
+#bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('assets/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index: -1; /* di belakang semua konten */
+}
+
     .clock {
       position: relative;
       width: 280px;
@@ -256,7 +268,9 @@ svg text {
   <div class="wrapper">
       
   <div class="fullscreen-wrapper">
-
+  	<body>
+  <div id="bg-image"></div>
+  <div id="content">
 
     <div class="circular-text" id="circularText">
       <svg viewBox="0 0 400 400">
@@ -338,18 +352,19 @@ svg text {
   updateClock();
 
   // Fullscreen helper
-  function requestFullScreen() {
-    const el = document.documentElement;
-    if (el.requestFullscreen) el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    else if (el.msRequestFullscreen) el.msRequestFullscreen();
-  }
+    function requestFullScreen() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+}
 
-  document.addEventListener("DOMContentLoaded", () => {
-    // Tap sekali buat fullscreen (gesture)
-    document.body.addEventListener("click", () => {
-      requestFullScreen();
-    }, { once: true });
+document.addEventListener("DOMContentLoaded", () => {
+  // Harus pakai gesture user, misal klik di mana aja
+  document.body.addEventListener("click", () => {
+    requestFullScreen();
+  }, { once: true }); // cuma sekali
+
 
     // Ganti background image (click upload)
     const bgUpload = document.getElementById("bgUpload");
