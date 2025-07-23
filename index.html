@@ -244,13 +244,10 @@ svg text {
   
   </style>  
 </head>  
-<body>  
-	  
+<body onclick="goFullscreen()">
+	    <div class="fullscreen-wrapper">  
   <div class="wrapper">  
-        
-  <div class="fullscreen-wrapper">  
-  
-  
+
     <div class="circular-text" id="circularText">  
       <svg viewBox="0 0 400 400">  
         <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>  
@@ -405,7 +402,6 @@ if (isInStandaloneMode()) {
       }  
     });  
     
-  
   if ('serviceWorker' in navigator) {  
     navigator.serviceWorker.register('sw.js')  
       .then(reg => console.log('✅ Service Worker registered:', reg.scope))  
