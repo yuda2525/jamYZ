@@ -19,6 +19,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />    
 <meta name="apple-mobile-web-app-title" content="JamYZ" />    
 <link rel="apple-touch-icon" href="assets/icon-192.png" />    
+<link rel="apple-touch-startup-image" href="assets/splash-screen.png">
   <title>YudaTime® Neon Glass</title>    
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">    
   <style>    
@@ -55,16 +56,17 @@ html, body {
       overflow: hidden;  
   background-color: transparent; /* Bikin bening */  
   overflow: hidden; /* cegah geser */  
-}  
-  
-body {  
   background-image: url('assets/wallpaper.jpg');  
   background-size: cover;  
   background-position: center;  
   background-repeat: no-repeat;  
   background-attachment: fixed;  
-}  
-  
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
     .clock {  
       position: relative;  
       width: 280px;  
@@ -246,12 +248,10 @@ svg text {
   </style>  
 </head>  
 <body>  
-	  
+	    <div class="fullscreen-wrapper">  
+
   <div class="wrapper">  
         
-  <div class="fullscreen-wrapper">  
-
-  
     <div class="circular-text" id="circularText">  
       <svg viewBox="0 0 400 400">  
         <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>  
@@ -379,25 +379,23 @@ if (isInStandaloneMode()) {
   
   
   
-function goFullscreen() {  
-  const el = document.documentElement;  
-  if (el.requestFullscreen) {  
-    el.requestFullscreen();  
-  } else if (el.webkitRequestFullscreen) {  
-    el.webkitRequestFullscreen();  
-  } else if (el.msRequestFullscreen) {  
-    el.msRequestFullscreen();  
-  }  
-}  
-  
-document.addEventListener('DOMContentLoaded', () => {  
-  document.body.addEventListener('click', function onceClick() {  
-    goFullscreen();  
-    document.body.removeEventListener('click', onceClick); // Biar nggak dobel-dobel fullscreen  
-  });  
-});  
-  
-  
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const requestFullscreen = () => {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    };
+
+    // Trigger fullscreen jika user tap layar atau di-load
+    document.body.addEventListener("click", requestFullscreen, { once: true });
+  });
+
   
   
   if ('serviceWorker' in navigator) {  
