@@ -54,13 +54,15 @@
   pointer-events: none; /* kalau konten bukan interaktif */
 }
 
-.outlined {  
-  text-shadow:  
-    -1px -1px 1px #000,  
-     1px -1px 1px #000,  
-    -1px  1px 1px #000,  
-     1px  1px 1px #000;  
-}  
+.outlined {
+  text-shadow:
+    -1.2px -1.2px 1px #000,
+     1.2px -1.2px 1px #000,
+    -1.2px  1.2px 1px #000,
+     1.2px  1.2px 1px #000;
+  font-weight: 600;
+  fill: #fff; /* putih tetap dominan */
+}
 
     .center {
       position: absolute;
@@ -148,6 +150,10 @@ svg text {
   fill: #111; 
   text-shadow: 
   0 0 1px #000;
+      -1px -1px 0 #fff,
+     1px -1px 0 #fff,
+    -1px  1px 0 #fff,
+     1px  1px 0 #fff;
   0 0 4px rgba(255, 255, 255, 0.2);
   font-size: 14px;
   font-family: 'Great Vibes', cursive;
