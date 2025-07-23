@@ -45,91 +45,71 @@ html, body {
   background: transparent;    
 }    
 
-body {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-family: 'Cormorant Garamond', serif;
-  overflow: hidden;
-  background-color: black;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-}
-  
-    .clock {    
-      position: relative;    
-      width: 280px;    
-      height: 280px;    
-      border-radius: 50%;    
-      backdrop-filter: #0ff;    
-      box-shadow: 0 8px 30px rgba(255,255,255,0.08), inset 0 0 25px rgba(255,255,255,0.08);    
-      border: 4px solid rgba(255,255,255,0.1);    
-  background-color: transparent;    
-  color: white; /* atau warna neon/glow */    
-  font-size: 4em;    
-  text-shadow: 0 0 10px cyan; /* biar glow kayak jam digital */    
-}    
+    body {
+      margin: 0;
+      background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Cormorant Garamond', serif;
+      overflow: hidden;
+    }
+
+    .wrapper {
+      position: relative;
+    }
+
+    .clock {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 8px 30px rgba(255,255,255,0.08), inset 0 0 25px rgba(255,255,255,0.08);
+      border: 4px solid rgba(255,255,255,0.1);
+    }
+
+    .center {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+
+    .hand {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: bottom center;
+      transform: rotate(0deg);
+      border-radius: 4px;
+    }
+
+    .hour {
+      width: 6px;
+      height: 60px;
+      z-index: 3;
+    }
     
-.container {    
-  background-color: transparent;    
-  pointer-events: none; /* kalau konten bukan interaktif */    
-}    
-    
-.outlined {    
-  color: #111; /* atau fill: #111 jika SVG */    
-  text-shadow:    
-    -1px -1px 1px #fff,    
-     1px -1px 1px #fff,    
-    -1px  1px 1px #fff,    
-     1px  1px 1px #fff;    
-}    
-    
-    .center {    
-      position: absolute;    
-      width: 12px;    
-      height: 12px;    
-      background: #fff;    
-      border: 2px solid #000;    
-      border-radius: 50%;    
-      top: 50%;    
-      left: 50%;    
-      transform: translate(-50%, -50%);    
-      z-index: 10;    
-    }    
-    
-    .hand {    
-      position: absolute;    
-      top: 50%;    
-      left: 50%;    
-      transform-origin: bottom center;    
-      transform: rotate(0deg);    
-      border-radius: 4px;    
-    }    
-    
-    .hour {    
-      width: 6px;    
-      height: 60px;    
-      z-index: 3;    
-    }    
-        
-     .hour, .minute {    
-      background: #0ff;    
-      box-shadow: 0 0 8px #0ff;    
-    }    
-    
-    .minute {    
-      width: 4px;    
-      height: 90px;    
-      z-index: 2;    
-    }    
-    
+     .hour, .minute {
+      background: #0ff;
+      box-shadow: 0 0 8px #0ff;
+    }
+
+    .minute {
+      width: 4px;
+      height: 90px;
+      z-index: 2;
+    }
+
 .date-info {    
   position: absolute;    
   bottom: 14px;    
@@ -178,162 +158,157 @@ svg text {
       stroke: rgba(255, 255, 255, 0.3); /* putih transparan */    
   stroke-width: 0.1px;    
   paint-order: stroke;    
-      
   text-shadow:    
     0 0 1px #000, /* menjaga tajam di bg gelap */    
-    
   font-size: 14px;    
   font-family: 'Great Vibes', cursive;    
   letter-spacing: 3px;    
 }    
+
+    .pulse-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+       box-shadow: none;
+      animation: none;
+    }
     
-    .pulse-ring {    
-      position: absolute;    
-      width: 100%;    
-      height: 100%;    
-      border-radius: 50%;    
-       box-shadow: none;    
-      animation: none;    
-    }    
-        
-.numeral {    
-  position: absolute;    
-  width: 30px;    
-  height: 30px;    
-  text-align: center;    
-  line-height: 30px;    
-  font-weight: bold;    
-  color: #0ff;    
-  font-size: 14px;    
-  font-family: 'Cinzel Decorative', cursive;    
-  transform: translate(-50%, -50%);    
-  text-shadow: 0 0 6px #0ff;    
-  will-change: text-shadow;    
-}    
-    
-.clock::after {    
-  content: "";    
-  position: absolute;    
-  top: 28px;    
-  left: 28px;    
-  width: 48%;    
-  height: 16%;    
-  background: radial-gradient(ellipse at top left, rgba(255,255,255,0.04), transparent);    
-  border-radius: 50%;    
-  filter: blur(0.5px);    
-  opacity: 0.25;    
-  pointer-events: none;    
-}    
-    
-@keyframes pulse {    
-  0% {    
-    text-shadow: 0 0 6px #0ff;    
-    opacity: 0.8;    
-  }    
-  50% {    
-    text-shadow: 0 0 14px #0ff;    
-    opacity: 1;    
-  }    
-    
-  100% {    
-    text-shadow: 0 0 6px #0ff;    
-    opacity: 0.8;    
-  }    
-}    
-    
+.numeral {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  font-weight: bold;
+  color: #0ff;
+  font-size: 14px;
+  font-family: 'Cinzel Decorative', cursive;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 6px #0ff;
+  will-change: text-shadow;
+}
+
+.clock::after {
+  content: "";
+  position: absolute;
+  top: 28px;
+  left: 28px;
+  width: 48%;
+  height: 16%;
+  background: radial-gradient(ellipse at top left, rgba(255,255,255,0.04), transparent);
+  border-radius: 50%;
+  filter: blur(0.5px);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0% {
+    text-shadow: 0 0 6px #0ff;
+    opacity: 0.8;
+  }
+  50% {
+    text-shadow: 0 0 14px #0ff;
+    opacity: 1;
+  }
+  100% {
+    text-shadow: 0 0 6px #0ff;
+    opacity: 0.8;
+  }
+}
+
   </style>    
 </head>    
 <body onclick="goFullscreen()">
 	    <div class="fullscreen-wrapper">    
+  <div class="wrapper">
+    <div class="circular-text" id="circularText">
+      <svg viewBox="0 0 400 400">
+        <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>
+        <text>
+          <textPath xlink:href="#circlePath">
+            ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ since 2025  Y&Z@
+          </textPath>
+        </text>
+      </svg>
+    </div>
+
+    <div class="clock">
+      <div class="pulse-ring"></div>
+      <div class="center"></div>
+      <div class="hand hour" id="hourHand"></div>
+      <div class="hand minute" id="minuteHand"></div>
+      <div id="numerals"></div>
+      <div class="brand-name">Y&Z®</div>
+      <div class="date-info" id="dateInfo"></div>
+    </div>
+  </div>
   
-  <div class="wrapper">    
-          
-    <div class="circular-text" id="circularText">    
-      <svg viewBox="0 0 400 400">    
-        <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>    
-        <text>    
-          <textPath xlink:href="#circlePath">    
-            ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ since 2025  Y&Z@    
-          </textPath>    
-        </text>    
-      </svg>    
-    </div>    
-    
-    <div class="clock">    
-      <div class="pulse-ring"></div>    
-      <div class="center"></div>    
-      <div class="hand hour" id="hourHand"></div>    
-      <div class="hand minute" id="minuteHand"></div>    
-      <div id="numerals"></div>    
-      <div class="brand-name">Y&Z®</div>    
-      <div class="date-info" id="dateInfo"></div>    
-    </div>    
-  </div>    
-    
 <!-- Input file disembunyikan -->    
 <input type="file" id="bgUpload" accept="image/*" style="display: none;">    
 </body>    
-  <script>    
-  	window.addEventListener("error", e => console.error("❌ Global Error:", e.message));    
-const romanNumerals = [    
-  "I", "II", "III", "IV", "V", "", // kosongin VI    
-  "VII", "VIII", "IX", "X", "XI", "XII"    
-];    
+  <script>
+  	window.addEventListener("error", e => console.error("❌ Global Error:", e.message));
+const romanNumerals = [
+  "I", "II", "III", "IV", "V", "", // kosongin VI
+  "VII", "VIII", "IX", "X", "XI", "XII"
+];
+
+    const numeralContainer = document.getElementById("numerals");
+
+    romanNumerals.forEach((num, i) => {
+      const angle = (i * 30 - 60) * Math.PI / 180;
+      const radius = 115;
+      const x = 140 + radius * Math.cos(angle);
+      const y = 140 + radius * Math.sin(angle);
+
+      const div = document.createElement("div");
+      div.className = "numeral";
+      div.style.left = `${x}px`;
+      div.style.top = `${y}px`;
+      div.innerText = num;
+      numeralContainer.appendChild(div);
+    });
+
+function updateClock() {
+  const now = new Date();
+  const sec = now.getSeconds();
+  const min = now.getMinutes();
+  const hr = now.getHours() % 12;
+
+  const minAngle = min * 6 + sec * 0.1;
+  const hrAngle = hr * 30 + min * 0.5;
+
+  document.getElementById('minuteHand').style.transform = `translate(-50%, -100%) rotate(${minAngle}deg)`;
+  document.getElementById('hourHand').style.transform = `translate(-50%, -100%) rotate(${hrAngle}deg)`;
+
+  // Rotate circular quote per detik (sync)
+  const rotateDegree = sec * 6;
+  document.querySelector('.circular-text svg').style.transform = `rotate(${rotateDegree}deg)`;
+
+// Trigger pulse on numerals every second
+const numerals = document.querySelectorAll('.numeral');
+numerals.forEach(num => {
+  num.style.animation = 'none';
+  num.offsetHeight; // Trigger reflow
+  num.style.animation = 'pulse 1s ease-in-out';
+});
+
+  // Date
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  const day = days[now.getDay()];
+  const date = now.getDate();
+  const month = months[now.getMonth()];
+  const year = now.getFullYear();
+  document.getElementById('dateInfo').innerText = `${day}, ${date} ${month} ${year}`;
+}
+
+    setInterval(updateClock, 1000);
+    updateClock();
     
-    const numeralContainer = document.getElementById("numerals");    
-    
-    romanNumerals.forEach((num, i) => {    
-      const angle = (i * 30 - 60) * Math.PI / 180;    
-      const radius = 115;    
-      const x = 140 + radius * Math.cos(angle);    
-      const y = 140 + radius * Math.sin(angle);    
-    
-      const div = document.createElement("div");    
-      div.className = "numeral";    
-      div.style.left = `${x}px`;    
-      div.style.top = `${y}px`;    
-      div.innerText = num;    
-      numeralContainer.appendChild(div);    
-    });    
-    
-function updateClock() {    
-  const now = new Date();    
-  const sec = now.getSeconds();    
-  const min = now.getMinutes();    
-  const hr = now.getHours() % 12;    
-    
-  const minAngle = min * 6 + sec * 0.1;    
-  const hrAngle = hr * 30 + min * 0.5;    
-    
-  document.getElementById('minuteHand').style.transform = `translate(-50%, -100%) rotate(${minAngle}deg)`;    
-  document.getElementById('hourHand').style.transform = `translate(-50%, -100%) rotate(${hrAngle}deg)`;    
-    
-  // Rotate circular quote per detik (sync)    
-  const rotateDegree = sec * 6;    
-  document.querySelector('.circular-text svg').style.transform = `rotate(${rotateDegree}deg)`;    
-    
-// Trigger pulse on numerals every second    
-const numerals = document.querySelectorAll('.numeral');    
-numerals.forEach(num => {    
-  num.style.animation = 'none';    
-  num.offsetHeight; // Trigger reflow    
-  num.style.animation = 'pulse 1s ease-in-out';    
-});    
-    
-  // Date    
-  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];    
-  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];    
-  const day = days[now.getDay()];    
-  const date = now.getDate();    
-  const month = months[now.getMonth()];    
-  const year = now.getFullYear();    
-  document.getElementById('dateInfo').innerText = `${day}, ${date} ${month} ${year}`;    
-}    
-    
-    setInterval(updateClock, 1000);    
-    updateClock();    
-        
-let lastTap = 0;
+    let lastTap = 0;
 
 // Double-tap deteksi untuk PWA dan browser
 document.body.addEventListener('touchend', (e) => {
@@ -372,22 +347,8 @@ function isInStandaloneMode() {
 if (isInStandaloneMode()) {
   document.getElementById('bgUpload').style.display = 'none';
 }
-
-localStorage.setItem("bgImage", "assets/custom1.jpg");
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  const savedBg = localStorage.getItem("bgImage");
-  const bg = savedBg || "https://yuda2525.github.io/jamY-Z/bg.jpg"; // fallback
-
-  document.body.style.backgroundImage = `url('${bg}')`;
-  document.body.style.backgroundColor = "black";
-  document.body.style.backgroundSize = 'cover';
-  document.body.style.backgroundRepeat = 'no-repeat';
-  document.body.style.backgroundPosition = 'center';
-});
-  
-    // 🔁 Fullscreen on start  
+    
+        // 🔁 Fullscreen on start  
     function goFullscreen() {  
       const docElm = document.documentElement;  
       if (docElm.requestFullscreen) docElm.requestFullscreen();  
@@ -414,19 +375,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }  
     });  
     
-
-  
-  if ('serviceWorker' in navigator) {  
+      if ('serviceWorker' in navigator) {  
     navigator.serviceWorker.register('sw.js')  
       .then(reg => console.log('✅ Service Worker registered:', reg.scope))  
       .catch(err => console.error('❌ Service Worker registration failed:', err));  
   }  
   
-  
-        
-    console.log("✅ Script Loaded");    
-  </script>    
-</body>    
-</html>    
     
-    
+    console.log("✅ Script Loaded");
+  </script>
+</body>
+</html>
+</html>
+
+
