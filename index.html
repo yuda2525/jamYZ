@@ -403,9 +403,6 @@ numerals.forEach(num => {
     else if (docElm.msRequestFullscreen) docElm.msRequestFullscreen();
   }
 
-  // ⏱ Trigger pertama saat user interaksi
-  window.addEventListener("click", enterFullScreen, { once: true });
-
   // 🔄 Pantau terus, kalau keluar fullscreen, langsung coba balik
   document.addEventListener("fullscreenchange", () => {
     if (!document.fullscreenElement) {
