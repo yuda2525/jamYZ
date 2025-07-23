@@ -147,18 +147,19 @@ text-shadow:
 
 svg text {
   font-weight: 500;
-  fill: #111;
-  text-shadow: 
-    0 0 1px #000, /* agar tetap tajam di dark bg */
+  fill: #111; /* warna utama huruf */
       stroke: rgba(255, 255, 255, 0.3); /* putih transparan */
-  0 0 2px rgba(255,255,255,0.15);  
-  stroke: #fff;
-  stroke-width: 0.15px;
+  stroke-width: 0.1px;
   paint-order: stroke;
+  
+  text-shadow:
+    0 0 1px #000, /* menjaga tajam di bg gelap */
+  0 0 2px rgba(255,255,255,0.15);  
     -0.5px -0.5px 0 #ccc,
      0.5px -0.5px 0 #ccc,
     -0.5px  0.5px 0 #ccc,
      0.5px  0.5px 0 #ccc;
+
   font-size: 14px;
   font-family: 'Great Vibes', cursive;
   letter-spacing: 3px;
