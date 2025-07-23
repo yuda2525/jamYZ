@@ -30,6 +30,19 @@
       overflow: hidden;  
   background: radial-gradient(ellipse at center, #111 0%, #000 100%);    
 }    
+
+  .bg-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('assets/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+  }
     
   .fullscreen-wrapper {    
   width: 100vw;    
@@ -245,6 +258,7 @@ svg text {
   </style>  
 </head>  
 <body onclick="goFullscreen()">
+	<div class="bg-layer"></div>
 	    <div class="fullscreen-wrapper">  
   <div class="wrapper">  
 
