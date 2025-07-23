@@ -376,20 +376,26 @@ if (isInStandaloneMode()) {
   document.getElementById('bgUpload').style.display = 'none';
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  const savedBg = localStorage.getItem("bgImage");
-  if (savedBg) {
-    document.body.style.backgroundImage = `url(${savedBg})`;
-  } else {
-    const bg = 'assets/bg.jpg'; // fallback default
-    document.body.style.backgroundImage = `url('${bg}')`;
-  }
+localStorage.setItem("bgImage", "assets/custom1.jpg");
 
-  document.body.style.backgroundColor = "black";
-  document.body.style.backgroundSize = 'cover';
-  document.body.style.backgroundRepeat = 'no-repeat';
-  document.body.style.backgroundPosition = 'center';
-});
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedBg = localStorage.getItem("bgImage");
+
+    if (savedBg) {
+      console.log("Menggunakan background dari localStorage:", savedBg);
+      document.body.style.backgroundImage = `url('${savedBg}')`;
+    } else {
+      const defaultBg = 'assets/bg.jpg';
+      console.log("Default digunakan:", defaultBg);
+      document.body.style.backgroundImage = `url('${defaultBg}')`;
+    }
+
+    document.body.style.backgroundColor = "black";
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundPosition = 'center';
+  });
 
 
   
