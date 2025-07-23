@@ -1,90 +1,90 @@
-<!DOCTYPE html>        
-<html lang="id">        
-<head>        
-  <meta charset="UTF-8" />        
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">        
-<!-- Web App Manifest -->        
-<link rel="manifest" href="manifest.json" />        
-        
-<!-- App Icons -->        
-<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />        
-<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />        
-        
-<!-- Android Theme -->        
-<meta name="theme-color" content="#000000" />        
-<meta name="mobile-web-app-capable" content="yes" />        
-        
-<!-- iOS support -->        
-<meta name="apple-mobile-web-app-capable" content="yes" />        
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />        
-<meta name="apple-mobile-web-app-title" content="JamYZ" />        
-<link rel="apple-touch-icon" href="assets/icon-192.png" />        
-<link rel="apple-touch-startup-image" href="assets/splash-screen.png">    
-  <title>YudaTime® Neon Glass</title>        
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">        
-  <style>        
-html, body {  
-  margin: 0;  
-  padding: 0;  
-  width: 100vw;  
-  height: 100vh;  
-  overflow: hidden;  
-}  
+<!DOCTYPE html>      
+<html lang="id">      
+<head>      
+  <meta charset="UTF-8" />      
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">      
+<!-- Web App Manifest -->      
+<link rel="manifest" href="manifest.json" />      
       
-  .fullscreen-wrapper {      
-      height: 100%;    
-      width: 100%;   
-  display: flex;      
-  justify-content: center;      
-  align-items: center;      
-  border-radius: 0;      
-}      
+<!-- App Icons -->      
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />      
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />      
       
-    .wrapper {      
-      position: relative;      
-  background: transparent;      
-}      
+<!-- Android Theme -->      
+<meta name="theme-color" content="#000000" />      
+<meta name="mobile-web-app-capable" content="yes" />      
       
-    body {      
-      margin: 0;      
-      display: flex;      
-      justify-content: center;      
-      align-items: center;      
-      height: 100vh;      
-      font-family: 'Cormorant Garamond', serif;      
-      overflow: hidden;      
-  background-color: transparent; /* Bikin bening */      
-  overflow: hidden; /* cegah geser */      
-  background-image: url('assets/wallpaper.jpg');      
-  background-size: cover;      
-  background-position: center;      
-  background-repeat: no-repeat;      
-  background-attachment: fixed;      
-  padding-top: env(safe-area-inset-top);    
-  padding-bottom: env(safe-area-inset-bottom);    
-  padding-left: env(safe-area-inset-left);    
-  padding-right: env(safe-area-inset-right);    
+<!-- iOS support -->      
+<meta name="apple-mobile-web-app-capable" content="yes" />      
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />      
+<meta name="apple-mobile-web-app-title" content="JamYZ" />      
+<link rel="apple-touch-icon" href="assets/icon-192.png" />      
+<link rel="apple-touch-startup-image" href="assets/splash-screen.png">  
+  <title>YudaTime® Neon Glass</title>      
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">      
+  <style>      
+    html, body {  
+      height: 100%;  
+      width: 100%;  
+      font-family: sans-serif;  
+      overflow: hidden;  
+  background: radial-gradient(ellipse at center, #111 0%, #000 100%);    
 }    
     
-    .clock {      
-      position: relative;      
-      width: 280px;      
-      height: 280px;      
-      border-radius: 50%;      
-      backdrop-filter: #0ff;      
-      box-shadow: 0 8px 30px rgba(255,255,255,0.08), inset 0 0 25px rgba(255,255,255,0.08);      
-      border: 4px solid rgba(255,255,255,0.1);      
-  background-color: transparent;      
-  color: white; /* atau warna neon/glow */      
-  font-size: 4em;      
-  text-shadow: 0 0 10px cyan; /* biar glow kayak jam digital */      
-}      
-      
-.container {      
-  background-color: transparent;      
-  pointer-events: none; /* kalau konten bukan interaktif */      
-}      
-
+  .fullscreen-wrapper {    
+  width: 100vw;    
+  height: 100vh;    
+  display: flex;    
+  justify-content: center;    
+  align-items: center;    
+  border-radius: 0;    
+}    
+    
+    .wrapper {    
+      position: relative;    
+  background: transparent;    
+}    
+    
+    body {    
+      margin: 0;    
+      display: flex;    
+      justify-content: center;    
+      align-items: center;    
+      height: 100vh;    
+      font-family: 'Cormorant Garamond', serif;    
+      overflow: hidden;    
+  background-color: transparent; /* Bikin bening */    
+  overflow: hidden; /* cegah geser */    
+  background-image: url('assets/wallpaper.jpg');    
+  background-size: cover;    
+  background-position: center;    
+  background-repeat: no-repeat;    
+  background-attachment: fixed;    
+  padding-top: env(safe-area-inset-top);  
+  padding-bottom: env(safe-area-inset-bottom);  
+  padding-left: env(safe-area-inset-left);  
+  padding-right: env(safe-area-inset-right);  
+}  
+  
+    .clock {    
+      position: relative;    
+      width: 280px;    
+      height: 280px;    
+      border-radius: 50%;    
+      backdrop-filter: #0ff;    
+      box-shadow: 0 8px 30px rgba(255,255,255,0.08), inset 0 0 25px rgba(255,255,255,0.08);    
+      border: 4px solid rgba(255,255,255,0.1);    
+  background-color: transparent;    
+  color: white; /* atau warna neon/glow */    
+  font-size: 4em;    
+  text-shadow: 0 0 10px cyan; /* biar glow kayak jam digital */    
+}    
+    
+.container {    
+  background-color: transparent;    
+  pointer-events: none; /* kalau konten bukan interaktif */    
+}    
+    
 .outlined {    
   color: #111; /* atau fill: #111 jika SVG */    
   text-shadow:    
@@ -187,60 +187,60 @@ svg text {
   font-family: 'Great Vibes', cursive;    
   letter-spacing: 3px;    
 }    
-  
-    .pulse-ring {  
-      position: absolute;  
-      width: 100%;  
-      height: 100%;  
-      border-radius: 50%;  
-       box-shadow: none;  
-      animation: none;  
-    }  
-      
-.numeral {  
-  position: absolute;  
-  width: 30px;  
-  height: 30px;  
-  text-align: center;  
-  line-height: 30px;  
-  font-weight: bold;  
-  color: #0ff;  
-  font-size: 14px;  
-  font-family: 'Cinzel Decorative', cursive;  
-  transform: translate(-50%, -50%);  
-  text-shadow: 0 0 6px #0ff;  
-  will-change: text-shadow;  
-}  
-  
-.clock::after {  
-  content: "";  
-  position: absolute;  
-  top: 28px;  
-  left: 28px;  
-  width: 48%;  
-  height: 16%;  
-  background: radial-gradient(ellipse at top left, rgba(255,255,255,0.04), transparent);  
-  border-radius: 50%;  
-  filter: blur(0.5px);  
-  opacity: 0.25;  
-  pointer-events: none;  
-}  
-  
-@keyframes pulse {  
-  0% {  
-    text-shadow: 0 0 6px #0ff;  
-    opacity: 0.8;  
-  }  
-  50% {  
-    text-shadow: 0 0 14px #0ff;  
-    opacity: 1;  
-  }  
-  
-  100% {  
-    text-shadow: 0 0 6px #0ff;  
-    opacity: 0.8;  
-  }  
-}  
+    
+    .pulse-ring {    
+      position: absolute;    
+      width: 100%;    
+      height: 100%;    
+      border-radius: 50%;    
+       box-shadow: none;    
+      animation: none;    
+    }    
+        
+.numeral {    
+  position: absolute;    
+  width: 30px;    
+  height: 30px;    
+  text-align: center;    
+  line-height: 30px;    
+  font-weight: bold;    
+  color: #0ff;    
+  font-size: 14px;    
+  font-family: 'Cinzel Decorative', cursive;    
+  transform: translate(-50%, -50%);    
+  text-shadow: 0 0 6px #0ff;    
+  will-change: text-shadow;    
+}    
+    
+.clock::after {    
+  content: "";    
+  position: absolute;    
+  top: 28px;    
+  left: 28px;    
+  width: 48%;    
+  height: 16%;    
+  background: radial-gradient(ellipse at top left, rgba(255,255,255,0.04), transparent);    
+  border-radius: 50%;    
+  filter: blur(0.5px);    
+  opacity: 0.25;    
+  pointer-events: none;    
+}    
+    
+@keyframes pulse {    
+  0% {    
+    text-shadow: 0 0 6px #0ff;    
+    opacity: 0.8;    
+  }    
+  50% {    
+    text-shadow: 0 0 14px #0ff;    
+    opacity: 1;    
+  }    
+    
+  100% {    
+    text-shadow: 0 0 6px #0ff;    
+    opacity: 0.8;    
+  }    
+}    
   
   </style>  
 </head>  
@@ -407,8 +407,7 @@ if (isInStandaloneMode()) {
       .then(reg => console.log('✅ Service Worker registered:', reg.scope))  
       .catch(err => console.error('❌ Service Worker registration failed:', err));  
   }  
-  
-      
+
     console.log("✅ Script Loaded");  
   </script>  
 </body>  
