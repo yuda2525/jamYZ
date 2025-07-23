@@ -67,6 +67,16 @@
   padding-left: env(safe-area-inset-left);  
   padding-right: env(safe-area-inset-right);  
 }  
+
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    filter: brightness(1.2) contrast(1.25) saturate(1.5) drop-shadow(0 0 20px rgba(255,255,255,0.3));
+    z-index: -1;
+    transform: scale(1.02);
+  }
   
     .clock {    
       position: relative;    
