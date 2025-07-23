@@ -255,6 +255,7 @@ svg text {
   <div class="wrapper">
       
   <div class="fullscreen-wrapper">
+  	<body onclick="requestFullScreen()">
 
     <div class="circular-text" id="circularText">
       <svg viewBox="0 0 400 400">
@@ -379,6 +380,18 @@ function isInStandaloneMode() {
 // Kalau PWA, tetap sembunyikan inputnya
 if (isInStandaloneMode()) {
   document.getElementById('bgUpload').style.display = 'none';
+}
+
+
+function requestFullScreen() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) {
+    el.requestFullscreen();
+  } else if (el.webkitRequestFullscreen) {
+    el.webkitRequestFullscreen();
+  } else if (el.msRequestFullscreen) {
+    el.msRequestFullscreen();
+  }
 }
 
 
