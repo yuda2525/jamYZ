@@ -22,6 +22,7 @@
 <link rel="apple-touch-startup-image" href="assets/splash-screen.png">  
   <title>YudaTime® Neon Glass</title>      
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">      
+    <link rel="stylesheet" href="style.css" />
   <style>      
     * {
       margin: 0;
@@ -74,45 +75,50 @@ body {
       z-index: 0;
 }
 
-    .bg-vivid {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-image: url('assets/bg-photo.jpg'); /* ganti ke fotomu */
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      filter: contrast(1.15) saturate(1.4) brightness(1.1);
-      transform: scale(1.03);
-      z-index: -1;
-      animation: pulseGlow 10s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulseGlow {
-      0% {
-        filter: contrast(1.2) saturate(1.5) brightness(1.1) blur(0px);
-        transform: scale(1.03);
-      }
-      100% {
-        filter: contrast(1.1) saturate(1.3) brightness(1.05) blur(0.5px);
-        transform: scale(1.05);
-      }
-    }
-
-    .content {
-      z-index: 1;
-      position: relative;
-      text-align: center;
-      padding-top: 20vh;
-      color: white;
-      text-shadow: 0 0 5px #000;
-    }
-
-    h1 {
-      font-size: 3em;
-      letter-spacing: 2px;
-    }
+.bg-vivid {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('assets/bg-photo.jpg'); /* ganti ke fotomu */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: contrast(1.2) saturate(1.6) brightness(1.1);
+  transform: scale(1.02);
+  animation: vividMotion 15s ease-in-out infinite alternate;
+  z-index: -1;
+}
+@keyframes vividMotion {
+  0% {
+    filter: contrast(1.2) saturate(1.6) brightness(1.1) blur(0px);
+    transform: scale(1.02) translateY(0) translateX(0);
+  }
+  50% {
+    filter: contrast(1.15) saturate(1.4) brightness(1.05) blur(0.4px);
+    transform: scale(1.03) translateY(-4px) translateX(4px);
+  }
+  100% {
+    filter: contrast(1.2) saturate(1.6) brightness(1.1) blur(0px);
+    transform: scale(1.02) translateY(0) translateX(0);
+  }
+}
+.content-overlay {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  backdrop-filter: blur(2px) brightness(1.1);
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+}
+p {
+  font-size: 1.2em;
+  margin-top: 1rem;
+}
 
     .clock {    
       position: relative;    
