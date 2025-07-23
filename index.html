@@ -3,14 +3,22 @@
 <head>
   <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#000000">
-  <link rel="manifest" href="manifest.json" />
-<link rel="icon" type="image/png" sizes="192x192" href="Android-icon-192x192.png" />
-<link rel="icon" type="image/png" sizes="512x512" href="wall-clock-icon.png" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="mobile-web-app-capable" content="yes" />
+<!-- Web App Manifest -->
+<link rel="manifest" href="manifest.json" />
+
+<!-- App Icons -->
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />
+
+<!-- Android Theme -->
 <meta name="theme-color" content="#000000" />
 <meta name="mobile-web-app-capable" content="yes" />
+
+<!-- iOS support -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="JamYZ" />
+<link rel="apple-touch-icon" href="assets/icon-192.png" />
   <title>YudaTime® Neon Glass</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">
   <style>
@@ -376,19 +384,18 @@ function goFullscreen() {
   const el = document.documentElement;
   if (el.requestFullscreen) {
     el.requestFullscreen();
-  } else if (el.webkitRequestFullscreen) { // Safari
+  } else if (el.webkitRequestFullscreen) {
     el.webkitRequestFullscreen();
-  } else if (el.msRequestFullscreen) { // IE/Edge lama
+  } else if (el.msRequestFullscreen) {
     el.msRequestFullscreen();
   }
 }
 
-document.addEventListener("click", function () {
-  if (!document.fullscreenElement &&
-      !document.webkitFullscreenElement &&
-      !document.msFullscreenElement) {
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.addEventListener('click', function onceClick() {
     goFullscreen();
-  }
+    document.body.removeEventListener('click', onceClick); // Biar nggak dobel-dobel fullscreen
+  });
 });
 
   if ('serviceWorker' in navigator) {
