@@ -1,5 +1,5 @@
 {
-  "name": "Garage Clock",
+  "name": "Y&ZTime® Neon Glass",
   "short_name": "YudaTime",
   "start_url": "./index.html",
   "display": "standalone",
@@ -17,5 +17,4 @@
       "type": "image/png"
     }
   ]
-}
 }
