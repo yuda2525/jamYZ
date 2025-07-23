@@ -1,27 +1,28 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<!-- Web App Manifest -->
-<link rel="manifest" href="manifest.json" />
-
-<!-- App Icons -->
-<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
-<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />
-
-<!-- Android Theme -->
-<meta name="theme-color" content="#000000" />
-<meta name="mobile-web-app-capable" content="yes" />
-
-<!-- iOS support -->
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="JamYZ" />
-<link rel="apple-touch-icon" href="assets/icon-192.png" />
-  <title>YudaTime® Neon Glass</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">
-  <style>
+<!DOCTYPE html>  
+<html lang="id">  
+<head>  
+  <meta charset="UTF-8" />  
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">  
+<!-- Web App Manifest -->  
+<link rel="manifest" href="manifest.json" />  
+  
+<!-- App Icons -->  
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />  
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />  
+  
+<!-- Android Theme -->  
+<meta name="theme-color" content="#000000" />  
+<meta name="mobile-web-app-capable" content="yes" />  
+  
+<!-- iOS support -->  
+<meta name="apple-mobile-web-app-capable" content="yes" />  
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />  
+<meta name="apple-mobile-web-app-title" content="JamYZ" />  
+<link rel="apple-touch-icon" href="assets/icon-192.png" />  
+  <title>YudaTime® Neon Glass</title>  
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">  
+  <style>  
+ 
  
 html, body {
   margin: 0;
@@ -62,12 +63,6 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-}
-body {
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
 }
 
     .clock {
@@ -383,6 +378,7 @@ if (isInStandaloneMode()) {
 }
 
 
+
   document.addEventListener("DOMContentLoaded", () => {
     const requestFullscreen = () => {
       const elem = document.documentElement;
@@ -398,6 +394,7 @@ if (isInStandaloneMode()) {
     // Trigger fullscreen jika user tap layar atau di-load
     document.body.addEventListener("click", requestFullscreen, { once: true });
   });
+
 
 
 
