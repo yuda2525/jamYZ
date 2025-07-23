@@ -352,15 +352,13 @@ document.getElementById('bgUpload').addEventListener('change', function (event) 
   const file = event.target.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    const bg = e.target.result;
-    document.body.style.backgroundImage = `url('${bg}')`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundRepeat = 'no-repeat';
-  };
-  reader.readAsDataURL(file);
+const reader = new FileReader();
+reader.onload = function (e) {
+  const base64 = e.target.result;
+  localStorage.setItem("bgImage", base64);
+  document.body.style.backgroundImage = `url(${base64})`;
+};
+reader.readAsDataURL(file); // file dari input type=file
 });
 
 // Deteksi apakah sedang diinstall (PWA mode)
