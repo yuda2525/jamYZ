@@ -147,19 +147,22 @@ text-shadow:
 
 svg text {
   font-weight: 500;
-  fill: #111; 
+  fill: #111;
   text-shadow: 
-  0 0 1px #000;
-      -1px -1px 0 #fff,
-     1px -1px 0 #fff,
-    -1px  1px 0 #fff,
-     1px  1px 0 #fff;
-  0 0 4px rgba(255, 255, 255, 0.2);
+    0 0 1px #000, /* agar tetap tajam di dark bg */
+  0 0 2px rgba(255,255,255,0.15);  
+    stroke: #ccc; /* putih lembut, bukan transparan */
+ stroke: #fff;
+  stroke-width: 0.15px;
+  paint-order: stroke;
+    -0.5px -0.5px 0 #ccc,
+     0.5px -0.5px 0 #ccc,
+    -0.5px  0.5px 0 #ccc,
+     0.5px  0.5px 0 #ccc;
   font-size: 14px;
   font-family: 'Great Vibes', cursive;
   letter-spacing: 3px;
 }
-
 
     .pulse-ring {
       position: absolute;
