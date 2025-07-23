@@ -23,16 +23,13 @@
   <title>YudaTime® Neon Glass</title>      
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">      
   <style>      
-  
-  
-  html, body {
+html, body {
   margin: 0;
   padding: 0;
   width: 100vw;
   height: 100vh;
-      overflow: hidden;  
-  background: transparent;    
-}    
+  overflow: hidden;
+}
     
   .fullscreen-wrapper {    
       height: 100%;  
@@ -377,6 +374,16 @@ function isInStandaloneMode() {
 if (isInStandaloneMode()) {
   document.getElementById('bgUpload').style.display = 'none';
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  const bg = 'assets/bg.jpg'; // pastikan file-nya ada
+  document.body.style.backgroundImage = `url('${bg}')`;
+  document.body.style.backgroundColor = "black";
+  document.body.style.backgroundSize = 'cover';
+  document.body.style.backgroundRepeat = 'no-repeat';
+  document.body.style.backgroundPosition = 'center';
+});
+
 
   
     // 🔁 Fullscreen on start  
