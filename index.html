@@ -46,6 +46,12 @@
   align-items: center;    
   border-radius: 0;    
 }    
+
+    .fullscreen-bg {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
     
     .wrapper {    
       position: relative;    
@@ -395,29 +401,26 @@ numerals.forEach(num => {
     
     
 
-  function enterFullScreen() {
-    const docElm = document.documentElement;
-    if (docElm.requestFullscreen) docElm.requestFullscreen();
-    else if (docElm.webkitRequestFullscreen) docElm.webkitRequestFullscreen();
-    else if (docElm.mozRequestFullScreen) docElm.mozRequestFullScreen();
-    else if (docElm.msRequestFullscreen) docElm.msRequestFullscreen();
-  }
-
-  // ⏱ Trigger pertama saat user interaksi
-  window.addEventListener("click", enterFullScreen, { once: true });
-
-  // 🔄 Pantau terus, kalau keluar fullscreen, langsung coba balik
-  document.addEventListener("fullscreenchange", () => {
-    if (!document.fullscreenElement) {
-      console.warn("Keluar dari fullscreen. Balik lagi...");
-      setTimeout(enterFullScreen, 300);
+    // ⏱ Fullscreen pada first interaction
+    function goFullscreen() {
+      const docElm = document.documentElement;
+      if (docElm.requestFullscreen) docElm.requestFullscreen();
+      else if (docElm.webkitRequestFullscreen) docElm.webkitRequestFullscreen();
+      else if (docElm.mozRequestFullScreen) docElm.mozRequestFullScreen();
+      else if (docElm.msRequestFullscreen) docElm.msRequestFullscreen();
     }
-  });
 
-  // 🧼 Opsional: Tambah trigger dari gesture lain
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "f") enterFullScreen(); // Tekan 'f' buat masuk lagi
-  });
+    // 🚀 Jalankan fullscreen hanya sekali saat interaksi awal
+    window.addEventListener("touchstart", goFullscreen, { once: true });
+    window.addEventListener("click", goFullscreen, { once: true });
+
+    // 🔄 Jaga fullscreen tetap aktif
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) {
+        console.warn("Fullscreen hilang, coba lagi...");
+        setTimeout(goFullscreen, 500);
+      }
+    });
 
 
 // Deteksi double-tap di body  
