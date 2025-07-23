@@ -41,12 +41,14 @@
   border-radius: 0;  
 }  
 
-.bg-fullscreen {
-  display: block;
-  width: 100%;
+.fullscreen-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
-  object-fit: cover;
-  object-position: center;
+  object-fit: cover;   /* ini yang penting */
+  z-index: -1;
 }
 
 img.fullscreen-bg {
@@ -57,6 +59,24 @@ img.fullscreen-bg {
   width: 100vw;
   object-fit: cover;
   z-index: -1; /* biar di belakang konten */
+}
+
+.bg-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.bg-image {
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
   
     .wrapper {  
