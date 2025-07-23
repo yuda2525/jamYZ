@@ -383,22 +383,21 @@ if (isInStandaloneMode()) {
 }
 
 
-function requestFullScreen() {
-  const el = document.documentElement;
-  if (el.requestFullscreen) {
-    el.requestFullscreen().catch((err) => {
-      console.warn("Fullscreen gagal:", err);
-    });
-  } else if (el.webkitRequestFullscreen) {
-    el.webkitRequestFullscreen();
-  } else if (el.msRequestFullscreen) {
-    el.msRequestFullscreen();
-  }
-}
+  document.addEventListener("DOMContentLoaded", () => {
+    const requestFullscreen = () => {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    };
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.addEventListener("click", requestFullScreen, { once: true });
-});
+    // Trigger fullscreen jika user tap layar atau di-load
+    document.body.addEventListener("click", requestFullscreen, { once: true });
+  });
 
 
 
