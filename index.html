@@ -1,65 +1,71 @@
-<!DOCTYPE html>    
-<html lang="id">    
-<head>    
-  <meta charset="UTF-8" />    
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">    
-<!-- Web App Manifest -->    
-<link rel="manifest" href="manifest.json" />    
-    
-<!-- App Icons -->    
-<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />    
-<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />    
-    
-<!-- Android Theme -->    
-<meta name="theme-color" content="#000000" />    
-<meta name="mobile-web-app-capable" content="yes" />    
-    
-<!-- iOS support -->    
-<meta name="apple-mobile-web-app-capable" content="yes" />    
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />    
-<meta name="apple-mobile-web-app-title" content="JamYZ" />    
-<link rel="apple-touch-icon" href="assets/icon-192.png" />    
-  <title>YudaTime® Neon Glass</title>    
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">    
-  <style>    
-html, body {  
-  margin: 0;  
-  padding: 0;  
-  height: 100%;  
-  background: radial-gradient(ellipse at center, #111 0%, #000 100%);  
-  overflow: hidden;  
-}  
+<!DOCTYPE html>      
+<html lang="id">      
+<head>      
+  <meta charset="UTF-8" />      
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">      
+<!-- Web App Manifest -->      
+<link rel="manifest" href="manifest.json" />      
+      
+<!-- App Icons -->      
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />      
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />      
+      
+<!-- Android Theme -->      
+<meta name="theme-color" content="#000000" />      
+<meta name="mobile-web-app-capable" content="yes" />      
+      
+<!-- iOS support -->      
+<meta name="apple-mobile-web-app-capable" content="yes" />      
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />      
+<meta name="apple-mobile-web-app-title" content="JamYZ" />      
+<link rel="apple-touch-icon" href="assets/icon-192.png" />      
+<link rel="apple-touch-startup-image" href="assets/splash-screen.png">  
+  <title>YudaTime® Neon Glass</title>      
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">      
+  <style>      
   
-    .wrapper {  
-      position: relative;  
-  background: transparent;  
+    html, body {  
+      height: 100%;  
+      width: 100%;  
+      font-family: sans-serif;  
+      overflow: hidden;  
+  background: radial-gradient(ellipse at center, #111 0%, #000 100%);    
+}    
+    
+  .fullscreen-wrapper {    
+  width: 100vw;    
+  height: 100vh;    
+  display: flex;    
+  justify-content: center;    
+  align-items: center;    
+  border-radius: 0;    
+}    
+    
+    .wrapper {    
+      position: relative;    
+  background: transparent;    
+}    
+    
+    body {    
+      margin: 0;    
+      display: flex;    
+      justify-content: center;    
+      align-items: center;    
+      height: 100vh;    
+      font-family: 'Cormorant Garamond', serif;    
+      overflow: hidden;    
+  background-color: transparent; /* Bikin bening */    
+  overflow: hidden; /* cegah geser */    
+  background-image: url('assets/wallpaper.jpg');    
+  background-size: cover;    
+  background-position: center;    
+  background-repeat: no-repeat;    
+  background-attachment: fixed;    
+  padding-top: env(safe-area-inset-top);  
+  padding-bottom: env(safe-area-inset-bottom);  
+  padding-left: env(safe-area-inset-left);  
+  padding-right: env(safe-area-inset-right);  
 }  
-  
-.fullscreen-wrapper {  
-  width: 100vw;  
-  height: 100vh;  
-  display: flex;  
-  justify-content: center;  
-  align-items: center;  
-  border-radius: 0;  
-}  
-body {  
-  margin: 0;  
-  padding: 0;  
-  height: 100vh;  
-  overflow: hidden;  
-  background: radial-gradient(ellipse at center, #111 0%, #000 100%);  
-  background-image: url('assets/wallpaper.jpg'); /* default bg */  
-  background-size: cover;  
-  background-position: center;  
-  background-repeat: no-repeat;  
-  background-attachment: fixed;  
-  font-family: 'Cormorant Garamond', serif;  
-  display: flex;  
-  justify-content: center;  
-  align-items: center;  
-}  
-  
   
     .clock {    
       position: relative;    
@@ -176,8 +182,10 @@ svg text {
       stroke: rgba(255, 255, 255, 0.3); /* putih transparan */    
   stroke-width: 0.1px;    
   paint-order: stroke;    
+      
   text-shadow:    
     0 0 1px #000, /* menjaga tajam di bg gelap */    
+    
   font-size: 14px;    
   font-family: 'Great Vibes', cursive;    
   letter-spacing: 3px;    
@@ -236,99 +244,100 @@ svg text {
     opacity: 0.8;    
   }    
 }    
-  
+    
   </style>  
 </head>  
 <body onclick="goFullscreen()">
 	    <div class="fullscreen-wrapper">  
   <div class="wrapper">  
-
-    <div class="circular-text" id="circularText">  
-      <svg viewBox="0 0 400 400">  
-        <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>  
-        <text>  
-          <textPath xlink:href="#circlePath">  
-            ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ since 2025  Y&Z@  
-          </textPath>  
-        </text>  
-      </svg>  
-    </div>  
-  
-    <div class="clock">  
-      <div class="pulse-ring"></div>  
-      <div class="center"></div>  
-      <div class="hand hour" id="hourHand"></div>  
-      <div class="hand minute" id="minuteHand"></div>  
-      <div id="numerals"></div>  
-      <div class="brand-name">Y&Z®</div>  
-      <div class="date-info" id="dateInfo"></div>  
-    </div>  
-  </div>  
-  
-<!-- Input file disembunyikan -->  
-<input type="file" id="bgUpload" accept="image/*" style="display: none;">  
-  
-</body>  
-  <script>  
-  	window.addEventListener("error", e => console.error("❌ Global Error:", e.message));  
-const romanNumerals = [  
-  "I", "II", "III", "IV", "V", "", // kosongin VI  
-  "VII", "VIII", "IX", "X", "XI", "XII"  
-];  
-  
-    const numeralContainer = document.getElementById("numerals");  
-  
-    romanNumerals.forEach((num, i) => {  
-      const angle = (i * 30 - 60) * Math.PI / 180;  
-      const radius = 115;  
-      const x = 140 + radius * Math.cos(angle);  
-      const y = 140 + radius * Math.sin(angle);  
-  
-      const div = document.createElement("div");  
-      div.className = "numeral";  
-      div.style.left = `${x}px`;  
-      div.style.top = `${y}px`;  
-      div.innerText = num;  
-      numeralContainer.appendChild(div);  
-    });  
-  
-function updateClock() {  
-  const now = new Date();  
-  const sec = now.getSeconds();  
-  const min = now.getMinutes();  
-  const hr = now.getHours() % 12;  
-  
-  const minAngle = min * 6 + sec * 0.1;  
-  const hrAngle = hr * 30 + min * 0.5;  
-  
-  document.getElementById('minuteHand').style.transform = `translate(-50%, -100%) rotate(${minAngle}deg)`;  
-  document.getElementById('hourHand').style.transform = `translate(-50%, -100%) rotate(${hrAngle}deg)`;  
-  
-  // Rotate circular quote per detik (sync)  
-  const rotateDegree = sec * 6;  
-  document.querySelector('.circular-text svg').style.transform = `rotate(${rotateDegree}deg)`;  
-  
-// Trigger pulse on numerals every second  
-const numerals = document.querySelectorAll('.numeral');  
-numerals.forEach(num => {  
-  num.style.animation = 'none';  
-  num.offsetHeight; // Trigger reflow  
-  num.style.animation = 'pulse 1s ease-in-out';  
-});  
-  
-  // Date  
-  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];  
-  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];  
-  const day = days[now.getDay()];  
-  const date = now.getDate();  
-  const month = months[now.getMonth()];  
-  const year = now.getFullYear();  
-  document.getElementById('dateInfo').innerText = `${day}, ${date} ${month} ${year}`;  
-}  
-  
-    setInterval(updateClock, 1000);  
-    updateClock();  
-      
+          
+    <div class="circular-text" id="circularText">    
+      <svg viewBox="0 0 400 400">    
+        <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>    
+        <text>    
+          <textPath xlink:href="#circlePath">    
+            ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ since 2025  Y&Z@    
+          </textPath>    
+        </text>    
+      </svg>    
+    </div>    
+    
+    <div class="clock">    
+      <div class="pulse-ring"></div>    
+      <div class="center"></div>    
+      <div class="hand hour" id="hourHand"></div>    
+      <div class="hand minute" id="minuteHand"></div>    
+      <div id="numerals"></div>    
+      <div class="brand-name">Y&Z®</div>    
+      <div class="date-info" id="dateInfo"></div>    
+    </div>    
+  </div>    
+    
+<!-- Input file disembunyikan -->    
+<input type="file" id="bgUpload" accept="image/*" style="display: none;">    
+    
+</body>    
+</html>    
+  <script>    
+  	window.addEventListener("error", e => console.error("❌ Global Error:", e.message));    
+const romanNumerals = [    
+  "I", "II", "III", "IV", "V", "", // kosongin VI    
+  "VII", "VIII", "IX", "X", "XI", "XII"    
+];    
+    
+    const numeralContainer = document.getElementById("numerals");    
+    
+    romanNumerals.forEach((num, i) => {    
+      const angle = (i * 30 - 60) * Math.PI / 180;    
+      const radius = 115;    
+      const x = 140 + radius * Math.cos(angle);    
+      const y = 140 + radius * Math.sin(angle);    
+    
+      const div = document.createElement("div");    
+      div.className = "numeral";    
+      div.style.left = `${x}px`;    
+      div.style.top = `${y}px`;    
+      div.innerText = num;    
+      numeralContainer.appendChild(div);    
+    });    
+    
+function updateClock() {    
+  const now = new Date();    
+  const sec = now.getSeconds();    
+  const min = now.getMinutes();    
+  const hr = now.getHours() % 12;    
+    
+  const minAngle = min * 6 + sec * 0.1;    
+  const hrAngle = hr * 30 + min * 0.5;    
+    
+  document.getElementById('minuteHand').style.transform = `translate(-50%, -100%) rotate(${minAngle}deg)`;    
+  document.getElementById('hourHand').style.transform = `translate(-50%, -100%) rotate(${hrAngle}deg)`;    
+    
+  // Rotate circular quote per detik (sync)    
+  const rotateDegree = sec * 6;    
+  document.querySelector('.circular-text svg').style.transform = `rotate(${rotateDegree}deg)`;    
+    
+// Trigger pulse on numerals every second    
+const numerals = document.querySelectorAll('.numeral');    
+numerals.forEach(num => {    
+  num.style.animation = 'none';    
+  num.offsetHeight; // Trigger reflow    
+  num.style.animation = 'pulse 1s ease-in-out';    
+});    
+    
+  // Date    
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];    
+  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];    
+  const day = days[now.getDay()];    
+  const date = now.getDate();    
+  const month = months[now.getMonth()];    
+  const year = now.getFullYear();    
+  document.getElementById('dateInfo').innerText = `${day}, ${date} ${month} ${year}`;    
+}    
+    
+    setInterval(updateClock, 1000);    
+    updateClock();    
+        
 // Deteksi double-tap di body  
 let lastTap = 0;  
   
@@ -345,7 +354,7 @@ document.body.addEventListener('touchend', (e) => {
 document.getElementById('bgUpload').addEventListener('change', function (event) {  
   const file = event.target.files[0];  
   if (!file) return;  
-  
+
   const reader = new FileReader();  
 reader.onload = function (e) {  
   const bg = e.target.result;  
@@ -397,15 +406,16 @@ if (isInStandaloneMode()) {
       }  
     });  
     
-  if ('serviceWorker' in navigator) {  
-    navigator.serviceWorker.register('sw.js')  
-      .then(reg => console.log('✅ Service Worker registered:', reg.scope))  
-      .catch(err => console.error('❌ Service Worker registration failed:', err));  
-  }  
-
-    console.log("✅ Script Loaded");  
-  </script>  
-</body>  
-</html>  
-  
-  
+  if ('serviceWorker' in navigator) {    
+    navigator.serviceWorker.register('sw.js')    
+      .then(reg => console.log('✅ Service Worker registered:', reg.scope))    
+      .catch(err => console.error('❌ Service Worker registration failed:', err));    
+  }    
+    
+        
+    console.log("✅ Script Loaded");    
+  </script>    
+</body>    
+</html>    
+    
+    
