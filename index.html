@@ -403,14 +403,6 @@ numerals.forEach(num => {
     else if (docElm.msRequestFullscreen) docElm.msRequestFullscreen();
   }
 
-  // 🔄 Pantau terus, kalau keluar fullscreen, langsung coba balik
-  document.addEventListener("fullscreenchange", () => {
-    if (!document.fullscreenElement) {
-      console.warn("Keluar dari fullscreen. Balik lagi...");
-      setTimeout(enterFullScreen, 300);
-    }
-  });
-
     // 🧠 Keep fullscreen alive      
     function ensureFullscreen() {      
       if (!document.fullscreenElement) goFullscreen();      
