@@ -2,7 +2,7 @@
   "name": "Garage Clock",
   "short_name": "Clock",
   "start_url": "/index.html",
-  "display": "fullscreen",
+  "display": "standalone"
   "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#000000",
