@@ -401,7 +401,13 @@ if (isInStandaloneMode()) {
       goFullscreen();
     }, { once: true });
 
-  
+      // 🔄 Auto-check if fullscreen hilang
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) {
+        console.warn("Fullscreen hilang! Nyoba masuk lagi...");
+        setTimeout(goFullscreen, 500);
+      }
+    });
   
   if ('serviceWorker' in navigator) {  
     navigator.serviceWorker.register('sw.js')  
