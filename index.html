@@ -6,6 +6,8 @@
   <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/png" sizes="192x192" href="Android-icon-192x192.png" />
 <link rel="icon" type="image/png" sizes="512x512" href="wall-clock-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
 <meta name="theme-color" content="#000000" />
 <meta name="mobile-web-app-capable" content="yes" />
   <title>YudaTime® Neon Glass</title>
@@ -206,6 +208,41 @@ svg text {
     text-shadow: 0 0 14px #0ff;
     opacity: 1;
   }
+  
+  body {
+  margin: 0;
+  background: radial-gradient(ellipse at center, #111 0%, #000 100%);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lockscreen {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2rem;
+  padding: 2rem;
+  box-shadow:
+    inset 0 0 0.5rem rgba(255, 255, 255, 0.05),
+    0 0 3rem rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Tambahan buat SVG jam agar glow halus */
+svg text {
+  fill: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  text-shadow: 
+    0 0 1px #fff,
+    0 0 2px rgba(255,255,255,0.5),
+    0 0 4px rgba(255,255,255,0.3);
+  letter-spacing: 3px;
+  font-family: 'Great Vibes', cursive;
+}
 
   100% {
     text-shadow: 0 0 6px #0ff;
@@ -217,6 +254,8 @@ svg text {
 </head>
 <body>
   <div class="wrapper">
+      <div class="lockscreen">
+
     <div class="circular-text" id="circularText">
       <svg viewBox="0 0 400 400">
         <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>
