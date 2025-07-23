@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#000000">
   <link rel="manifest" href="manifest.json" />
 <link rel="icon" type="image/png" sizes="192x192" href="Android-icon-192x192.png" />
 <link rel="icon" type="image/png" sizes="512x512" href="wall-clock-icon.png" />
@@ -13,13 +14,27 @@
   <title>YudaTime® Neon Glass</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">
   <style>
-  	
-  html, body {
+ 
+html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
   height: 100%;
-  overflow: hidden; /* cegah geser */
+  background: radial-gradient(ellipse at center, #111 0%, #000 100%);
+  overflow: hidden;
+}
+
+    .wrapper {
+      position: relative;
+  background: transparent;
+}
+
+.fullscreen-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0;
 }
     body {
       margin: 0;
@@ -41,10 +56,6 @@ body {
   background-attachment: fixed;
 }
 
-    .wrapper {
-      position: relative;
-  background: transparent;
-}
     .clock {
       position: relative;
       width: 280px;
@@ -227,6 +238,9 @@ svg text {
 </head>
 <body>
   <div class="wrapper">
+      
+  <div class="fullscreen-wrapper">
+
     <div class="circular-text" id="circularText">
       <svg viewBox="0 0 400 400">
         <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>
@@ -352,6 +366,11 @@ if (isInStandaloneMode()) {
   document.getElementById('bgUpload').style.display = 'none';
 }
     
+   document.body.addEventListener('click', () => {
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen();
+  }
+});
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js')
