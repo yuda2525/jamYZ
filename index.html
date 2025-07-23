@@ -249,26 +249,6 @@ svg text {
 }
 
 
-  #screenLockOverlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.8); /* bisa dibuat lebih bening */
-    z-index: 9999;
-    pointer-events: all;
-    touch-action: none;
-  }
-  #screenLockBtn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    font-size: 24px;
-    z-index: 10000;
-    background: transparent;
-    border: none;
-    color: white;
-  }
-
 
   </style>
 </head>
@@ -442,44 +422,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.removeEventListener('click', onceClick); // Biar nggak dobel-dobel fullscreen
   });
 });
-
-if (document.documentElement.requestFullscreen) {
-  document.documentElement.requestFullscreen();
-}
-
-
-  const lockBtn = document.getElementById("screenLockBtn");
-  const lockOverlay = document.getElementById("screenLockOverlay");
-  let isLocked = false;
-  let idleTimer = null;
-
-  function toggleLock(force = null) {
-    isLocked = force !== null ? force : !isLocked;
-    if (isLocked) {
-      lockOverlay.style.display = "block";
-      lockBtn.textContent = "🔓";
-      lockBtn.title = "Buka kunci";
-    } else {
-      lockOverlay.style.display = "none";
-      lockBtn.textContent = "🔒";
-      lockBtn.title = "Kunci layar";
-    }
-  }
-
-  lockBtn.addEventListener("click", () => toggleLock());
-
-  function resetIdleTimer() {
-    if (idleTimer) clearTimeout(idleTimer);
-    if (!isLocked) {
-      idleTimer = setTimeout(() => toggleLock(true), 30000); // 30 detik
-    }
-  }
-
-  ["mousemove", "keydown", "touchstart"].forEach(evt =>
-    document.addEventListener(evt, resetIdleTimer)
-  );
-  resetIdleTimer();
-
 
 
 
