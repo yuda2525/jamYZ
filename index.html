@@ -382,14 +382,11 @@ function goFullscreen() {
   else if (el.msRequestFullscreen) el.msRequestFullscreen();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.body.addEventListener('click', function onceClick() {
-    goFullscreen();
-    document.body.removeEventListener('click', onceClick); // supaya nggak dobel-dobel
-  });
+// ✅ Langsung pasang event click karena script sudah di bawah body
+document.body.addEventListener('click', function onceClick() {
+  goFullscreen();
+  document.body.removeEventListener('click', onceClick);
 });
-
-
 
 
   if ('serviceWorker' in navigator) {
