@@ -383,31 +383,24 @@ if (isInStandaloneMode()) {
 }
 
 
-function requestFullScreen() {
-  const el = document.documentElement;
-  if (el.requestFullscreen) {
-    el.requestFullscreen();
-  } else if (el.webkitRequestFullscreen) {
-    el.webkitRequestFullscreen();
-  } else if (el.msRequestFullscreen) {
-    el.msRequestFullscreen();
+
+  function requestFullScreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen) {
+      el.requestFullscreen();
+    } else if (el.webkitRequestFullscreen) {
+      el.webkitRequestFullscreen();
+    } else if (el.msRequestFullscreen) {
+      el.msRequestFullscreen();
+    }
   }
-}
 
-
-document.addEventListener("DOMContentLoaded", () => {
-  const requestFullscreen = () => {
-    const elem = document.documentElement;
-    if (elem.requestFullscreen) elem.requestFullscreen();
-    else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-    else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
-  };
-
-  // Fullscreen hanya saat gesture (browser butuh gesture user)
-  document.body.addEventListener("click", () => {
-    requestFullscreen();
-  }, { once: true }); // hanya sekali
-});
+  document.addEventListener("DOMContentLoaded", () => {
+    // Fullscreen hanya bisa diminta saat gesture (klik)
+    document.body.addEventListener("click", () => {
+      requestFullScreen();
+    }, { once: true }); // hanya sekali saja
+  });
 
 
 
