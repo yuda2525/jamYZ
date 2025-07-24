@@ -18,6 +18,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />        
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />        
 <meta name="apple-mobile-web-app-title" content="JamYZ" />        
+<meta name="color-scheme" content="dark light">
 <link rel="apple-touch-icon" href="assets/icon-192.png" />        
 <link rel="apple-touch-startup-image" href="assets/splash-screen.png">    
   <title>YudaTime® Neon Glass</title>        
@@ -29,13 +30,30 @@
       padding: 0;  
       box-sizing: border-box;  
     }  
-  
+    
+    :root {
+  --color-primary: #00ffee;
+  --color-accent: #ff4de8;
+  --color-background: linear-gradient(120deg, #0e0e0e, #1a1a1a);
+  --shadow-depth: 0 8px 30px rgba(0, 255, 255, 0.3);
+  --glow-effect: 0 0 12px #00ffee;
+}
+body {
+  background: var(--color-background);
+  color: white;
+  filter: contrast(110%) saturate(125%) brightness(1.05);
+}
+.card-3d {
+  box-shadow: var(--shadow-depth);
+  transform: perspective(1000px) rotateX(4deg);
+  backdrop-filter: blur(12px) brightness(1.1);
+}
+    
     html, body {  
   width: 100vw;      
   height: 100vh;      
       overflow: hidden;  
       font-family: 'Segoe UI', sans-serif;  
-      background: #000;  
     }  
   
   .fullscreen-wrapper {      
@@ -84,48 +102,32 @@ body {
         position: relative;  
       z-index: 0;  
 }  
-  
-.bg-vivid {  
-  position: fixed;  
-  top: 0; left: 0;  
-  	      height: 100%;  
-      width: 100%;  
-  filter: contrast(1.2) saturate(1.6) brightness(1.1);  
-  transform: scale(1.02);  
-  animation: vividMotion 15s ease-in-out infinite alternate;  
-  z-index: -1;  
-}  
-@keyframes vividMotion {  
-  0% {  
-    filter: contrast(1.2) saturate(1.6) brightness(1.1) blur(0px);  
-    transform: scale(1.02) translateY(0) translateX(0);  
-  }  
-  50% {  
-    filter: contrast(1.15) saturate(1.4) brightness(1.05) blur(0.4px);  
-    transform: scale(1.03) translateY(-4px) translateX(4px);  
-  }  
-  100% {  
-    filter: contrast(1.2) saturate(1.6) brightness(1.1) blur(0px);  
-    transform: scale(1.02) translateY(0) translateX(0);  
-  }  
-}  
-.content-overlay {  
-  position: relative;  
-  height: 100vh;  
-  width: 100vw;  
-  display: flex;  
-  flex-direction: column;  
-  justify-content: center;  
-  align-items: center;  
-  color: white;  
-  backdrop-filter: blur(2px) brightness(1.1);  
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);  
-}  
-p {  
-  font-size: 1.2em;  
-  margin-top: 1rem;  
-}  
-  
+
+.visual-mode-all {
+  filter:
+    hue-rotate(5deg)
+    saturate(1.6)
+    contrast(1.2)
+    brightness(1.1)
+    contrast(1.1)
+    brightness(0.95)
+    saturate(1.2)
+    brightness(1.3)
+    contrast(1.25)
+    saturate(1.4);
+    
+  transform: perspective(1000px) rotateX(2deg);
+  border-radius: 12px;
+  transition: all 0.5s ease;
+}
+
+.glassy-overlay {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(8px) brightness(1.1) saturate(1.2);
+  pointer-events: none;
+  z-index: 100;
+}
     .clock {      
       position: relative;      
       width: 280px;      
@@ -305,8 +307,10 @@ svg text {
 }      
     </style>      
 </head>      
+
 <body onclick="enterFullScreen()" style="margin:0; overflow:hidden;">      
-  
+	<div id="visualMode" class="content-overlay visual-mode-all">
+		
 <div class="bg-cover"></div>  
 <div class="content">  
 	<div class="bg-vivid"></div>  
@@ -501,6 +505,25 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 document.documentElement.style.height = `${window.innerHeight}px`;
   
+  window.addEventListener('DOMContentLoaded', () => {
+  const el = document.getElementById("visualMode");
+
+  if (!el) {
+    console.warn("Elemen #visualMode tidak ditemukan!");
+    return;
+  }
+
+  console.log("🔵 Mode visual aktif!");
+
+  // Tes tambahkan class manual satu-satu
+  el.classList.add("dolby-vision");
+  el.classList.remove("bravia-cinematic");
+  el.classList.toggle("huawei-vivid");
+
+  // Gabungan semuanya?
+  el.classList.add("visual-mode-all");
+});
+
     console.log("✅ Script Loaded");      
   </script>      
 </body>      
