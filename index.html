@@ -30,9 +30,9 @@
       box-sizing: border-box;
     }
 
-    html, body {
-  width: 100vw;    
-  height: 100vh;    
+html, body {
+  width: 100vw;
+  height: 100vh;
       overflow: hidden;
       font-family: 'Segoe UI', sans-serif;
       background: #000;
@@ -425,13 +425,22 @@ function goFullscreen() {
       goFullscreen();    
     }, { once: true });    
     
-    document.addEventListener('DOMContentLoaded', () => {  
-  document.body.addEventListener('click', function onceClick() {  
-    goFullscreen();  
-    document.body.removeEventListener('click', onceClick); // Biar nggak dobel-dobel fullscreen  
-  });  
-});  
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Klik pertama aktifkan fullscreen
+  document.body.addEventListener('click', function onceClick() {
+    goFullscreen();
+    document.body.removeEventListener('click', onceClick);
+  });
 
+  // 2. Background dari localStorage
+  const savedBg = localStorage.getItem("bgImage");
+  if (savedBg) {
+    document.body.style.backgroundImage = `url(${savedBg})`;
+  } else {
+    const bg = 'assets/bg.jpg';
+    document.body.style.backgroundImage = `url('${bg}')`;
+  }
+});
 
 // Deteksi double-tap di body  
 let lastTap = 0;  
@@ -474,25 +483,20 @@ if (isInStandaloneMode()) {
   document.getElementById('bgUpload').style.display = 'none';  
 }  
 
-window.addEventListener('DOMContentLoaded', () => {
-  const savedBg = localStorage.getItem("bgImage");
-  if (savedBg) {
-    document.body.style.backgroundImage = `url(${savedBg})`;
-  } else {
-    const bg = 'assets/bg.jpg'; // fallback default
-    document.body.style.backgroundImage = `url('${bg}')`;
-  }
-});
-
-
-
-
 
   if ('serviceWorker' in navigator) {    
     navigator.serviceWorker.register('sw.js')    
       .then(reg => console.log('✅ Service Worker registered:', reg.scope))    
       .catch(err => console.error('❌ Service Worker registration failed:', err));    
   }    
+  
+
+    window.addEventListener("resize", () => {
+      document.documentElement.style.height = `${window.innerHeight}px`;
+    });
+
+    // Panggil sekali di awal juga
+    document.documentElement.style.height = `${window.innerHeight}px`;
 
     console.log("✅ Script Loaded");    
   </script>    
