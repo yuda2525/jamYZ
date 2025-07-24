@@ -445,31 +445,26 @@ document.body.addEventListener('touchend', (e) => {
   lastTap = now;    
 });    
     
-// Deteksi background file dipilih → tampilkan sebagai background    
-document.getElementById('bgUpload').addEventListener('change', function (event) {    
-  const file = event.target.files[0];    
-  if (!file) return;    
-    const savedBg = localStorage.getItem("bgImage");  
-  if (savedBg) {  
-    document.body.style.backgroundImage = `url(${savedBg})`;  
-  } else {  
-    const bg = 'assets/bg.jpg'; // fallback default  
-    document.body.style.backgroundImage = `url('${bg}')`;  
-  }  
-  
-  const reader = new FileReader();    
-reader.onload = function (e) {    
-  const bg = e.target.result;    
-  document.body.style.backgroundColor = "black";  
-  document.body.style.backgroundSize = 'cover';    
-  document.body.style.backgroundPosition = 'center';    
-  document.body.style.backgroundRepeat = 'no-repeat';    
-  
-  // Masuk fullscreen lagi setelah ganti background  
-  goFullscreen();    
-};  
-  reader.readAsDataURL(file);    
-});    
+      
+// Deteksi background file dipilih → tampilkan sebagai background      
+document.getElementById('bgUpload').addEventListener('change', function (event) {      
+  const file = event.target.files[0];      
+  if (!file) return;      
+      
+  const bg = 'assets/bg.jpg'; // pastikan file-nya ada  
+  const reader = new FileReader();      
+  reader.onload = function (e) {      
+  const bg = e.target.result;      
+  document.body.style.backgroundImage = `url('${bg}')`;      
+  document.body.style.backgroundSize = 'cover';      
+  document.body.style.backgroundPosition = 'center';      
+  document.body.style.backgroundRepeat = 'no-repeat';      
+    
+  // Masuk fullscreen lagi setelah ganti background    
+  goFullscreen();      
+};    
+  reader.readAsDataURL(file);      
+});      
     
 // Deteksi apakah sedang diinstall (PWA mode)    
 function isInStandaloneMode() {    
