@@ -360,6 +360,7 @@ body.locked {
   cursor: pointer;
   z-index: 100;
   transition: transform 0.2s ease;
+    display: none;
 ">🔒</button>
 
 <!-- Layar lock overlay -->
@@ -371,6 +372,7 @@ body.locked {
   z-index: 99;
   pointer-events: all;
 "></div>
+
 	<div id="visualMode" class="content-overlay visual-mode-all">
 	
 <div class="bg-cover"></div>  
@@ -597,21 +599,29 @@ const lockOverlay = document.getElementById("screenLockOverlay");
 
 let isLocked = false;
 
-lockBtn.addEventListener("click", () => {
-  isLocked = !isLocked;
-
+function applyLockState() {
   if (isLocked) {
-    // Aktifkan layar terkunci
     lockOverlay.style.display = "block";
-    lockBtn.textContent = "🔓"; // Icon terbuka
+    lockBtn.textContent = "🔓";
     lockBtn.title = "Buka kunci";
   } else {
-    // Matikan layar terkunci
     lockOverlay.style.display = "none";
-    lockBtn.textContent = "🔒"; // Icon terkunci
+    lockBtn.textContent = "🔒";
     lockBtn.title = "Kunci layar";
   }
+}
+
+lockBtn.addEventListener("click", () => {
+  isLocked = !isLocked;
+  applyLockState();
 });
+
+// Auto lock saat halaman dimuat
+window.addEventListener("load", () => {
+  isLocked = true;
+  applyLockState();
+});
+
 
     console.log("✅ Script Loaded");      
   </script>      
