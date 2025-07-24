@@ -401,6 +401,26 @@ numerals.forEach(num => {
     setInterval(updateClock, 1000);    
     updateClock();    
     
+    
+        
+    // 🔁 Fullscreen on start    
+    function goFullscreen() {    
+      const docElm = document.documentElement;    
+      if (docElm.requestFullscreen) docElm.requestFullscreen();    
+      else if (docElm.webkitRequestFullscreen) docElm.webkitRequestFullscreen();    
+      else if (docElm.mozRequestFullScreen) docElm.mozRequestFullScreen();    
+      else if (docElm.msRequestFullscreen) docElm.msRequestFullscreen();    
+    }    
+    
+    // 🧠 Keep fullscreen alive    
+    function ensureFullscreen() {    
+      if (!document.fullscreenElement) goFullscreen();    
+    }    
+    
+    // ⏱ Start fullscreen once user interacts    
+    document.addEventListener("click", () => {    
+      goFullscreen();    
+    }, { once: true });    
 
 
 // Deteksi double-tap di body  
@@ -458,6 +478,8 @@ window.addEventListener('DOMContentLoaded', () => {
   document.body.style.backgroundRepeat = 'no-repeat';
   document.body.style.backgroundPosition = 'center';
 });
+
+
 
   if ('serviceWorker' in navigator) {    
     navigator.serviceWorker.register('sw.js')    
