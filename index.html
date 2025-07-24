@@ -303,9 +303,7 @@ svg text {
 }      
     </style>      
 </head>      
-
 <body onclick="enterFullScreen()" style="margin:0; overflow:hidden;">      
-
 	<div id="visualMode" class="content-overlay visual-mode-all">
 		
 <div class="bg-cover"></div>  
@@ -320,7 +318,7 @@ svg text {
         <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>      
         <text>      
           <textPath xlink:href="#circlePath">      
-            ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ -2025-       
+            ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦-2025-      
           </textPath>      
         </text>      
       </svg>      
@@ -403,7 +401,6 @@ numerals.forEach(num => {
     updateClock();      
       
       
-          
     // 🔁 Fullscreen on start      
 function goFullscreen() {    
   const el = document.documentElement;    
@@ -433,7 +430,6 @@ function goFullscreen() {
   });    
 });    
   
-  
 // Deteksi double-tap di body    
 let lastTap = 0;    
     
@@ -446,7 +442,6 @@ document.body.addEventListener('touchend', (e) => {
   lastTap = now;    
 });    
     
-      
 // Deteksi background file dipilih → tampilkan sebagai background      
 document.getElementById('bgUpload').addEventListener('change', function (event) {      
   const file = event.target.files[0];      
@@ -478,7 +473,6 @@ if (isInStandaloneMode()) {
   document.getElementById('bgUpload').style.display = 'none';    
 }    
 
-  
 window.addEventListener('DOMContentLoaded', () => {  
   const savedBg = localStorage.getItem("bgImage");  
   if (savedBg) {  
@@ -489,30 +483,11 @@ window.addEventListener('DOMContentLoaded', () => {
   }  
 });  
 
-
-  function injectVisualBoost() {
-    const el = document.getElementById("mediaElement");
-
-    if (el) {
-      const currentFilter = getComputedStyle(el).filter;
-
-      el.style.filter = `${currentFilter} drop-shadow(0 0 40px rgba(0,255,255,0.4)) blur(0.3px)`;
-      el.style.transform += " scale(1.015)";
-      el.style.borderRadius = "20px"; // Naikin radius biar makin glow
-      el.style.transition = "all 0.3s ease";
-    }
-  }
-
-  // AUTO JALANKAN SAAT PAGE LOAD
-  window.addEventListener("DOMContentLoaded", injectVisualBoost);
-
-  
   if ('serviceWorker' in navigator) {      
     navigator.serviceWorker.register('sw.js')      
       .then(reg => console.log('✅ Service Worker registered:', reg.scope))      
       .catch(err => console.error('❌ Service Worker registration failed:', err));      
   }      
-  
   
   window.addEventListener("resize", () => {
   document.documentElement.style.height = `${window.innerHeight}px`;
@@ -538,17 +513,8 @@ document.documentElement.style.height = `${window.innerHeight}px`;
   el.classList.add("visual-mode-all");
 });
 
-
-function fixHeight() {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-}
-window.addEventListener('resize', fixHeight);
-fixHeight();
-
     console.log("✅ Script Loaded");      
   </script>      
 </body>      
 </html>      
-      
       
