@@ -56,17 +56,10 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  	      height: 100%;
+      width: 100%;
   object-fit: cover;
   z-index: -1;
-}
-
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow-x: hidden;
 }
     
 body {
@@ -95,12 +88,8 @@ body {
 .bg-vivid {
   position: fixed;
   top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-image: url('assets/bg-photo.jpg'); /* ganti ke fotomu */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  	      height: 100%;
+      width: 100%;
   filter: contrast(1.2) saturate(1.6) brightness(1.1);
   transform: scale(1.02);
   animation: vividMotion 15s ease-in-out infinite alternate;
@@ -318,10 +307,8 @@ svg text {
 </head>    
 <body onclick="enterFullScreen()" style="margin:0; overflow:hidden;">    
 
-  <img src="assets/bg.jpg" class="bg-fullscreen" alt="">
-  <div class="content">
-    <!-- Semua konten di atas background -->
-
+<div class="bg-cover"></div>
+<div class="content">
 	<div class="bg-vivid"></div>
 <div class="glass-mask"></div>
 	    <div class="fullscreen-wrapper">  
