@@ -31,6 +31,16 @@
       box-sizing: border-box;  
     }  
     
+    * {
+    will-change: auto;
+    transform: translateZ(0); /* Reduce GPU overuse */
+  }
+
+  video, canvas, img {
+    will-change: auto;
+    filter: brightness(95%);
+  }
+    
   :root {
     --color-primary: #00ffee;
     --color-accent: #ff4de8;
@@ -52,11 +62,15 @@
   }
     
     html, body {  
-  height: 100svh;
-  min-height: 100svh; 
+  width: 100%;
+  height: 100%;
+  display: flex;
       overflow: hidden;  
       font-family: 'Segoe UI', sans-serif;  
         height: calc(var(--vh, 1vh) * 100);
+            image-rendering: optimizeSpeed;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
     }  
 
   .fullscreen-wrapper {      
@@ -64,14 +78,21 @@
       width: 100%;  
   display: flex;      
   justify-content: center;      
-  align-items: center;      
+  align-items: center;     
+  flex: 1;  
   border-radius: 0;      
 }      
-      
-    .wrapper {      
-      position: relative;      
+
+.wrapper {
+	      position: relative;      
   background: transparent;      
-}      
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
       
     .bg-fullscreen {  
   position: fixed;  
@@ -397,7 +418,12 @@ numerals.forEach(num => {
   document.getElementById('dateInfo').innerText = `${day}, ${date} ${month} ${year}`;      
 }      
       
-    setInterval(updateClock, 1000);      
+function loopClock() {
+  updateClock();
+  setTimeout(() => requestAnimationFrame(loopClock), 1000);
+}
+requestAnimationFrame(loopClock);
+
     updateClock();      
       
       
@@ -512,6 +538,13 @@ document.documentElement.style.height = `${window.innerHeight}px`;
   // Gabungan semuanya?
   el.classList.add("visual-mode-all");
 });
+
+function fixHeight() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+window.addEventListener('resize', fixHeight);
+fixHeight();
 
     console.log("✅ Script Loaded");      
   </script>      
