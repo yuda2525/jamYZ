@@ -404,14 +404,17 @@ numerals.forEach(num => {
     
         
     // 🔁 Fullscreen on start    
-    function goFullscreen() {    
-      const docElm = document.documentElement;    
-      if (docElm.requestFullscreen) docElm.requestFullscreen();    
-      else if (docElm.webkitRequestFullscreen) docElm.webkitRequestFullscreen();    
-      else if (docElm.mozRequestFullScreen) docElm.mozRequestFullScreen();    
-      else if (docElm.msRequestFullscreen) docElm.msRequestFullscreen();    
-    }    
-    
+function goFullscreen() {  
+  const el = document.documentElement;  
+  if (el.requestFullscreen) {  
+    el.requestFullscreen();  
+  } else if (el.webkitRequestFullscreen) {  
+    el.webkitRequestFullscreen();  
+  } else if (el.msRequestFullscreen) {  
+    el.msRequestFullscreen();  
+  }  
+}  
+      
     // 🧠 Keep fullscreen alive    
     function ensureFullscreen() {    
       if (!document.fullscreenElement) goFullscreen();    
@@ -421,6 +424,13 @@ numerals.forEach(num => {
     document.addEventListener("click", () => {    
       goFullscreen();    
     }, { once: true });    
+    
+    document.addEventListener('DOMContentLoaded', () => {  
+  document.body.addEventListener('click', function onceClick() {  
+    goFullscreen();  
+    document.body.removeEventListener('click', onceClick); // Biar nggak dobel-dobel fullscreen  
+  });  
+});  
 
 
 // Deteksi double-tap di body  
@@ -443,7 +453,7 @@ document.getElementById('bgUpload').addEventListener('change', function (event) 
   const reader = new FileReader();  
 reader.onload = function (e) {  
   const bg = e.target.result;  
-  document.body.style.backgroundImage = `url('${bg}')`;  
+  document.body.style.backgroundColor = "black";
   document.body.style.backgroundSize = 'cover';  
   document.body.style.backgroundPosition = 'center';  
   document.body.style.backgroundRepeat = 'no-repeat';  
@@ -472,12 +482,9 @@ window.addEventListener('DOMContentLoaded', () => {
     const bg = 'assets/bg.jpg'; // fallback default
     document.body.style.backgroundImage = `url('${bg}')`;
   }
-
-  document.body.style.backgroundColor = "black";
-  document.body.style.backgroundSize = 'cover';
-  document.body.style.backgroundRepeat = 'no-repeat';
-  document.body.style.backgroundPosition = 'center';
 });
+
+
 
 
 
