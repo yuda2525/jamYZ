@@ -31,6 +31,17 @@
       box-sizing: border-box;  
     }  
     
+  .ratio-box {
+  width: 100vw;
+  height: calc(100vw * 16 / 9); /* rasio 9:16 */
+  max-height: 100vh;
+  max-width: calc(100vh * 9 / 16);
+  margin: auto;
+  overflow: hidden;
+  position: relative;
+  background: transparent;
+}
+    
   :root {
     --color-primary: #00ffee;
     --color-accent: #ff4de8;
@@ -303,6 +314,7 @@ svg text {
 </head>      
 
 <body onclick="enterFullScreen()" style="margin:0; overflow:hidden;">      
+	  <div class="ratio-box">
 	<div id="visualMode" class="content-overlay visual-mode-all">
 		
 <div class="bg-cover"></div>  
