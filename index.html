@@ -451,7 +451,6 @@ document.getElementById('bgUpload').addEventListener('change', function (event) 
   const file = event.target.files[0];      
   if (!file) return;      
       
-  const bg = 'assets/bg.jpg'; // pastikan file-nya ada  
   const reader = new FileReader();      
   reader.onload = function (e) {      
   const bg = e.target.result;      
