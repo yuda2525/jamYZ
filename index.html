@@ -373,6 +373,7 @@ svg text {
 body.locked {  
   overflow: hidden;  
 }  
+
     </style>      
 </head>      
 <body onclick="enterFullscreenOnce()" style="margin:0; overflow:hidden;">      
@@ -504,37 +505,34 @@ requestAnimationFrame(loopClock);
     updateClock();      
       
       
-  let fullscreenActivated = false;
 
-  function goFullscreen() {
-    if (fullscreenActivated) return;
+let fullscreenActivated = false;
+let lastTap = 0;
+
+// Fungsi universal masuk fullscreen
+function requestFullscreen() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+}
+
+// Klik pertama → aktifkan fullscreen
+document.addEventListener("click", () => {
+  if (!fullscreenActivated) {
+    requestFullscreen();
     fullscreenActivated = true;
-
-    const el = document.documentElement;
-    if (el.requestFullscreen) el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    else if (el.msRequestFullscreen) el.msRequestFullscreen();
   }
+}, { once: true });
 
-  function forceFullscreen() {
-    const el = document.documentElement;
-    if (el.requestFullscreen) el.requestFullscreen();
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-    else if (el.msRequestFullscreen) el.msRequestFullscreen();
+// Double tap → buka input file
+document.body.addEventListener("touchend", (e) => {
+  const now = Date.now();
+  if (now - lastTap < 300) {
+    document.getElementById("bgUpload").click();
   }
-
-  // Klik pertama → aktifin fullscreen
-  document.addEventListener("click", goFullscreen, { once: true });
-
-  // Double tap → buka input file
-  let lastTap = 0;
-  document.body.addEventListener("touchend", (e) => {
-    const now = Date.now();
-    if (now - lastTap < 300) {
-      document.getElementById("bgUpload").click();
-    }
-    lastTap = now;
-  });
+  lastTap = now;
+});
 
   // Kalau file dipilih → jadikan background
     
@@ -551,13 +549,20 @@ document.body.style.backgroundImage = `url('${bgData}')`;
   document.body.style.backgroundSize = 'cover';    
   document.body.style.backgroundPosition = 'center';    
   document.body.style.backgroundRepeat = 'no-repeat';    
-  
-    // ⏳ Masuk fullscreen ulang tanpa cek flag
-    forceFullscreen();
   };
-
   reader.readAsDataURL(file);
 });
+
+
+// Auto cek setiap 3 detik → masuk fullscreen kalau keluar (tapi jangan spam)
+setInterval(() => {
+  const isFullscreen = document.fullscreenElement ||
+                       document.webkitFullscreenElement ||
+                       document.msFullscreenElement;
+  if (!isFullscreen && fullscreenActivated) {
+    requestFullscreen();
+  }
+}, 3000);
 
 // Deteksi apakah sedang diinstall (PWA mode)    
 function isInStandaloneMode() {    
