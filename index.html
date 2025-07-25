@@ -554,6 +554,11 @@ document.body.style.backgroundImage = `url('${bgData}')`;
   document.body.style.backgroundPosition = 'center';      
   document.body.style.backgroundRepeat = 'no-repeat';      
   document.body.style.backgroundRepeat = 'no-repeat';    
+  
+    // 🔁 Delay kecil sebelum fullscreen biar stabil
+    setTimeout(() => {
+      forceFullscreen();
+    }, 400); // kalau masih nge-cancel, bisa naikin ke 600 atau 800 ms
   };
   reader.readAsDataURL(file);
 });
