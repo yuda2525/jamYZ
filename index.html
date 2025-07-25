@@ -584,6 +584,12 @@ setInterval(() => {
   }
 }, 3000);
 
+document.body.addEventListener("click", () => {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  }
+});
+
 // Deteksi apakah sedang diinstall (PWA mode)    
 function isInStandaloneMode() {    
   return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;    
