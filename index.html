@@ -41,26 +41,61 @@
     filter: brightness(95%);
   }
     
-  :root {
-    --color-primary: #00ffee;
-    --color-accent: #ff4de8;
-    --color-background: linear-gradient(120deg, #0e0e0e, #1a1a1a);
-    --shadow-depth: 0 8px 30px rgba(0, 255, 255, 0.3);
-    --glow-effect: 0 0 12px #00ffee;
-  }
+:root {
+  --color-primary: rgba(0, 255, 238, 0.08);       /* soft glass base */
+  --color-accent: #ff4de8;
+  --color-background: linear-gradient(120deg, #0e0e0e, #1a1a1a);
+  --shadow-depth: 0 10px 32px rgba(0, 255, 255, 0.15);
+  --glow-effect: 0 0 12px rgba(0, 255, 238, 0.6);
 
-  body {
-    background: var(--color-background);
-    color: white;
-    filter: contrast(110%) saturate(125%) brightness(1.05);
-  }
+  --glass-blur: blur(18px);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --color-glow: rgba(0, 255, 238, 0.25);
+}
 
-  .card-3d {
-    box-shadow: var(--shadow-depth);
-    transform: perspective(1000px) rotateX(4deg);
-    backdrop-filter: blur(12px) brightness(1.1);
-  }
-    
+body {
+  background: var(--color-background);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  filter: contrast(105%) saturate(115%) brightness(1.03);
+  margin: 0;
+  padding: 0;
+}
+
+/* Retina Glass Card */
+.glass-retina {
+  background: var(--color-primary);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 0 0.5px rgba(255, 255, 255, 0.1),
+    0 4px 16px var(--color-glow),
+    0 8px 24px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  transition: all 0.4s ease;
+}
+
+/* Hover effect (optional) */
+.glass-retina:hover {
+  transform: scale(1.02);
+  box-shadow:
+    inset 0 0 1px rgba(255, 255, 255, 0.15),
+    0 6px 28px rgba(0, 255, 238, 0.35),
+    0 12px 36px rgba(0, 0, 0, 0.3);
+}
+
+/* 3D Card Base */
+.card-3d {
+  box-shadow: var(--shadow-depth);
+  transform: perspective(900px) rotateX(2deg);
+  backdrop-filter: blur(12px) brightness(1.08);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.4s ease;
+}
+
     html, body {  
   width: 100%;
   height: 100%;
