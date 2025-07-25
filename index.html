@@ -274,15 +274,13 @@ text-shadow:
     }      
       
 svg text {      
-  font-weight: 600;      
+  font-weight: 500;      
   fill: #111; /* warna utama huruf */      
       stroke: rgba(255, 255, 255, 0.3); /* putih transparan */      
   stroke-width: 0.1px;      
   paint-order: stroke;      
-        
   text-shadow:      
     0 0 1px #000, /* menjaga tajam di bg gelap */      
-      
   font-size: 14px;      
   font-family: 'Great Vibes', cursive;      
   letter-spacing: 3px;      
@@ -387,7 +385,7 @@ body.locked {
         <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>      
         <text>      
           <textPath xlink:href="#circlePath">      
-            ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦-2025-      
+            ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦ My attitude depends on who you are ✦- 2025 -      
           </textPath>      
         </text>      
       </svg>      
@@ -457,8 +455,8 @@ numerals.forEach(num => {
 });      
       
   // Date      
-  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];      
-  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];      
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];  
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];  
   const day = days[now.getDay()];      
   const date = now.getDate();      
   const month = months[now.getMonth()];      
