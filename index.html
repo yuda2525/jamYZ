@@ -375,7 +375,7 @@ body.locked {
 }  
     </style>      
 </head>      
-<body onclick="enterFullScreen()" style="margin:0; overflow:hidden;">      
+<body onclick="enterFullscreenOnce()" style="margin:0; overflow:hidden;">      
 	<!-- Tombol Lock/Unlock -->
 <button id="screenLockBtn" title="Kunci layar" style="  
   font-size: 28px;
@@ -504,46 +504,39 @@ requestAnimationFrame(loopClock);
     updateClock();      
       
       
-    // 🔁 Fullscreen on start      
-function goFullscreen() {    
-  const el = document.documentElement;    
-  if (el.requestFullscreen) {    
-    el.requestFullscreen();    
-  } else if (el.webkitRequestFullscreen) {    
-    el.webkitRequestFullscreen();    
-  } else if (el.msRequestFullscreen) {    
-    el.msRequestFullscreen();    
-  }    
-}    
-        
-    // 🧠 Keep fullscreen alive      
-    function ensureFullscreen() {      
-      if (!document.fullscreenElement) goFullscreen();      
-    }      
-      
-    // ⏱ Start fullscreen once user interacts      
-    document.addEventListener("click", () => {      
-      goFullscreen();      
-    }, { once: true });      
-      
-    document.addEventListener('DOMContentLoaded', () => {    
-  document.body.addEventListener('click', function onceClick() {    
-    goFullscreen();    
-    document.body.removeEventListener('click', onceClick); // Biar nggak dobel-dobel fullscreen    
-  });    
-});    
-  
-// Deteksi double-tap di body    
-let lastTap = 0;    
-    
-// Double-tap deteksi untuk PWA dan browser    
-document.body.addEventListener('touchend', (e) => {    
-  const now = Date.now();    
-  if (now - lastTap < 300) {    
-    document.getElementById('bgUpload').click();    
-  }    
-  lastTap = now;    
-});    
+  let fullscreenActivated = false;
+
+  function goFullscreen() {
+    if (fullscreenActivated) return;
+    fullscreenActivated = true;
+
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.msRequestFullscreen) el.msRequestFullscreen();
+  }
+
+  function forceFullscreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.msRequestFullscreen) el.msRequestFullscreen();
+  }
+
+  // Klik pertama → aktifin fullscreen
+  document.addEventListener("click", goFullscreen, { once: true });
+
+  // Double tap → buka input file
+  let lastTap = 0;
+  document.body.addEventListener("touchend", (e) => {
+    const now = Date.now();
+    if (now - lastTap < 300) {
+      document.getElementById("bgUpload").click();
+    }
+    lastTap = now;
+  });
+
+  // Kalau file dipilih → jadikan background
     
 // Deteksi background file dipilih → tampilkan sebagai background      
 document.getElementById('bgUpload').addEventListener('change', function (event) {      
@@ -559,12 +552,13 @@ document.body.style.backgroundImage = `url('${bgData}')`;
   document.body.style.backgroundPosition = 'center';    
   document.body.style.backgroundRepeat = 'no-repeat';    
   
-  // Masuk fullscreen lagi setelah ganti background  
-  goFullscreen();    
-};  
-  reader.readAsDataURL(file);    
-});    
-    
+    // ⏳ Masuk fullscreen ulang tanpa cek flag
+    forceFullscreen();
+  };
+
+  reader.readAsDataURL(file);
+});
+
 // Deteksi apakah sedang diinstall (PWA mode)    
 function isInStandaloneMode() {    
   return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;    
