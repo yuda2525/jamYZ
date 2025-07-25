@@ -505,28 +505,27 @@ requestAnimationFrame(loopClock);
     updateClock();      
       
       
-
 let fullscreenActivated = false;
 
-  function goFullscreen() {  
-    if (fullscreenActivated) return;  
-    fullscreenActivated = true;  
-  
-    const el = document.documentElement;  
-    if (el.requestFullscreen) el.requestFullscreen();  
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();  
-    else if (el.msRequestFullscreen) el.msRequestFullscreen();  
-  }  
-  
-  function forceFullscreen() {  
-    const el = document.documentElement;  
-    if (el.requestFullscreen) el.requestFullscreen();  
-    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();  
-    else if (el.msRequestFullscreen) el.msRequestFullscreen();  
-  }  
-  
-  // Klik pertama → aktifin fullscreen  
-  document.addEventListener("click", goFullscreen, { once: true });  
+function goFullscreen() {
+  if (fullscreenActivated) return;
+  fullscreenActivated = true;
+
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+}
+
+function forceFullscreen() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+}
+
+// Klik pertama → aktifin fullscreen
+document.addEventListener("click", goFullscreen, { once: true });
   
   // Double tap → buka input file  
   let lastTap = 0;  
@@ -556,21 +555,32 @@ document.body.style.backgroundImage = `url('${bgData}')`;
   document.body.style.backgroundRepeat = 'no-repeat';    
   
     // 🔁 Delay kecil sebelum fullscreen biar stabil
-    setTimeout(() => {
+  setTimeout(() => {
       forceFullscreen();
-    }, 400); // kalau masih nge-cancel, bisa naikin ke 600 atau 800 ms
+    }, 400); // atau 600 jika perlu delay tambahan
   };
+
   reader.readAsDataURL(file);
-});
+})
 
 
-// Auto cek setiap 3 detik → masuk fullscreen kalau keluar (tapi jangan spam)
+// Optional: klik gambar masuk fullscreen
+const img = document.getElementById("thumb");
+if (img) {
+  img.addEventListener("click", () => {
+    forceFullscreen();
+  });
+}
+
+// Auto cek setiap 3 detik → masukin lagi ke fullscreen kalau keluar
 setInterval(() => {
-  const isFullscreen = document.fullscreenElement ||
-                       document.webkitFullscreenElement ||
-                       document.msFullscreenElement;
+  const isFullscreen =
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.msFullscreenElement;
+
   if (!isFullscreen && fullscreenActivated) {
-    requestFullscreen();
+    forceFullscreen();
   }
 }, 3000);
 
