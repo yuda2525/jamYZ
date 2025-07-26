@@ -893,25 +893,46 @@ if ('serviceWorker' in navigator) {
       const reg = await navigator.serviceWorker.register('./sw.js');
       console.log('✅ Service Worker terdaftar:', reg.scope);
 
-      // Kirim "ping" ke SW jika sudah aktif
+      // Cek status SW: kirim ping
       if (reg.active) {
         reg.active.postMessage('ping');
+      } else if (reg.installing) {
+        reg.installing.postMessage('ping');
       }
 
-      // Atau tunggu sampai ready
-      navigator.serviceWorker.ready.then(swReg => {
-        swReg.active?.postMessage('ping');
+      // Jika ada update baru, suruh skipWaiting
+      if (reg.waiting) {
+        console.log('[SW] Ada versi baru, skip waiting...');
+        reg.waiting.postMessage('skipWaiting');
+      }
+
+      // Auto-reload saat versi baru siap
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('[SW] Controller berubah, reload halaman...');
+        window.location.reload();
       });
+
+      // Deteksi update SW dari backend
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        newSW?.addEventListener('statechange', () => {
+          if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+            console.log('[SW] Update ditemukan, siap digunakan...');
+            newSW.postMessage('skipWaiting');
+          }
+        });
+      });
+
     } catch (err) {
       console.error('❌ Gagal daftar Service Worker:', err);
     }
   });
-}
 
-// Minta izin notifikasi
-Notification.requestPermission().then(permission => {
-  console.log('🔔 Izin notifikasi:', permission);
-});
+  // Opsional: minta izin notifikasi
+  Notification.requestPermission().then(permission => {
+    console.log('🔔 Izin notifikasi:', permission);
+  });
+}
 
     console.log("✅ Script Loaded");      
   </script>      
