@@ -22,7 +22,8 @@
 <link rel="apple-touch-icon" href="assets/icon-192.png" />        
 <link rel="apple-touch-startup-image" href="assets/splash-screen.png">    
   <title>YudaTime® Neon Glass</title>        
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">        
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">      
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />  
   <style>        
     * {  
@@ -374,6 +375,73 @@ body.locked {
   overflow: hidden;  
 }  
 
+  .quote-container {
+    position: absolute;
+    top: calc(100% + 15px); /* Di bawah jam */
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    z-index: 10;
+        margin-top: 30px;
+          animation: fadeInBox 1s ease-out;
+  }
+
+  .quote-line {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: #f5f5f5;
+    margin: 0;
+    white-space: pre-line;
+    min-height: 60px;
+      transition: opacity 0.5s ease-in-out;
+  }
+
+  .quote-author {
+    font-family: 'Great Vibes', cursive;
+    font-size: 24px;
+    color: #12c2e9;
+  font-weight: 500;
+    margin-top: 10px;
+      transition: opacity 0.5s ease-in-out;
+        text-shadow: 0 0 8px rgba(255,255,255,0.4); /* glow halus */
+  }
+
+@keyframes fadeInBox {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#typedQuote, #quoteAuthor {
+  transition: opacity 1.2s ease; /* halus fade */
+  opacity: 1;
+}
+
+  #typedQuote {
+background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
+  text-shadow: 0 0 8px rgba(255,255,255,0.4); /* glow halus */
+      white-space: pre-line;
+  transition: opacity 0.5s ease;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+    color: #f0f0f0; /* Ubah ini sesuai selera kamu */
+    font-family: 'Poiret One', cursive; /* Atau font sebelumnya yang kamu suka */
+    font-size: 1.2rem;
+    text-align: center;
+    line-height: 1.6;
+  }
+  
+.holiday {
+  color: red;
+}
+
+</style>
     </style>      
 </head>      
 <body onclick="enterFullscreenOnce()" style="margin:0; overflow:hidden;">      
@@ -411,7 +479,7 @@ body.locked {
 <div class="glass-mask"></div>  
 	    <div class="fullscreen-wrapper">    
   <div class="wrapper">    
-            
+
     <div class="circular-text" id="circularText">      
       <svg viewBox="0 0 400 400">      
         <path id="circlePath" fill="none" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"/>      
@@ -433,12 +501,18 @@ body.locked {
       <div class="date-info" id="dateInfo"></div>      
     </div>      
   </div>      
-      
+  
+<p id="dateInfo"></p>
 <!-- Input file disembunyikan -->      
 <input type="file" id="bgUpload" accept="image/*" style="display: none;">      
-      
+
+<!-- Quotes Box -->
+<div id="quoteBox" class="quote-container">
+<p id="typedQuote" class="quote-line typing"></p>
+<p id="quoteAuthor" class="quote-author"></p>
+</div>
+<span id="dateInfo" style="display:none;">25 Juli 2025</span>
 </body>      
-</html>      
   <script>      
   	window.addEventListener("error", e => console.error("❌ Global Error:", e.message));      
 const romanNumerals = [      
@@ -675,6 +749,90 @@ window.addEventListener("load", () => {
   applyLockState();
 });
 
+
+<!-- Panggil ini di bawah </body> -->
+const quotes = [
+  { text: "Jangan tunggu waktu yang sempurna. Ambillah waktu dan buat itu sempurna.", author: "- Sujiwo Tejo" },
+  { text: "Hidup bukan tentang menunggu badai reda, tapi belajar menari di tengah hujan.", author: "- Anonim" },
+  { text: "Bermimpilah dalam hidup, jangan hidup dalam mimpi.", author: "- Andrea Hirata" },
+];
+
+function typeText(textElement, text, speed = 120) {
+  textElement.textContent = "";
+  let i = 0;
+  const interval = setInterval(() => {
+    textElement.textContent += text.charAt(i);
+    i++;
+    if (i >= text.length) clearInterval(interval);
+  }, speed);
+}
+
+function showQuote() {
+  const quote = quotes[Math.floor(Math.random() * quotes.length)];
+  const box = document.getElementById("quoteBox");
+  const text = document.getElementById("quoteText");
+  const author = document.getElementById("quoteAuthor");
+
+  box.classList.remove("hidden");
+
+  // Ketik teks & author
+  typeText(text, quote.text, 120);
+  setTimeout(() => {
+    typeText(author, quote.author, 100);
+  }, quote.text.length * 120 + 500); // delay sesuai panjang teks
+
+  // Hide kembali setelah 15 detik
+  setTimeout(() => {
+    box.classList.add("hidden");
+  }, 15000);
+}
+
+function checkTimeForQuotes() {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+
+  const timeKey = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+
+  const triggerTimes = ["08:30", "13:00", "00:00"];
+
+  if (triggerTimes.includes(timeKey)) {
+    showQuote();
+  }
+}
+
+setInterval(checkTimeForQuotes, 60 * 1000);
+checkTimeForQuotes();
+
+
+(async () => {
+  const el = document.getElementById("dateInfo");
+  if (!el) return;
+
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const todayStr = now.toISOString().split("T")[0]; // "2025-07-25"
+
+  const localKey = `libur-${yyyy}`;
+  let liburList = JSON.parse(localStorage.getItem(localKey) || "[]");
+
+  // Kalau belum disimpan di localStorage tahun ini, fetch dulu
+  if (!liburList.length) {
+    try {
+      const resp = await fetch(`https://kalenderindonesia-api.vercel.app/api/v1/holidays/${yyyy}`);
+      const data = await resp.json();
+      liburList = data?.data?.map(x => x.date) || [];
+      localStorage.setItem(localKey, JSON.stringify(liburList));
+    } catch (e) {
+      console.warn("Gagal fetch data libur nasional:", e);
+    }
+  }
+
+  if (liburList.includes(todayStr)) {
+    el.style.color = "red";
+    el.title = "Hari Libur Nasional";
+  }
+})();
 
     console.log("✅ Script Loaded");      
   </script>      
