@@ -524,6 +524,7 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
 <p id="quoteAuthor" class="quote-author"></p>
 </div>
 <div class="day-card holiday" data-date="2025-08-17"></div>
+<audio id="pingSound" src="assets/sound/ping.mp3" preload="auto"></audio>
 </body>      
   <script>      
   	window.addEventListener("error", e => console.error("❌ Global Error:", e.message));      
@@ -765,11 +766,11 @@ const quotesByTime = {
     text: "Setiap pagi adalah kesempatan baru, Jangan ulangi kesalahan kemarin, Jika masih ingin bahagia hari ini.", 
     author: "- Najwa Shihab -" 
   },
-  "16:40": { 
+  "13:00": { 
     text: "Ada yang selalu ingatkanmu makan siang, Bukan karna takut kamu sakit, Tapi karena ingin kamu tetap kuat, Untuk terus bersamaku.", 
     author: "- Tere Liye -" 
   },
-  "00:00": { 
+  "19:15": { 
     text: "Yang membekas dari lilin bukan lelehnya, kekasih, Tapi wajahmu sebelum gelap.", 
     author: "- Sujiwo Tejo -" 
   }
@@ -854,6 +855,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkTimeForQuotes(); // langsung cek juga
 });
 
+
 (async () => {
   const el = document.getElementById("dateInfo");
   if (!el) return;
@@ -893,11 +895,15 @@ if ('serviceWorker' in navigator) {
       const reg = await navigator.serviceWorker.register('./sw.js');
       console.log('✅ Service Worker terdaftar:', reg.scope);
 
-      // Cek status SW: kirim ping
+      // Kirim ping ke SW aktif atau nanti saat controller berubah
       if (reg.active) {
         reg.active.postMessage('ping');
-      } else if (reg.installing) {
-        reg.installing.postMessage('ping');
+      } else {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage('ping');
+          }
+        });
       }
 
       // Jika ada update baru, suruh skipWaiting
@@ -921,6 +927,12 @@ if ('serviceWorker' in navigator) {
             newSW.postMessage('skipWaiting');
           }
         });
+      });
+
+      // Tambahan aman: cek ready juga
+      navigator.serviceWorker.ready.then((regReady) => {
+        console.log('[Main] SW ready, kirim ping (dari ready)...');
+        regReady.active?.postMessage('ping');
       });
 
     } catch (err) {
