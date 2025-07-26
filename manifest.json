@@ -1,8 +1,8 @@
 {
-  "name": "Y&ZTime® Neon Glass",
-  "short_name": "YudaTime",
+  "name": "Y&ZTime",
+  "short_name": "Y&Z",
   "start_url": "./index.html",
-  "display": "Fullscreen",
+  "display": "fullscreen",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
