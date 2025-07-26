@@ -1,56 +1,74 @@
-const cacheName = 'yudatime-v1';
-const assetsToCache = [
-  './',
-  './index.html',
-  './style.css',
-  './manifest.json',
-  './sw.js',
-  './assets/icon-192.png',
-  './assets/icon-512.png'
+const CACHE_NAME = 'yz-cache-v2';
+const URLS_TO_CACHE = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/assets/icon-192.png',
+  '/assets/icon-512.png',
+  '/assets/style.css',         // Ganti sesuai file kamu
+  '/assets/script.js',         // Tambah file lain yg ingin dicache
+  '/assets/bg.mp4',
 ];
 
-// Install event
+// Install: Caching awal
 self.addEventListener('install', event => {
+  self.skipWaiting(); // Aktifkan langsung
   event.waitUntil(
-    caches.open(cacheName).then(cache => {
-      return cache.addAll(assetsToCache);
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(URLS_TO_CACHE))
   );
 });
 
-// Activate event + Notifikasi ping
+// Activate: Hapus cache lama
 self.addEventListener('activate', event => {
-  console.log('⚡ Service Worker aktif (Ping masuk)');
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.filter(key => key !== cacheName).map(key => caches.delete(key))
-      );
-    }).then(() => {
-      return self.clients.claim();
-    }).then(() => {
-      // Notifikasi saat aktif
-      self.registration.showNotification('Y&Z Time Aktif', {
-        body: 'Aplikasi sudah siap digunakan',
-        icon: './assets/icon-192.png'
-      });
-    })
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+      )
+    )
   );
+  self.clients.claim();
 });
 
-// Fetch event
+// Fetch: Ambil dari cache dulu, fallback ke jaringan
 self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
+
   event.respondWith(
-    caches.match(event.request).then(cacheRes => {
-      return cacheRes || fetch(event.request);
+    caches.match(event.request).then(cached => {
+      return cached || fetch(event.request)
+        .then(response => {
+          // Simpan di cache jika sukses fetch
+          return caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, response.clone());
+            return response;
+          });
+        })
+        .catch(() => caches.match('/offline.html')); // fallback kalau offline
     })
   );
 });
 
-// Terima ping dari halaman
+// Message listener
 self.addEventListener('message', event => {
   if (event.data === 'ping') {
-    console.log('📡 Ping diterima dari halaman');
-    // Di sini bisa ditambah update data, sync, dll
+    console.log('📡 Ping OK');
+    sendNotification('Ping berhasil', { body: 'SW aktif bro!' });
+  }
+
+  if (event.data?.type === 'show-notif') {
+    sendNotification(event.data.title, {
+      body: event.data.body,
+      icon: '/assets/icon-192.png',
+    });
+  }
+
+  if (event.data === 'skipWaiting') {
+    self.skipWaiting();
   }
 });
+
+// Fungsi kirim notifikasi
+function sendNotification(title, options) {
+  self.registration.showNotification(title, options);
+}
