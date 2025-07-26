@@ -446,7 +446,7 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
 .holiday {
 	  left: 53%;
 	  font-size: 15px;
-	  font-weight: 800;
+	  font-weight: 700;
   color: #ff4d4d !important;
   text-shadow:
     0 0 2px #000,      /* bayangan hitam halus */
@@ -881,8 +881,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("Gagal ambil data libur nasional:", e);
     }
   }
-
-liburList.push(todayStr); // ====> untuk testing lokal saja
 
   if (liburList.includes(todayStr)) {
     el.classList.remove("hidden");
