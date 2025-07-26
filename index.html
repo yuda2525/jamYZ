@@ -893,36 +893,33 @@ if ('serviceWorker' in navigator) {
       const reg = await navigator.serviceWorker.register('./sw.js');
       console.log('✅ Service Worker terdaftar di:', reg.scope);
 
+      // Langsung kirim ping ke aktif SW
       if (reg.active) {
         console.log('[Main] Kirim ping ke SW aktif');
         reg.active.postMessage('ping');
-      } else {
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (navigator.serviceWorker.controller) {
-            console.log('[Main] Kirim ping setelah controller berubah');
-            navigator.serviceWorker.controller.postMessage('ping');
-          }
-        });
       }
 
-      reg.addEventListener('updatefound', () => {
-        const newSW = reg.installing;
-        newSW?.addEventListener('statechange', () => {
-          if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
-            console.log('[Main] Update ditemukan, kirim skipWaiting');
-            newSW.postMessage('skipWaiting');
-          }
-        });
+      // Listener balasan dari SW
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data?.type === 'quote-ready') {
+          console.log('[Main] Quote siap dijalankan!');
+          jalankanQuote();
+        }
       });
 
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        console.log('[Main] Controller berubah, reload halaman');
-        window.location.reload();
-      });
     } catch (err) {
       console.error('❌ Gagal daftar Service Worker:', err);
     }
   });
+}
+
+function jalankanQuote() {
+  // Di sini langsung tampilkan atau fetch quote
+  const quoteBox = document.querySelector('.quote-container');
+  if (quoteBox) {
+    quoteBox.textContent = '🌟 “Kesuksesan adalah gabungan dari tekad dan disiplin.”';
+    quoteBox.classList.add('active');
+  }
 }
 
     console.log("✅ Script Loaded");      
