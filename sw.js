@@ -18,13 +18,22 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activate event
+// Activate event + Notifikasi ping
 self.addEventListener('activate', event => {
+  console.log('⚡ Service Worker aktif (Ping masuk)');
   event.waitUntil(
     caches.keys().then(keys => {
       return Promise.all(
         keys.filter(key => key !== cacheName).map(key => caches.delete(key))
       );
+    }).then(() => {
+      return self.clients.claim();
+    }).then(() => {
+      // Notifikasi saat aktif
+      self.registration.showNotification('Y&Z Time Aktif', {
+        body: 'Aplikasi sudah siap digunakan',
+        icon: './assets/icon-192.png'
+      });
     })
   );
 });
@@ -36,4 +45,12 @@ self.addEventListener('fetch', event => {
       return cacheRes || fetch(event.request);
     })
   );
+});
+
+// Terima ping dari halaman
+self.addEventListener('message', event => {
+  if (event.data === 'ping') {
+    console.log('📡 Ping diterima dari halaman');
+    // Di sini bisa ditambah update data, sync, dll
+  }
 });
