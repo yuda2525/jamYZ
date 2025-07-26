@@ -281,7 +281,7 @@ body {
 }
 
 /* Kalau hari libur */
-.date-info.holiday {
+.holiday {
 	  left: 53%;
 	  font-size: 15px;
 	  font-weight: 900;
@@ -454,7 +454,6 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
     line-height: 1.6;
   }
   
-
 </style>
     </style>      
 </head>      
@@ -524,7 +523,7 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
 <p id="typedQuote" class="quote-line typing"></p>
 <p id="quoteAuthor" class="quote-author"></p>
 </div>
-<p id="dateInfo" title="" style="display:none">25 Juli 2025</p>
+<div class="day-card holiday" data-date="2025-08-17"></div>
 </body>      
   <script>      
   	window.addEventListener("error", e => console.error("❌ Global Error:", e.message));      
@@ -892,7 +891,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 })();
-
 
     console.log("✅ Script Loaded");      
   </script>      
