@@ -48,22 +48,23 @@ self.addEventListener('fetch', event => {
 
       return fetch(event.request)
         .then(response => {
-          // Simpan hasil baru ke cache
           return caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, response.clone());
             return response;
           });
         })
-        .catch(() => caches.match('/offline.html')); // fallback offline
+        .catch(() => caches.match('/offline.html'));
     })
   );
 });
 
-// Handle pesan dari client
+// Handle pesan dari client (ping, notif, skipWaiting)
 self.addEventListener('message', event => {
+  console.log('[SW] Pesan masuk:', event.data);
+  
   if (event.data === 'ping') {
-    console.log('[SW] Ping diterima 🚀');
-    sendNotification('Ping berhasil', { body: 'SW aktif bro!' });
+    console.log('[SW] ✅ Ping diterima 🚀');
+    sendNotification('Ping berhasil', { body: 'Service Worker aktif bro!' });
   }
 
   if (event.data?.type === 'show-notif') {
@@ -75,14 +76,19 @@ self.addEventListener('message', event => {
   }
 
   if (event.data === 'skipWaiting') {
-    self.skipWaiting(); // paksa update
+    console.log('[SW] ⚡ skipWaiting() dipanggil via message');
+    self.skipWaiting();
   }
 });
 
 // Fungsi notifikasi
 function sendNotification(title, options = {}) {
-  self.registration.showNotification(title, {
-    icon: '/assets/icon-192.png',
-    ...options
-  });
+  if (self.registration?.showNotification) {
+    self.registration.showNotification(title, {
+      icon: '/assets/icon-192.png',
+      ...options
+    });
+  } else {
+    console.warn('[SW] ❗ Notifikasi tidak tersedia.');
+  }
 }
