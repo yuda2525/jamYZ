@@ -262,18 +262,35 @@ body {
       z-index: 2;      
     }      
       
-.date-info {      
-  position: absolute;      
-  bottom: 14px;      
-  left: 52%;      
-  transform: translateX(-50%);      
-  padding: 5px 10px;      
-  font-size: 12px;      
-  font-family: 'Cormorant Garamond', serif;      
-  letter-spacing: 0.5px;      
-font-weight: 600;      
-text-shadow: 0 0 4px #000;       
-}      
+/* Gaya dasar */
+.date-info {
+  position: absolute;
+  bottom: 14px;
+  left: 52%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  font-size: 14px;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  text-shadow: 0 0 4px #000;
+  color: #fff; /* default putih */
+  background: rgba(0, 0, 0, 0.0); /* biar ada kontras */
+  border-radius: 6px;
+  z-index: 20;
+}
+
+/* Kalau hari libur */
+.date-info.holiday {
+	  left: 53%;
+	  font-size: 15px;
+	  font-weight: 900;
+  color: #ff4d4d !important;
+  text-shadow:
+    0 0 2px #000,      /* bayangan hitam halus */
+    0 0 5px #000;      /* glow hitam lembut */
+  background: rgba(0, 0, 0, 0.0); /* biar lebih mencolok tapi tetap clean */
+}
       
     .brand-name {      
       position: absolute;      
@@ -437,9 +454,6 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
     line-height: 1.6;
   }
   
-.holiday {
-  color: red;
-}
 
 </style>
     </style>      
@@ -502,7 +516,6 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
     </div>      
   </div>      
   
-<p id="dateInfo"></p>
 <!-- Input file disembunyikan -->      
 <input type="file" id="bgUpload" accept="image/*" style="display: none;">      
 
@@ -511,7 +524,7 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
 <p id="typedQuote" class="quote-line typing"></p>
 <p id="quoteAuthor" class="quote-author"></p>
 </div>
-<span id="dateInfo" style="display:none;">25 Juli 2025</span>
+<p id="dateInfo" title="" style="display:none">25 Juli 2025</p>
 </body>      
   <script>      
   	window.addEventListener("error", e => console.error("❌ Global Error:", e.message));      
@@ -751,59 +764,102 @@ window.addEventListener("load", () => {
 
 
 <!-- Panggil ini di bawah </body> -->
-const quotes = [
-  { text: "Jangan tunggu waktu yang sempurna. Ambillah waktu dan buat itu sempurna.", author: "- Sujiwo Tejo" },
-  { text: "Hidup bukan tentang menunggu badai reda, tapi belajar menari di tengah hujan.", author: "- Anonim" },
-  { text: "Bermimpilah dalam hidup, jangan hidup dalam mimpi.", author: "- Andrea Hirata" },
-];
+let quoteIndex = 0; // wajib ada buat kontrol index
 
-function typeText(textElement, text, speed = 120) {
-  textElement.textContent = "";
+// Atur quotes berdasarkan waktu
+const quotesByTime = {
+  "08:30": { 
+    text: "Setiap pagi adalah kesempatan baru, Jangan ulangi kesalahan kemarin, Jika masih ingin bahagia hari ini.", 
+    author: "- Najwa Shihab -" 
+  },
+  "16:40": { 
+    text: "Ada yang selalu ingatkanmu makan siang, Bukan karna takut kamu sakit, Tapi karena ingin kamu tetap kuat, Untuk terus bersamaku.", 
+    author: "- Tere Liye -" 
+  },
+  "00:00": { 
+    text: "Yang membekas dari lilin bukan lelehnya, kekasih, Tapi wajahmu sebelum gelap.", 
+    author: "- Sujiwo Tejo -" 
+  }
+};
+
+const triggerTimes = Object.keys(quotesByTime);
+
+function typeText(el, txt, speed = 120) {
+  el.textContent = "";
   let i = 0;
-  const interval = setInterval(() => {
-    textElement.textContent += text.charAt(i);
-    i++;
-    if (i >= text.length) clearInterval(interval);
+  const intv = setInterval(() => {
+    el.textContent += txt.charAt(i++);
+    if (i >= txt.length) clearInterval(intv);
   }, speed);
 }
 
-function showQuote() {
-  const quote = quotes[Math.floor(Math.random() * quotes.length)];
-  const box = document.getElementById("quoteBox");
-  const text = document.getElementById("quoteText");
-  const author = document.getElementById("quoteAuthor");
+let lastShownTime = null;
 
-  box.classList.remove("hidden");
+function typeText(el, txt, speed = 120, onComplete = null) {
+  el.textContent = "";
+  let i = 0;
+  const intv = setInterval(() => {
+    el.textContent += txt.charAt(i++);
+    if (i >= txt.length) {
+      clearInterval(intv);
+      if (onComplete) onComplete();
+    }
+  }, speed);
+}
 
-  // Ketik teks & author
-  typeText(text, quote.text, 120);
-  setTimeout(() => {
-    typeText(author, quote.author, 100);
-  }, quote.text.length * 120 + 500); // delay sesuai panjang teks
+function playQuoteSequence(timeKey, repeat = 2) {
+  const quote = quotesByTime[timeKey];
+  const textEl = document.getElementById("typedQuote");
+  const authorEl = document.getElementById("quoteAuthor");
 
-  // Hide kembali setelah 15 detik
-  setTimeout(() => {
-    box.classList.add("hidden");
-  }, 15000);
+  let currentRepeat = 0;
+
+  function runOnce() {
+    typeText(textEl, quote.text, 100, () => {
+      setTimeout(() => {
+        typeText(authorEl, quote.author, 80, () => {
+          // Setelah selesai ketik semua, tunggu 5 detik
+          setTimeout(() => {
+            // Fade out
+            textEl.style.opacity = 0;
+            authorEl.style.opacity = 0;
+
+            setTimeout(() => {
+              textEl.textContent = "";
+              authorEl.textContent = "";
+              textEl.style.opacity = 1;
+              authorEl.style.opacity = 1;
+
+              currentRepeat++;
+              if (currentRepeat < repeat) {
+                setTimeout(runOnce, 1000); // jeda antar tampil ulang
+              }
+            }, 800); // tunggu fadeout
+          }, 5000); // quote tampil selama 5 detik
+        });
+      }, 300); // jeda sebelum mulai ketik author
+    });
+  }
+
+  runOnce(); // mulai urutan pertama
 }
 
 function checkTimeForQuotes() {
   const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
+  const h = String(now.getHours()).padStart(2, "0");
+  const m = String(now.getMinutes()).padStart(2, "0");
+  const timeKey = `${h}:${m}`;
 
-  const timeKey = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
-
-  const triggerTimes = ["08:30", "13:00", "00:00"];
-
-  if (triggerTimes.includes(timeKey)) {
-    showQuote();
+  if (triggerTimes.includes(timeKey) && timeKey !== lastShownTime) {
+    lastShownTime = timeKey;
+    playQuoteSequence(timeKey); // hanya 2x tampil, 1 urutan per kali
   }
 }
 
-setInterval(checkTimeForQuotes, 60 * 1000);
-checkTimeForQuotes();
-
+document.addEventListener("DOMContentLoaded", () => {
+  setInterval(checkTimeForQuotes, 60000);
+  checkTimeForQuotes(); // langsung cek juga
+});
 
 (async () => {
   const el = document.getElementById("dateInfo");
@@ -811,12 +867,11 @@ checkTimeForQuotes();
 
   const now = new Date();
   const yyyy = now.getFullYear();
-  const todayStr = now.toISOString().split("T")[0]; // "2025-07-25"
+  const todayStr = now.toISOString().split("T")[0]; // Misal: "2025-07-26"
 
   const localKey = `libur-${yyyy}`;
   let liburList = JSON.parse(localStorage.getItem(localKey) || "[]");
 
-  // Kalau belum disimpan di localStorage tahun ini, fetch dulu
   if (!liburList.length) {
     try {
       const resp = await fetch(`https://kalenderindonesia-api.vercel.app/api/v1/holidays/${yyyy}`);
@@ -824,15 +879,20 @@ checkTimeForQuotes();
       liburList = data?.data?.map(x => x.date) || [];
       localStorage.setItem(localKey, JSON.stringify(liburList));
     } catch (e) {
-      console.warn("Gagal fetch data libur nasional:", e);
+      console.warn("Gagal ambil data libur nasional:", e);
     }
   }
 
   if (liburList.includes(todayStr)) {
-    el.style.color = "red";
+    el.classList.remove("hidden");
+    el.classList.add("holiday");
     el.title = "Hari Libur Nasional";
+    el.textContent = now.toLocaleDateString('id-ID', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
   }
 })();
+
 
     console.log("✅ Script Loaded");      
   </script>      
