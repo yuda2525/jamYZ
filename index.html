@@ -695,12 +695,6 @@ window.addEventListener('DOMContentLoaded', () => {
     document.body.style.backgroundImage = `url('${bg}')`;  
   }  
 });  
-
-  if ('serviceWorker' in navigator) {      
-    navigator.serviceWorker.register('sw.js')      
-      .then(reg => console.log('✅ Service Worker registered:', reg.scope))      
-      .catch(err => console.error('❌ Service Worker registration failed:', err));      
-  }      
   
   window.addEventListener("resize", () => {
   document.documentElement.style.height = `${window.innerHeight}px`;
@@ -891,6 +885,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 })();
+
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.register('./sw.js');
+      console.log('✅ Service Worker terdaftar:', reg.scope);
+
+      // Kirim "ping" ke SW jika sudah aktif
+      if (reg.active) {
+        reg.active.postMessage('ping');
+      }
+
+      // Atau tunggu sampai ready
+      navigator.serviceWorker.ready.then(swReg => {
+        swReg.active?.postMessage('ping');
+      });
+    } catch (err) {
+      console.error('❌ Gagal daftar Service Worker:', err);
+    }
+  });
+}
+
+// Minta izin notifikasi
+Notification.requestPermission().then(permission => {
+  console.log('🔔 Izin notifikasi:', permission);
+});
 
     console.log("✅ Script Loaded");      
   </script>      
