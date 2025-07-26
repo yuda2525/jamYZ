@@ -269,7 +269,7 @@ body {
   left: 52%;
   transform: translateX(-50%);
   padding: 6px 12px;
-  font-size: 14px;
+  font-size: 13px;
   font-family: 'Cormorant Garamond', serif;
   letter-spacing: 0.5px;
   font-weight: 600;
@@ -280,18 +280,6 @@ body {
   z-index: 20;
 }
 
-/* Kalau hari libur */
-.holiday {
-	  left: 53%;
-	  font-size: 15px;
-	  font-weight: 900;
-  color: #ff4d4d !important;
-  text-shadow:
-    0 0 2px #000,      /* bayangan hitam halus */
-    0 0 5px #000;      /* glow hitam lembut */
-  background: rgba(0, 0, 0, 0.0); /* biar lebih mencolok tapi tetap clean */
-}
-      
     .brand-name {      
       position: absolute;      
       top: 50px;      
@@ -454,6 +442,18 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
     line-height: 1.6;
   }
   
+  /* Kalau hari libur */
+.holiday {
+	  left: 53%;
+	  font-size: 15px;
+	  font-weight: 800;
+  color: #ff4d4d !important;
+  text-shadow:
+    0 0 2px #000,      /* bayangan hitam halus */
+    0 0 5px #000;      /* glow hitam lembut */
+  background: rgba(0, 0, 0, 0.0); /* biar lebih mencolok tapi tetap clean */
+}
+      
 </style>
     </style>      
 </head>      
@@ -881,6 +881,8 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("Gagal ambil data libur nasional:", e);
     }
   }
+
+liburList.push(todayStr); // ====> untuk testing lokal saja
 
   if (liburList.includes(todayStr)) {
     el.classList.remove("hidden");
