@@ -524,7 +524,7 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
 <p id="quoteAuthor" class="quote-author"></p>
 </div>
 
-
+<audio id="alarmSound" src="https://raw.githubusercontent.com/yuda2525/jamY-Z/main/quote-ping.mp3" preload="auto"></audio>
 </body>      
   <script>      
   	window.addEventListener("error", e => console.error("❌ Global Error:", e.message));      
@@ -913,14 +913,59 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-function jalankanQuote() {
-  // Di sini langsung tampilkan atau fetch quote
-  const quoteBox = document.querySelector('.quote-container');
-  if (quoteBox) {
-    quoteBox.textContent = '🌟 “Kesuksesan adalah gabungan dari tekad dan disiplin.”';
-    quoteBox.classList.add('active');
+let audioReady = false;
+let alarmTriggered = [false, false, false]; // status trigger untuk 3 waktu
+
+// Interaksi awal user (wajib biar audio bisa autoplay)
+document.addEventListener('click', () => {
+  const alarm = document.getElementById('alarmSound');
+  alarm.play().then(() => {
+    alarm.pause();
+    alarm.currentTime = 0;
+    audioReady = true;
+    console.log('✅ Audio di-unlock lewat klik');
+  }).catch(err => {
+    console.warn('❌ Gagal unlock audio:', err);
+  });
+}, { once: true });
+
+// Tiga waktu target (jam & menit)
+const alarmTimes = [
+  { hour: 8, minute: 30 },  
+  { hour: 13, minute: 00 }, 
+  { hour: 0, minute: 0 }  
+];
+
+// Cek setiap detik
+setInterval(() => {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+
+  alarmTimes.forEach((time, i) => {
+    if (!alarmTriggered[i] && audioReady && h === time.hour && m === time.minute) {
+      const alarm = document.getElementById('alarmSound');
+      alarm.play().then(() => {
+        console.log(`🔔 Alarm ${i + 1} bunyi: ${h}:${m}`);
+      }).catch(err => {
+        console.warn(`❌ Gagal putar alarm ${i + 1}:`, err);
+      });
+      alarmTriggered[i] = true;
+    }
+  });
+}, 1000);
+
+// Reset status alarmTriggered setiap jam baru
+let lastCheckedHour = new Date().getHours();
+setInterval(() => {
+  const nowHour = new Date().getHours();
+  if (nowHour !== lastCheckedHour) {
+    alarmTriggered = [false, false, false];
+    lastCheckedHour = nowHour;
+    console.log('🔄 Reset alarmTriggered untuk hari baru');
   }
-}
+}, 60000); // cek tiap menit
+
 
     console.log("✅ Script Loaded");      
   </script>      
