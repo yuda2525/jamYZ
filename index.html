@@ -442,18 +442,6 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
     line-height: 1.6;
   }
   
-  /* Kalau hari libur */
-.holiday {
-	  left: 53%;
-	  font-size: 15px;
-	  font-weight: 700;
-  color: #ff4d4d !important;
-  text-shadow:
-    0 0 2px #000,      /* bayangan hitam halus */
-    0 0 5px #000;      /* glow hitam lembut */
-  background: rgba(0, 0, 0, 0.0); /* biar lebih mencolok tapi tetap clean */
-}
-      
 </style>
     </style>      
 </head>      
@@ -757,36 +745,115 @@ window.addEventListener("load", () => {
 });
 
 <!-- Panggil ini di bawah </body> -->
-let quoteIndex = 0; // wajib ada buat kontrol index
-
-// Atur quotes berdasarkan waktu
-const quotesByTime = {
-  "08:30": { 
-    text: "Setiap pagi adalah kesempatan baru, Jangan ulangi kesalahan kemarin, Jika masih ingin bahagia hari ini.", 
-    author: "- Najwa Shihab -" 
+const weeklyQuotes = [
+  // Minggu (0)
+  {
+    "09:00": {
+      text: "Hari ini aku bangun dengan satu tujuan: mencintaimu lebih baik dari kemarin.",
+      author: "- Najwa Shihab -"
+    },
+    "12:00": {
+      text: "Aku ingin menjadi alasan di balik senyummu, bahkan saat kamu sedang makan siang sendirian.",
+      author: "- Raditya Dika -"
+    },
+    "22:00": {
+      text: "Jangan lupa istirahat, sayang. Mimpimu malam ini semoga tentang kita.",
+      author: "- Boy Candra -"
+    }
   },
-  "13:00": { 
-    text: "Ada yang selalu ingatkanmu makan siang, Bukan karna takut kamu sakit, Tapi karena ingin kamu tetap kuat, Untuk terus bersamaku.", 
-    author: "- Tere Liye -" 
+  // Senin (1)
+  {
+    "09:00": {
+      text: "Your love is the first thought in my mind when I wake up.",
+      author: "- Jane Austen -"
+    },
+    "12:00": {
+      text: "You make my heart smile even on the busiest of days.",
+      author: "- A.R. Asher -"
+    },
+    "22:00": {
+      text: "You’re my favorite notification before I sleep.",
+      author: "- Beau Taplin -"
+    }
   },
-  "00:00": { 
-    text: "Yang membekas dari lilin bukan lelehnya, kekasih, Tapi wajahmu sebelum gelap.", 
-    author: "- Sujiwo Tejo -" 
-  }
-};
+  // Selasa (2)
+  {
+    "09:00": {
+      text: "Setiap hari bersamamu adalah awal yang baru untuk mencintai lebih dalam.",
+      author: "- Merry Riana -"
+    },
+    "12:00": {
+      text: "Cinta bukan sekadar kata, tapi tindakan yang tak kenal lelah.",
+      author: "- Soekarno -"
+    },
+    "22:00": {
+      text: "Ketika malam datang dan kamu jauh dariku, hatiku tetap bersamamu.",
+      author: "- Ludwig van Beethoven -"
+    }
+  },
+    // Rabu (3)
+  {
+    "09:00": {
+      text: “When you arise in the morning, think of what a precious privilege it is to be alive—to breathe, to think, to enjoy, to love.”,
+      author: "- Marcus Aurelius -"
+    },
+    "12:00": {
+      text: “Being deeply loved by someone gives you strength, while loving someone deeply gives you courage.”,
+      author: "- Lao Tzu -"
+    },
+    "22:00": {
+      text: “Let us always meet each other with smile, for the smile is the beginning of love.”,
+      author: "- Mother Teresa -"
+    }
+  },
+    // kamis (4)
+  {
+    "09:00": {
+      text: "Kopi pagi ini terasa manis karena ada namamu yang ikut larut di pikiranku.",
+      author: "- Wira Nagara -"
+    },
+    "12:00": {
+      text: "Cinta adalah kekuatan terbesar yang pernah dikenal manusia.",
+      author: "- Mahatma Gandhi -"
+    },
+    "22:00": {
+      text: "Tak ada yang lebih indah dari diamnya malam yang dipenuhi doa dan cinta.",
+      author: "- Imam Al-Ghazali -"
+    }
+  },
+    // jumat (5)
+  {
+    "09:00": {
+      text: "Jumat penuh berkah, dan berkah terbesarku adalah memilikimu.",
+      author: "- K.H. Mustofa Bisri -"
+    },
+    "12:00": {
+      text: "Bersamamu, bahkan diam di bawah matahari siang pun terasa teduh.",
+      author: "- Dian Sastro -"
+    },
+    "22:00": {
+      text: "Barangsiapa mencintai karena Allah, maka malamnya akan penuh damai dalam pelukan doa.",
+      author: "- Syekh Abdul Qodir Jaelani -"
+    }
+  },
+    // Sabtu (6)
+  {
+    "09:00": {
+      text: "One word frees us of all the weight and pain of life: That word is love.",
+      author: "- Sophocles -"
+    },
+    "12:00": {
+      text: "The more I give to thee, the more I have, for both are infinite.",
+      author: "- William Shakespeare -"
+    },
+    "22:00": {
+      text: "You don’t find love, it finds you. It’s got a little bit to do with destiny, fate, and what’s written in the stars.",
+      author: "- Anaïs Nin -"
+    }
+  },
+];
 
-const triggerTimes = Object.keys(quotesByTime);
-
-function typeText(el, txt, speed = 120) {
-  el.textContent = "";
-  let i = 0;
-  const intv = setInterval(() => {
-    el.textContent += txt.charAt(i++);
-    if (i >= txt.length) clearInterval(intv);
-  }, speed);
-}
-
-let lastShownTime = null;
+let quotePlayedToday = {}; // buat tracking per waktu
 
 function typeText(el, txt, speed = 120, onComplete = null) {
   el.textContent = "";
@@ -800,20 +867,16 @@ function typeText(el, txt, speed = 120, onComplete = null) {
   }, speed);
 }
 
-function playQuoteSequence(timeKey, repeat = 2) {
-  const quote = quotesByTime[timeKey];
+function playQuoteSequence(quote, repeat = 2) {
   const textEl = document.getElementById("typedQuote");
   const authorEl = document.getElementById("quoteAuthor");
-
   let currentRepeat = 0;
 
   function runOnce() {
     typeText(textEl, quote.text, 100, () => {
       setTimeout(() => {
         typeText(authorEl, quote.author, 80, () => {
-          // Setelah selesai ketik semua, tunggu 5 detik
           setTimeout(() => {
-            // Fade out
             textEl.style.opacity = 0;
             authorEl.style.opacity = 0;
 
@@ -825,66 +888,48 @@ function playQuoteSequence(timeKey, repeat = 2) {
 
               currentRepeat++;
               if (currentRepeat < repeat) {
-                setTimeout(runOnce, 1000); // jeda antar tampil ulang
+                setTimeout(runOnce, 1000);
               }
-            }, 800); // tunggu fadeout
-          }, 5000); // quote tampil selama 5 detik
+            }, 800);
+          }, 5000);
         });
-      }, 300); // jeda sebelum mulai ketik author
+      }, 300);
     });
   }
 
-  runOnce(); // mulai urutan pertama
+  runOnce();
 }
 
 function checkTimeForQuotes() {
   const now = new Date();
+  const day = now.getDay(); // 0–6
   const h = String(now.getHours()).padStart(2, "0");
   const m = String(now.getMinutes()).padStart(2, "0");
   const timeKey = `${h}:${m}`;
+  const todayQuotes = weeklyQuotes[day];
 
-  if (triggerTimes.includes(timeKey) && timeKey !== lastShownTime) {
-    lastShownTime = timeKey;
-    playQuoteSequence(timeKey); // hanya 2x tampil, 1 urutan per kali
+  if (!todayQuotes) return;
+
+  const quote = todayQuotes[timeKey];
+  if (quote && !quotePlayedToday[timeKey]) {
+    quotePlayedToday[timeKey] = true;
+    playQuoteSequence(quote); // tampil quote ketik per waktu
   }
 }
+
+// Reset tiap jam 00:01
+setInterval(() => {
+  const now = new Date();
+  if (now.getHours() === 0 && now.getMinutes() === 1) {
+    quotePlayedToday = {};
+    console.log("Reset harian");
+  }
+}, 60000);
 
 document.addEventListener("DOMContentLoaded", () => {
   setInterval(checkTimeForQuotes, 60000);
-  checkTimeForQuotes(); // langsung cek juga
+  checkTimeForQuotes();
 });
-
-
-async function updateDateInfo() {
-  const dateEl = document.getElementById("dateInfo");
-  const now = new Date();
-  const yyyy = now.getFullYear();
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const dd = String(now.getDate()).padStart(2, '0');
-  const day = now.toLocaleDateString('en-US', { weekday: 'long' });
-  const month = now.toLocaleDateString('en-US', { month: 'long' });
-
-  const fullDate = `${day}, ${month} ${dd}, ${yyyy}`;
-  dateEl.textContent = fullDate;
-
-  // Ambil data libur dari API
-  try {
-    const res = await fetch(`https://api-harilibur.vercel.app/api?year=${yyyy}`);
-    const holidays = await res.json();
-    const isHoliday = holidays.some(h => h.date === `${yyyy}-${mm}-${dd}`);
-
-    if (isHoliday) {
-      dateEl.style.color = "#ff4d4d"; // merah
-    } else {
-      dateEl.style.color = ""; // default
-    }
-  } catch (err) {
-    console.warn("Gagal ambil data hari libur:", err);
-  }
-}
-
-// Update setiap hari (dan saat awal load)
-updateDateInfo();
 
 
 if ('serviceWorker' in navigator) {
@@ -931,9 +976,9 @@ document.addEventListener('click', () => {
 
 // Tiga waktu target (jam & menit)
 const alarmTimes = [
-  { hour: 8, minute: 30 },  
-  { hour: 13, minute: 00 }, 
-  { hour: 0, minute: 0 }  
+  { hour: 9, minute: 00 },  
+  { hour: 12, minute: 00 }, 
+  { hour: 22, minute: 00 }  
 ];
 
 // Cek setiap detik
@@ -972,3 +1017,32 @@ setInterval(() => {
 </body>      
 </html>      
       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
