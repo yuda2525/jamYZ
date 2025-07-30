@@ -22,9 +22,15 @@
 <link rel="apple-touch-icon" href="assets/icon-192.png" />        
 <link rel="apple-touch-startup-image" href="assets/splash-screen.png">    
   <title>YudaTime® Neon Glass</title>        
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">      
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap" rel="stylesheet">     
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Great+Vibes&family=Cormorant+Garamond&display=swap"> 
+<meta name="description" content="Jam Digital Neon Glass - Tampilan stylish, offline support, dan installable.">
+	<link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />  
+    <noscript>
+  <strong>JavaScript dibutuhkan agar situs ini bisa berjalan offline.</strong>
+</noscript>
   <style>        
     * {  
       margin: 0;  
@@ -932,31 +938,36 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', async () => {
-    try {
-      const reg = await navigator.serviceWorker.register('./sw.js');
-      console.log('✅ Service Worker terdaftar di:', reg.scope);
 
-      // Langsung kirim ping ke aktif SW
-      if (reg.active) {
-        console.log('[Main] Kirim ping ke SW aktif');
-        reg.active.postMessage('ping');
-      }
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+      try {
+        const reg = await navigator.serviceWorker.register('./sw.js');
+        console.log('✅ Service Worker terdaftar di:', reg.scope);
 
-      // Listener balasan dari SW
-      navigator.serviceWorker.addEventListener('message', (event) => {
-        if (event.data?.type === 'quote-ready') {
-          console.log('[Main] Quote siap dijalankan!');
-          jalankanQuote();
+        // Ping ke SW aktif (opsional, tergantung fitur)
+        if (reg.active) {
+          console.log('[Main] Kirim ping ke SW aktif');
+          reg.active.postMessage('ping');
         }
-      });
 
-    } catch (err) {
-      console.error('❌ Gagal daftar Service Worker:', err);
-    }
-  });
-}
+        // Menerima balasan dari SW
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data?.type === 'quote-ready') {
+            console.log('[Main] Quote siap dijalankan!');
+            if (typeof jalankanQuote === 'function') {
+              jalankanQuote();
+            }
+          }
+        });
+      } catch (err) {
+        console.error('❌ Gagal mendaftarkan Service Worker:', err);
+      }
+    });
+  } else {
+    console.warn('⚠️ Browser tidak mendukung Service Worker');
+  }
+
 
 let audioReady = false;
 let alarmTriggered = [false, false, false]; // status trigger untuk 3 waktu
