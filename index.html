@@ -1168,17 +1168,12 @@ setInterval(() => {
 }, 60000); // cek tiap menit
 
 
-(function injectPWASmoothEngine() {
+(function injectSmoothEngine() {
   const fps = 60;
   let ticking = true;
   let lastTime = performance.now();
 
-  function isPWA() {
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           window.navigator.standalone === true ||
-           document.referrer.includes('android-app://');
-  }
-
+  // ✅ Loop utama engine 60FPS berbasis requestAnimationFrame
   function loop() {
     if (!ticking) return;
 
@@ -1193,6 +1188,7 @@ setInterval(() => {
     requestAnimationFrame(loop);
   }
 
+  // 🔁 Pause/resume jika tab tidak aktif (hemat CPU)
   document.addEventListener("visibilitychange", () => {
     ticking = !document.hidden;
     if (ticking) {
@@ -1201,24 +1197,26 @@ setInterval(() => {
     }
   });
 
-  if (isPWA()) {
-    console.log("[✅ PWA Engine] Smooth engine aktif di PWA");
-    loop();
-  } else {
-    console.log("[⛔ Bukan PWA] Engine idle");
-  }
+  console.log("✅ [Smooth Engine] Aktif di semua mode");
+  loop();
 })();
 
+// ✅ Fallback aman (mencegah error jika fungsi belum tersedia)
+window.animateBackground ??= () => {};
+window.animateVisualizer ??= () => {};
+window.gerakinCoverArt ??= () => {};
+window.updateCustomMeter ??= () => {};
+
+// 🚀 Tick listener: dijalankan setiap frame
 document.addEventListener("pwaTick", (e) => {
   const { delta, now } = e.detail;
 
-  // Fungsi opsional — cek dulu apakah ada
-  if (typeof animateBackground === "function") animateBackground(delta);
-  if (typeof animateVisualizer === "function") animateVisualizer(delta);
-  if (typeof gerakinCoverArt === "function") gerakinCoverArt();
-  if (typeof updateCustomMeter === "function") updateCustomMeter(now);
+  // Jalankan fungsi animasi (jika tersedia)
+  animateBackground(delta);
+  animateVisualizer(delta);
+  gerakinCoverArt();
+  updateCustomMeter(now);
 });
-
 
     console.log("✅ Script Loaded");      
   </script>      
