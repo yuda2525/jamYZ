@@ -1212,11 +1212,11 @@ setInterval(() => {
 document.addEventListener("pwaTick", (e) => {
   const { delta, now } = e.detail;
 
-  // Di sinilah lo taruh semua animasi halus:
-  animateBackground?.(delta);
-  animateVisualizer?.(delta);
-  gerakinCoverArt?.();
-  updateCustomMeter?.(now);
+  // Fungsi opsional — cek dulu apakah ada
+  if (typeof animateBackground === "function") animateBackground(delta);
+  if (typeof animateVisualizer === "function") animateVisualizer(delta);
+  if (typeof gerakinCoverArt === "function") gerakinCoverArt();
+  if (typeof updateCustomMeter === "function") updateCustomMeter(now);
 });
 
 
