@@ -1084,7 +1084,6 @@ const visualEngineSettings = {
   animate();
 
 
-
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
@@ -1167,6 +1166,58 @@ setInterval(() => {
     console.log('🔄 Reset alarmTriggered untuk hari baru');
   }
 }, 60000); // cek tiap menit
+
+
+(function injectPWASmoothEngine() {
+  const fps = 60;
+  let ticking = true;
+  let lastTime = performance.now();
+
+  function isPWA() {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           window.navigator.standalone === true ||
+           document.referrer.includes('android-app://');
+  }
+
+  function loop() {
+    if (!ticking) return;
+
+    const now = performance.now();
+    const delta = now - lastTime;
+
+    if (delta >= 1000 / fps) {
+      lastTime = now;
+      document.dispatchEvent(new CustomEvent("pwaTick", { detail: { delta, now } }));
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    ticking = !document.hidden;
+    if (ticking) {
+      lastTime = performance.now();
+      loop();
+    }
+  });
+
+  if (isPWA()) {
+    console.log("[✅ PWA Engine] Smooth engine aktif di PWA");
+    loop();
+  } else {
+    console.log("[⛔ Bukan PWA] Engine idle");
+  }
+})();
+
+document.addEventListener("pwaTick", (e) => {
+  const { delta, now } = e.detail;
+
+  // Di sinilah lo taruh semua animasi halus:
+  animateBackground?.(delta);
+  animateVisualizer?.(delta);
+  gerakinCoverArt?.();
+  updateCustomMeter?.(now);
+});
 
 
     console.log("✅ Script Loaded");      
