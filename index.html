@@ -655,6 +655,7 @@ requestAnimationFrame(loopClock);
     updateClock();      
       
       
+// ==================== FULLSCREEN LOGIC ====================
 let fullscreenActivated = false;
 
 function goFullscreen() {
@@ -669,15 +670,17 @@ function goFullscreen() {
 
 function forceFullscreen() {
   const el = document.documentElement;
-  if (el.requestFullscreen) el.requestFullscreen();
-  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+  if (!document.fullscreenElement) {
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.msRequestFullscreen) el.msRequestFullscreen();
+  }
 }
 
 // Klik pertama → aktifin fullscreen
 document.addEventListener("click", goFullscreen, { once: true });
-  
-  // Double tap → buka input file  
+
+// ==================== BACKGROUND LOGIC ====================
 const bgUpload = document.getElementById("bgUpload");
 const clockCanvas = document.getElementById("clockCanvas");
 const clockBg = document.getElementById("clockBg");
@@ -688,42 +691,39 @@ window.addEventListener("load", () => {
   const bgOuter = localStorage.getItem("bgOuter");
   const bgInner = localStorage.getItem("bgInner");
 
-  if(bgOuter) document.body.style.backgroundImage = `url('${bgOuter}')`;
-  if(bgInner) clockBg.style.backgroundImage = `url('${bgInner}')`;
+  if (bgOuter) document.body.style.backgroundImage = `url('${bgOuter}')`;
+  if (bgInner) clockBg.style.backgroundImage = `url('${bgInner}')`;
 });
 
 // Double tap detection
 document.addEventListener("touchend", (e) => {
   const now = Date.now();
-  if(now - lastTap < 300){
+  if (now - lastTap < 300) {
     const rect = clockCanvas.getBoundingClientRect();
-    const centerX = rect.left + rect.width/2;
-    const centerY = rect.top + rect.height/2;
-    const radius = rect.width/2;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const radius = rect.width / 2;
 
     const touch = e.changedTouches[0];
     const distance = Math.hypot(touch.clientX - centerX, touch.clientY - centerY);
 
-    if(distance <= radius){
-      changeBackground("inner");
-    } else {
-      changeBackground("outer");
-    }
+    if (distance <= radius) changeBackground("inner");
+    else changeBackground("outer");
   }
   lastTap = now;
 });
 
 // Ganti background
-function changeBackground(type){
-  bgUpload.onchange = function(event){
+function changeBackground(type) {
+  bgUpload.onchange = function(event) {
     const file = event.target.files[0];
-    if(!file) return;
+    if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = function(e){
+    reader.onload = function(e) {
       const bgData = e.target.result;
 
-      if(type==="outer"){
+      if (type === "outer") {
         document.body.style.backgroundImage = `url('${bgData}')`;
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundPosition = "center";
@@ -734,18 +734,14 @@ function changeBackground(type){
         localStorage.setItem("bgInner", bgData);
       }
 
-      setTimeout(()=>forceFullscreen(),400);
-    }
+      // Delay kecil biar fullscreen aman
+      setTimeout(() => forceFullscreen(), 400);
+    };
     reader.readAsDataURL(file);
-  }
+  };
 
   bgUpload.click();
 }
-
-if(type === "inner") {
-  document.getElementById("clockBg").style.backgroundImage = `url('${bgData}')`;
-}
-
 
 // Optional: klik gambar masuk fullscreen
 const img = document.getElementById("thumb");
@@ -755,43 +751,65 @@ if (img) {
   });
 }
 
-// Auto cek setiap 3 detik → masukin lagi ke fullscreen kalau keluar
-setInterval(() => {
-  const isFullscreen =
-    document.fullscreenElement ||
-    document.webkitFullscreenElement ||
-    document.msFullscreenElement;
+// ==================== PWA / INPUT ====================
+function isInStandaloneMode() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+}
 
-  if (!isFullscreen && fullscreenActivated) {
-    forceFullscreen();
-  }
-}, 3000);
+if (isInStandaloneMode()) {
+  document.getElementById("bgUpload").style.display = "none";
+}
 
-document.body.addEventListener("click", () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-  }
+// Fallback background default
+window.addEventListener("DOMContentLoaded", () => {
+  const savedBg = localStorage.getItem("bgImage");
+  if (savedBg) document.body.style.backgroundImage = `url(${savedBg})`;
+  else document.body.style.backgroundImage = `url('assets/bg.jpg')`;
 });
 
-// Deteksi apakah sedang diinstall (PWA mode)    
-function isInStandaloneMode() {    
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;    
-}    
-    
-// Kalau PWA, tetap sembunyikan inputnya    
-if (isInStandaloneMode()) {    
-  document.getElementById('bgUpload').style.display = 'none';    
-}    
+// ==================== SMOOTH ENGINE 60FPS ====================
+(function injectSmoothEngine() {
+  const fps = 60;
+  let ticking = true;
+  let lastTime = performance.now();
 
-window.addEventListener('DOMContentLoaded', () => {  
-  const savedBg = localStorage.getItem("bgImage");  
-  if (savedBg) {  
-    document.body.style.backgroundImage = `url(${savedBg})`;  
-  } else {  
-    const bg = 'assets/bg.jpg'; // fallback default  
-    document.body.style.backgroundImage = `url('${bg}')`;  
-  }  
-});  
+  function loop() {
+    if (!ticking) return;
+    const now = performance.now();
+    const delta = now - lastTime;
+
+    if (delta >= 1000 / fps) {
+      lastTime = now;
+      document.dispatchEvent(new CustomEvent("pwaTick", { detail: { delta, now } }));
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    ticking = !document.hidden;
+    if (ticking) lastTime = performance.now();
+    if (ticking) loop();
+  });
+
+  console.log("✅ [Smooth Engine] Aktif di semua mode");
+  loop();
+})();
+
+// ✅ Fallback aman untuk fungsi animasi
+window.animateBackground ??= () => {};
+window.animateVisualizer ??= () => {};
+window.gerakinCoverArt ??= () => {};
+window.updateCustomMeter ??= () => {};
+
+// Tick listener tiap frame
+document.addEventListener("pwaTick", (e) => {
+  const { delta, now } = e.detail;
+  animateBackground(delta);
+  animateVisualizer(delta);
+  gerakinCoverArt();
+  updateCustomMeter(now);
+});
   
   window.addEventListener("resize", () => {
   document.documentElement.style.height = `${window.innerHeight}px`;
@@ -1228,57 +1246,6 @@ setInterval(() => {
     console.log('🔄 Reset alarmTriggered untuk hari baru');
   }
 }, 60000); // cek tiap menit
-
-
-(function injectSmoothEngine() {
-  const fps = 60;
-  let ticking = true;
-  let lastTime = performance.now();
-
-  // ✅ Loop utama engine 60FPS berbasis requestAnimationFrame
-  function loop() {
-    if (!ticking) return;
-
-    const now = performance.now();
-    const delta = now - lastTime;
-
-    if (delta >= 1000 / fps) {
-      lastTime = now;
-      document.dispatchEvent(new CustomEvent("pwaTick", { detail: { delta, now } }));
-    }
-
-    requestAnimationFrame(loop);
-  }
-
-  // 🔁 Pause/resume jika tab tidak aktif (hemat CPU)
-  document.addEventListener("visibilitychange", () => {
-    ticking = !document.hidden;
-    if (ticking) {
-      lastTime = performance.now();
-      loop();
-    }
-  });
-
-  console.log("✅ [Smooth Engine] Aktif di semua mode");
-  loop();
-})();
-
-// ✅ Fallback aman (mencegah error jika fungsi belum tersedia)
-window.animateBackground ??= () => {};
-window.animateVisualizer ??= () => {};
-window.gerakinCoverArt ??= () => {};
-window.updateCustomMeter ??= () => {};
-
-// 🚀 Tick listener: dijalankan setiap frame
-document.addEventListener("pwaTick", (e) => {
-  const { delta, now } = e.detail;
-
-  // Jalankan fungsi animasi (jika tersedia)
-  animateBackground(delta);
-  animateVisualizer(delta);
-  gerakinCoverArt();
-  updateCustomMeter(now);
-});
 
     console.log("✅ Script Loaded");      
   </script>      
