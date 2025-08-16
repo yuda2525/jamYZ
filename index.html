@@ -482,7 +482,8 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
   transition: all 1s ease-in-out;
   background: radial-gradient(circle at center, #111 10%, #000 100%);
 }
-    
+
+
 </style>
     </style>      
 </head>      
@@ -512,6 +513,33 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
   z-index: 99;
   pointer-events: all;
 "></div>
+
+<!-- Background div di belakang canvas -->
+<div id="clockBg" style="
+  position:absolute;
+  width:300px;
+  height:300px;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  border-radius:50%;
+  overflow:hidden;
+  z-index:0;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+"></div>
+
+<canvas id="clockCanvas" width="300" height="300" style="
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  border-radius:50%;
+  z-index:1;
+  background:none;
+"></canvas>
+
 
 <div class="retina-glass">
 	<div id="visualMode" class="content-overlay visual-mode-all">
@@ -547,6 +575,7 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
   
 <!-- Input file disembunyikan -->      
 <input type="file" id="bgUpload" accept="image/*" style="display: none;">      
+
 
 <!-- Quotes Box -->
 <div id="quoteBox" class="quote-container">
@@ -649,40 +678,73 @@ function forceFullscreen() {
 document.addEventListener("click", goFullscreen, { once: true });
   
   // Double tap → buka input file  
-  let lastTap = 0;  
-  document.body.addEventListener("touchend", (e) => {  
-    const now = Date.now();  
-    if (now - lastTap < 300) {  
-      document.getElementById("bgUpload").click();  
-    }  
-    lastTap = now;  
-  });  
-  
-  // Kalau file dipilih → jadikan background  
-      
-// Deteksi background file dipilih → tampilkan sebagai background        
-document.getElementById('bgUpload').addEventListener('change', function (event) {        
-  const file = event.target.files[0];        
-  if (!file) return;        
-        
-  const bg = 'assets/bg.jpg'; // pastikan file-nya ada    
-  const reader = new FileReader();        
-  reader.onload = function (e) {        
-const bgData = e.target.result;  
-document.body.style.backgroundImage = `url('${bgData}')`;  
-  document.body.style.backgroundSize = 'cover';      
-  document.body.style.backgroundPosition = 'center';      
-  document.body.style.backgroundRepeat = 'no-repeat';      
-  document.body.style.backgroundRepeat = 'no-repeat';    
-  
-    // 🔁 Delay kecil sebelum fullscreen biar stabil
-  setTimeout(() => {
-      forceFullscreen();
-    }, 400); // atau 600 jika perlu delay tambahan
-  };
+const bgUpload = document.getElementById("bgUpload");
+const clockCanvas = document.getElementById("clockCanvas");
+const clockBg = document.getElementById("clockBg");
+let lastTap = 0;
 
-  reader.readAsDataURL(file);
-})
+// Load background dari localStorage
+window.addEventListener("load", () => {
+  const bgOuter = localStorage.getItem("bgOuter");
+  const bgInner = localStorage.getItem("bgInner");
+
+  if(bgOuter) document.body.style.backgroundImage = `url('${bgOuter}')`;
+  if(bgInner) clockBg.style.backgroundImage = `url('${bgInner}')`;
+});
+
+// Double tap detection
+document.addEventListener("touchend", (e) => {
+  const now = Date.now();
+  if(now - lastTap < 300){
+    const rect = clockCanvas.getBoundingClientRect();
+    const centerX = rect.left + rect.width/2;
+    const centerY = rect.top + rect.height/2;
+    const radius = rect.width/2;
+
+    const touch = e.changedTouches[0];
+    const distance = Math.hypot(touch.clientX - centerX, touch.clientY - centerY);
+
+    if(distance <= radius){
+      changeBackground("inner");
+    } else {
+      changeBackground("outer");
+    }
+  }
+  lastTap = now;
+});
+
+// Ganti background
+function changeBackground(type){
+  bgUpload.onchange = function(event){
+    const file = event.target.files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const bgData = e.target.result;
+
+      if(type==="outer"){
+        document.body.style.backgroundImage = `url('${bgData}')`;
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundRepeat = "no-repeat";
+        localStorage.setItem("bgOuter", bgData);
+      } else {
+        clockBg.style.backgroundImage = `url('${bgData}')`;
+        localStorage.setItem("bgInner", bgData);
+      }
+
+      setTimeout(()=>forceFullscreen(),400);
+    }
+    reader.readAsDataURL(file);
+  }
+
+  bgUpload.click();
+}
+
+if(type === "inner") {
+  document.getElementById("clockBg").style.backgroundImage = `url('${bgData}')`;
+}
 
 
 // Optional: klik gambar masuk fullscreen
