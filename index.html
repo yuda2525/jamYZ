@@ -810,6 +810,45 @@ document.addEventListener("pwaTick", (e) => {
   gerakinCoverArt();
   updateCustomMeter(now);
 });
+
+// ==================== MEMORY ENGINE MAX ====================
+window.loadedImages = []; // global supaya bisa diakses dari luar
+
+(function MemoryEngineMax() {
+  console.log("✅ [Memory Engine Max] Aktif");
+
+  const imagesToLoad = [
+    "assets/bg1.jpg",
+    "assets/bg2.jpg",
+    "assets/bg3.jpg",
+  ];
+
+  // Preload semua image
+  imagesToLoad.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+      window.loadedImages.push(img); // push ke global
+      console.log(`✅ Loaded: ${src}`);
+    };
+    img.onerror = () => console.warn(`⚠️ Failed to load: ${src}`);
+  });
+
+  // Update background dari memory cache
+  window.setBackgroundFromMemory = (index, targetElement) => {
+    if (!window.loadedImages[index]) return;
+    targetElement.style.backgroundImage = `url('${window.loadedImages[index].src}')`;
+  };
+
+})();
+
+// Panggil background dari memory saat sudah loaded
+const checkLoaded = setInterval(() => {
+  if (window.loadedImages && window.loadedImages[0]) {
+    setBackgroundFromMemory(0, document.body);
+    clearInterval(checkLoaded);
+  }
+}, 100);
   
   window.addEventListener("resize", () => {
   document.documentElement.style.height = `${window.innerHeight}px`;
