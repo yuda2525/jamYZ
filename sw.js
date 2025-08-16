@@ -1,6 +1,6 @@
 console.log('[SW] Script loaded');
 
-const CACHE_NAME = 'yz-cache-v2';
+const CACHE_NAME = 'yz-cache-v3';
 const URLS_TO_CACHE = [
   '/',
   '/index.html',
@@ -10,10 +10,13 @@ const URLS_TO_CACHE = [
   '/assets/icon-512.png',
   '/assets/style.css',
   '/assets/script.js',
-  '/assets/quote-ping.mp3', // Suara quote
+  '/assets/quote-ping.mp3',   // suara quote
+  '/assets/bg.jpg',            // fallback image
+  '/assets/bg.mp4',            // video background
+  '/assets/lagu.mp3'           // audio utama
 ];
 
-// Install SW
+// Install SW: pre-cache semua asset
 self.addEventListener('install', event => {
   console.log('[SW] Install');
   event.waitUntil(
@@ -22,7 +25,7 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// Activate SW
+// Activate SW: hapus cache lama
 self.addEventListener('activate', event => {
   console.log('[SW] Activate');
   event.waitUntil(
@@ -33,19 +36,30 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Intercept fetch
+// Fetch: cache-first + fallback offline
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
     caches.match(event.request).then(cached => {
-      return cached || fetch(event.request).then(response => {
-        return caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, response.clone());
-          return response;
+      if (cached) return cached;
+
+      return fetch(event.request)
+        .then(response => {
+          // simpan request baru ke cache
+          return caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, response.clone());
+            return response;
+          });
+        })
+        .catch(() => {
+          // fallback offline
+          if (event.request.mode === 'navigate') return caches.match('/offline.html');
+          if (event.request.destination === 'image') return caches.match('/assets/bg.jpg');
+          if (event.request.destination === 'video') return caches.match('/assets/bg.mp4');
+          if (event.request.destination === 'audio') return caches.match('/assets/lagu.mp3');
         });
-      });
-    }).catch(() => caches.match('/offline.html'))
+    })
   );
 });
 
