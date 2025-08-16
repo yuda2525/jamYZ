@@ -45,20 +45,25 @@ self.addEventListener('fetch', event => {
       if (cached) return cached;
 
       return fetch(event.request)
-        .then(response => {
-          // simpan request baru ke cache
-          return caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, response.clone());
-            return response;
-          });
-        })
+        .then(resp => caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, resp.clone());
+          return resp;
+        }))
         .catch(() => {
-          // fallback offline
-          if (event.request.mode === 'navigate') return caches.match('/offline.html');
-          if (event.request.destination === 'image') return caches.match('/assets/bg.jpg');
-          if (event.request.destination === 'video') return caches.match('/assets/bg.mp4');
-          if (event.request.destination === 'audio') return caches.match('/assets/lagu.mp3');
-        });
+          const req = event.request;
+          const url = req.url.toLowerCase();
+
+          if (req.mode === 'navigate') return caches.match('/offline.html');
+          if (req.destination === 'image' || url.endsWith('.jpg') || url.endsWith('.png'))
+            return caches.match('/assets/bg.jpg');
+          if (req.destination === 'video' || url.endsWith('.mp4'))
+            return caches.match('/assets/bg.mp4');
+          if (req.destination === 'audio' || url.endsWith('.mp3'))
+            return caches.match('/assets/lagu.mp3');
+
+          // fallback default
+          return caches.match('/offline.html');
+        })
     })
   );
 });
