@@ -1199,34 +1199,35 @@ const visualEngineSettings = {
   animate();
 
 
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', async () => {
-      try {
-        const reg = await navigator.serviceWorker.register('./sw.js');
-        console.log('✅ Service Worker terdaftar di:', reg.scope);
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.register('./sw.js');
+      console.log('✅ Service Worker terdaftar di:', reg.scope);
 
-        // Ping ke SW aktif (opsional, tergantung fitur)
-        if (reg.active) {
-          console.log('[Main] Kirim ping ke SW aktif');
-          reg.active.postMessage('ping');
-        }
-
-        // Menerima balasan dari SW
-        navigator.serviceWorker.addEventListener('message', (event) => {
-          if (event.data?.type === 'quote-ready') {
-            console.log('[Main] Quote siap dijalankan!');
-            if (typeof jalankanQuote === 'function') {
-              jalankanQuote();
-            }
-          }
-        });
-      } catch (err) {
-        console.error('❌ Gagal mendaftarkan Service Worker:', err);
+      // Kirim ping ke SW aktif (opsional)
+      if (reg.active) {
+        console.log('[Main] Kirim ping ke SW aktif');
+        reg.active.postMessage('ping');
       }
-    });
-  } else {
-    console.warn('⚠️ Browser tidak mendukung Service Worker');
-  }
+
+      // Menerima balasan dari SW
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data?.type === 'quote-ready') {
+          console.log('[Main] Quote siap dijalankan!');
+          if (typeof jalankanQuote === 'function') {
+            jalankanQuote();
+          }
+        }
+      });
+
+    } catch (err) {
+      console.error('❌ Gagal mendaftarkan Service Worker:', err);
+    }
+  });
+} else {
+  console.warn('⚠️ Browser tidak mendukung Service Worker');
+}
 
 
 let audioReady = false;
