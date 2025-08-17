@@ -583,8 +583,12 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
 <p id="quoteAuthor" class="quote-author"></p>
 </div>
 
-<audio id="alarmSound" src="https://raw.githubusercontent.com/yuda2525/jamY-Z/main/quote-ping.mp3" preload="auto"></audio>
-</body>      
+<!-- Audio Alarm Ping (online, dikomentarin dulu) -->
+<audio id="alarmSound" src="https://raw.githubusercontent.com/yuda2525/jamY-Z/main/quote-ping.mp3" preload="auto"></audio> 
+
+<!-- Audio Happy Birthday Medley (online) -->
+<audio id="birthdayAudio" src="https://raw.githubusercontent.com/yuda2525/jamY-Z/main/happy_birthday_medley.mp3" preload="auto"></audio>
+
 
 <!-- Script Three.js -->
 <canvas id="hiddenCanvas" style="display: none;"></canvas>
@@ -1074,11 +1078,11 @@ function checkTimeForQuotes() {
   const quote = todayQuotes[timeKey];
   if (quote && !quotePlayedToday[timeKey]) {
     quotePlayedToday[timeKey] = true;
-    playQuoteSequence(quote); // tampil quote ketik per waktu
+    playQuoteSequence(quote);
   }
 }
 
-// Reset tiap jam 00:01
+// Reset harian tiap 00:01
 setInterval(() => {
   const now = new Date();
   if (now.getHours() === 0 && now.getMinutes() === 1) {
@@ -1090,6 +1094,75 @@ setInterval(() => {
 document.addEventListener("DOMContentLoaded", () => {
   setInterval(checkTimeForQuotes, 60000);
   checkTimeForQuotes();
+});
+
+// ==================== Alarm Routine ====================
+let audioReady = false;
+let alarmTriggered = [false, false, false]; // status trigger untuk 3 waktu
+
+document.addEventListener('click', () => {
+  const alarm = document.getElementById('alarmSound');
+  alarm.play().then(() => {
+    alarm.pause();
+    alarm.currentTime = 0;
+    audioReady = true;
+    console.log('✅ Audio di-unlock lewat klik');
+  }).catch(err => {
+    console.warn('❌ Gagal unlock audio:', err);
+  });
+}, { once: true });
+
+const alarmTimes = [
+  { hour: 9, minute: 0 },
+  { hour: 12, minute: 0 },
+  { hour: 22, minute: 0 }
+];
+
+setInterval(() => {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+
+  alarmTimes.forEach((time, i) => {
+    if (!alarmTriggered[i] && audioReady && h === time.hour && m === time.minute) {
+      const alarm = document.getElementById('alarmSound');
+      alarm.play().then(() => {
+        console.log(`🔔 Alarm ${i + 1} bunyi: ${h}:${m}`);
+      }).catch(err => console.warn(`❌ Gagal play alarm ${i + 1}:`, err));
+      alarmTriggered[i] = true;
+    }
+  });
+}, 1000);
+
+// Reset tiap jam
+let lastCheckedHour = new Date().getHours();
+setInterval(() => {
+  const nowHour = new Date().getHours();
+  if (nowHour !== lastCheckedHour) {
+    alarmTriggered = [false, false, false];
+    lastCheckedHour = nowHour;
+    console.log('🔄 Reset alarmTriggered untuk hari baru');
+  }
+}, 60000);
+
+// ==================== Single Tap Random Quote + Ping ====================
+document.body.addEventListener('click', () => {
+  if (!audioReady) return;
+
+  const dayIndex = new Date().getDay();
+  const todayQuotes = weeklyQuotes[dayIndex];
+  if (!todayQuotes) return;
+
+  const timeKeys = Object.keys(todayQuotes);
+  if (timeKeys.length === 0) return;
+
+  const randomKey = timeKeys[Math.floor(Math.random() * timeKeys.length)];
+  const randomQuote = todayQuotes[randomKey];
+
+  playQuoteSequence(randomQuote);
+
+  const alarm = document.getElementById('alarmSound');
+  alarm.play().catch(err => console.warn('❌ Gagal play ping:', err));
 });
 
 
@@ -1197,6 +1270,137 @@ const visualEngineSettings = {
   }
 
   animate();
+  
+
+
+
+let snowManualEnabled = false;  
+let snowAutoEnabled = false;  
+let snowCanvas, ctx, snowflakes;  
+let birthdayTriggered = localStorage.getItem('birthdayTriggered') === 'true';  
+let munchkinTriggered = false;  
+  
+function initSnow() {  
+  if (snowCanvas) return;  
+  snowCanvas = document.createElement("canvas");  
+  document.body.appendChild(snowCanvas);  
+  snowCanvas.style.position = "fixed";  
+  snowCanvas.style.top = "0";  
+  snowCanvas.style.left = "0";  
+  snowCanvas.style.width = "100%";  
+  snowCanvas.style.height = "100%";  
+  snowCanvas.style.pointerEvents = "none";  
+  snowCanvas.style.zIndex = "-2";  
+  snowCanvas.width = window.innerWidth;  
+  snowCanvas.height = window.innerHeight;  
+  
+  ctx = snowCanvas.getContext("2d");  
+  
+  const snowCount = 60;  
+  snowflakes = Array.from({ length: snowCount }, () => ({  
+    x: Math.random() * snowCanvas.width,  
+    y: Math.random() * snowCanvas.height,  
+    size: Math.random() * 2 + 1.5,  
+    speed: Math.random() * 0.8 + 0.2,  
+    sparkle: Math.random(),  
+    sparkleSpeed: Math.random() * 0.05 + 0.02,  
+    flashChance: Math.random() * 0.1 + 0.05,  
+    glowHue: Math.random() * 360  
+  }));  
+  
+  window.addEventListener("resize", () => {  
+    snowCanvas.width = window.innerWidth;  
+    snowCanvas.height = window.innerHeight;  
+  });  
+}  
+  
+const birthdayAudio = document.getElementById("birthdayAudio");  
+  
+function playBirthdayAudioTwice() {
+
+  let playCount = 0;  
+  
+  birthdayAudio.currentTime = 0;  
+  birthdayAudio.play().catch(() => console.warn("⚠ Audio autoplay blocked"));  
+  
+  birthdayAudio.onended = () => {  
+    playCount++;  
+    if (playCount < 2) {  
+      birthdayAudio.currentTime = 0;  
+      birthdayAudio.play().catch(() => console.warn("⚠ Audio autoplay blocked"));  
+    } else {  
+      snowAutoEnabled = false;  
+      if (ctx) ctx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);  
+      console.log("❄ Snow auto OFF (birthday audio selesai 2x)");  
+    }  
+  };  
+}  
+  
+// First-touch auto-trigger seumur hidup  
+document.body.addEventListener('click', () => {  
+  if (!birthdayTriggered) {  
+    birthdayTriggered = true;  
+    localStorage.setItem('birthdayTriggered', 'true');  
+    snowAutoEnabled = true;  
+    playBirthdayAudioTwice();  
+  }  
+  
+  if (!munchkinTriggered) {  
+    munchkinTriggered = true;  
+    console.log("🐾 Munchkin quotes triggered!");  
+    // logic quotes bisa ditambah di sini  
+  }  
+}, { once: true });  
+  
+// Swipe toggle snow + audio (opsional)  
+let startY = 0;  
+document.body.addEventListener("touchstart", e => { startY = e.touches[0].clientY; });  
+document.body.addEventListener("touchend", e => {  
+  const endY = e.changedTouches[0].clientY;  
+  if (startY - endY > 50) {  
+    snowManualEnabled = !snowManualEnabled;  
+    console.log("⛄ Snow toggle manual:", snowManualEnabled);  
+    if (snowManualEnabled) playBirthdayAudioTwice();  
+  }  
+});  
+  
+// Render snow  
+function renderSnow() {  
+  requestAnimationFrame(renderSnow);  
+  if (!(snowManualEnabled || snowAutoEnabled)) {  
+    if (ctx) ctx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);  
+    return;  
+  }  
+  
+  ctx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);  
+  
+  snowflakes.forEach(flake => {  
+    flake.y += flake.speed;  
+    if (flake.y > snowCanvas.height) flake.y = 0;  
+  
+    flake.sparkle += flake.sparkleSpeed;  
+    if (flake.sparkle > 1) flake.sparkle = 0;  
+  
+    const flash = Math.random() < flake.flashChance ? 1 : 0;  
+    const alpha = 0.05 + flake.sparkle * 0.6 + flash * 0.8;  
+    const sizeBoost = flake.size * (0.5 + flash * 0.7);  
+  
+    const hue = flake.glowHue;  
+    ctx.fillStyle = `hsla(${hue}, 100%, 80%, ${alpha})`;  
+    ctx.shadowColor = `hsla(${hue}, 100%, 80%, ${alpha})`;  
+    ctx.shadowBlur = 30 + 50 * flake.sparkle + flash * 70;  
+  
+    ctx.beginPath();  
+    ctx.arc(flake.x, flake.y, sizeBoost, 0, Math.PI * 2);  
+    ctx.fill();  
+  });  
+}  
+  
+// Init + render  
+initSnow();  
+renderSnow();  
+
+
 
 
 if ('serviceWorker' in navigator) {
@@ -1229,59 +1433,6 @@ if ('serviceWorker' in navigator) {
   console.warn('⚠️ Browser tidak mendukung Service Worker');
 }
 
-
-let audioReady = false;
-let alarmTriggered = [false, false, false]; // status trigger untuk 3 waktu
-
-// Interaksi awal user (wajib biar audio bisa autoplay)
-document.addEventListener('click', () => {
-  const alarm = document.getElementById('alarmSound');
-  alarm.play().then(() => {
-    alarm.pause();
-    alarm.currentTime = 0;
-    audioReady = true;
-    console.log('✅ Audio di-unlock lewat klik');
-  }).catch(err => {
-    console.warn('❌ Gagal unlock audio:', err);
-  });
-}, { once: true });
-
-// Tiga waktu target (jam & menit)
-const alarmTimes = [
-  { hour: 9, minute: 00 },  
-  { hour: 12, minute: 00 }, 
-  { hour: 22, minute: 00 }  
-];
-
-// Cek setiap detik
-setInterval(() => {
-  const now = new Date();
-  const h = now.getHours();
-  const m = now.getMinutes();
-
-  alarmTimes.forEach((time, i) => {
-    if (!alarmTriggered[i] && audioReady && h === time.hour && m === time.minute) {
-      const alarm = document.getElementById('alarmSound');
-      alarm.play().then(() => {
-        console.log(`🔔 Alarm ${i + 1} bunyi: ${h}:${m}`);
-      }).catch(err => {
-        console.warn(`❌ Gagal putar alarm ${i + 1}:`, err);
-      });
-      alarmTriggered[i] = true;
-    }
-  });
-}, 1000);
-
-// Reset status alarmTriggered setiap jam baru
-let lastCheckedHour = new Date().getHours();
-setInterval(() => {
-  const nowHour = new Date().getHours();
-  if (nowHour !== lastCheckedHour) {
-    alarmTriggered = [false, false, false];
-    lastCheckedHour = nowHour;
-    console.log('🔄 Reset alarmTriggered untuk hari baru');
-  }
-}, 60000); // cek tiap menit
 
     console.log("✅ Script Loaded");      
   </script>      
