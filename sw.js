@@ -10,13 +10,13 @@ const URLS_TO_CACHE = [
   '/assets/icon-512.png',
   '/assets/style.css',
   '/assets/script.js',
-  '/assets/quote-ping.mp3',   // suara quote
-  '/assets/bg.jpg',            // fallback image
-  '/assets/bg.mp4',            // video background
-  '/assets/lagu.mp3'           // audio utama
+  '/assets/quote-ping.mp3',
+  '/assets/bg.jpg',
+  '/assets/bg.mp4',
+  '/assets/happy_birthday_medley.mp3',
 ];
 
-// Install SW: pre-cache semua asset
+// Install
 self.addEventListener('install', event => {
   console.log('[SW] Install');
   event.waitUntil(
@@ -25,7 +25,7 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// Activate SW: hapus cache lama
+// Activate
 self.addEventListener('activate', event => {
   console.log('[SW] Activate');
   event.waitUntil(
@@ -59,9 +59,8 @@ self.addEventListener('fetch', event => {
           if (req.destination === 'video' || url.endsWith('.mp4'))
             return caches.match('/assets/bg.mp4');
           if (req.destination === 'audio' || url.endsWith('.mp3'))
-            return caches.match('/assets/lagu.mp3');
+            return caches.match('/assets/happy_birthday_medley.mp3');
 
-          // fallback default
           return caches.match('/offline.html');
         })
     })
