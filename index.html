@@ -572,8 +572,7 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
   </div>      
   
 <!-- Input file disembunyikan -->      
-<input type="file" id="bgUpload" accept="image/*" style="display: none;">      
-
+<input id="bgUpload" type="file" accept="image/*,video/mp4"style="display: none;">
 
 <!-- Quotes Box -->
 <div id="quoteBox" class="quote-container">
@@ -687,13 +686,63 @@ const bgUpload = document.getElementById("bgUpload");
 const clockCanvas = document.getElementById("clockCanvas");
 const clockBg = document.getElementById("clockBg");
 let lastTap = 0;
+let videoEl = null;
 
-// Load background dari localStorage
-window.addEventListener("load", () => {
+// IndexedDB setup buat video
+const DB_NAME = "BgMediaDB";
+const STORE_NAME = "videos";
+
+// buka DB
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror = e => reject(e);
+  });
+}
+
+async function saveVideo(file) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    tx.objectStore(STORE_NAME).put(file, "bgOuterVideo");
+    tx.oncomplete = () => resolve();
+    tx.onerror = e => reject(e);
+  });
+}
+
+async function loadVideo() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const req = tx.objectStore(STORE_NAME).get("bgOuterVideo");
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = e => reject(e);
+  });
+}
+
+// Load background dari localStorage / IndexedDB
+window.addEventListener("load", async () => {
   const bgOuter = localStorage.getItem("bgOuter");
   const bgInner = localStorage.getItem("bgInner");
+  const bgOuterType = localStorage.getItem("bgOuterType");
 
-  if (bgOuter) document.body.style.backgroundImage = `url('${bgOuter}')`;
+  if (bgOuterType === "image" && bgOuter) {
+    setImageBackground(bgOuter);
+  } else if (bgOuterType === "video") {
+    const file = await loadVideo();
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setVideoBackground(url);
+    }
+  }
+
   if (bgInner) clockBg.style.backgroundImage = `url('${bgInner}')`;
 });
 
@@ -717,32 +766,71 @@ document.addEventListener("touchend", (e) => {
 
 // Ganti background
 function changeBackground(type) {
-  bgUpload.onchange = function(event) {
+  bgUpload.onchange = async function(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const bgData = e.target.result;
+    if (file.type.startsWith("video/")) {
+      await saveVideo(file); // simpan ke IndexedDB
+      const url = URL.createObjectURL(file);
+      setVideoBackground(url);
+      localStorage.setItem("bgOuterType", "video"); 
+    } else {
+      // kalau gambar
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const bgData = e.target.result;
+        if (type === "outer") {
+          setImageBackground(bgData);
+          localStorage.setItem("bgOuter", bgData);
+          localStorage.setItem("bgOuterType", "image");
+        } else {
+          clockBg.style.backgroundImage = `url('${bgData}')`;
+          localStorage.setItem("bgInner", bgData);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
 
-      if (type === "outer") {
-        document.body.style.backgroundImage = `url('${bgData}')`;
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundPosition = "center";
-        document.body.style.backgroundRepeat = "no-repeat";
-        localStorage.setItem("bgOuter", bgData);
-      } else {
-        clockBg.style.backgroundImage = `url('${bgData}')`;
-        localStorage.setItem("bgInner", bgData);
-      }
-
-      // Delay kecil biar fullscreen aman
-      setTimeout(() => forceFullscreen(), 400);
-    };
-    reader.readAsDataURL(file);
+    // Delay kecil biar fullscreen aman
+    setTimeout(() => forceFullscreen(), 400);
   };
 
   bgUpload.click();
+}
+
+// Helper: set image bg
+function setImageBackground(data) {
+  if (videoEl) {
+    videoEl.remove();
+    videoEl = null;
+  }
+  document.body.style.backgroundImage = `url('${data}')`;
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+}
+
+// Helper: set video bg
+function setVideoBackground(url) {
+  if (videoEl) videoEl.remove();
+
+  videoEl = document.createElement("video");
+  videoEl.src = url;
+  videoEl.autoplay = true;
+  videoEl.loop = true;
+  videoEl.muted = true;
+  videoEl.playsInline = true;
+  videoEl.style = `
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: -1;
+  `;
+
+  document.body.style.backgroundImage = ""; // reset bg image
+  document.body.appendChild(videoEl);
 }
 
 // Optional: klik gambar masuk fullscreen
@@ -757,16 +845,30 @@ if (img) {
 function isInStandaloneMode() {
   return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
 }
-
 if (isInStandaloneMode()) {
   document.getElementById("bgUpload").style.display = "none";
 }
 
-// Fallback background default
-window.addEventListener("DOMContentLoaded", () => {
-  const savedBg = localStorage.getItem("bgImage");
-  if (savedBg) document.body.style.backgroundImage = `url(${savedBg})`;
-  else document.body.style.backgroundImage = `url('assets/bg.jpg')`;
+// ==================== FALLBACK BACKGROUND ====================
+window.addEventListener("DOMContentLoaded", async () => {
+  const bgOuterType = localStorage.getItem("bgOuterType");
+  const bgOuter = localStorage.getItem("bgOuter");
+  const bgInner = localStorage.getItem("bgInner");
+
+  if (bgOuterType === "image" && bgOuter) {
+    setImageBackground(bgOuter);
+  } else if (bgOuterType === "video") {
+    const file = await loadVideo();
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setVideoBackground(url);
+    }
+  } else {
+    // fallback default
+    document.body.style.backgroundImage = `url('assets/bg.jpg')`;
+  }
+
+  if (bgInner) clockBg.style.backgroundImage = `url('${bgInner}')`;
 });
 
 // ==================== SMOOTH ENGINE 60FPS ====================
@@ -794,7 +896,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (ticking) loop();
   });
 
-  console.log("✅ [Smooth Engine] Aktif di semua mode");
+  console.log("✅ [Smooth Engine] Aktif");
   loop();
 })();
 
@@ -814,39 +916,30 @@ document.addEventListener("pwaTick", (e) => {
 });
 
 // ==================== MEMORY ENGINE MAX ====================
-window.loadedImages = []; // global supaya bisa diakses dari luar
+window.loadedImages = [];
 
 (function MemoryEngineMax() {
   console.log("✅ [Memory Engine Max] Aktif");
 
-const imagesToLoad = []; 
+  const imagesToLoad = []; // bisa list preload di sini
 
-  // Preload semua image
   imagesToLoad.forEach((src) => {
     const img = new Image();
     img.src = src;
     img.onload = () => {
-      window.loadedImages.push(img); // push ke global
+      window.loadedImages.push(img);
       console.log(`✅ Loaded: ${src}`);
     };
     img.onerror = () => console.warn(`⚠️ Failed to load: ${src}`);
   });
 
-  // Update background dari memory cache
+  // bisa dipanggil manual buat inject ke elemen
   window.setBackgroundFromMemory = (index, targetElement) => {
     if (!window.loadedImages[index]) return;
     targetElement.style.backgroundImage = `url('${window.loadedImages[index].src}')`;
   };
-
 })();
 
-// Panggil background dari memory saat sudah loaded
-const checkLoaded = setInterval(() => {
-  if (window.loadedImages && window.loadedImages[0]) {
-    setBackgroundFromMemory(0, document.body);
-    clearInterval(checkLoaded);
-  }
-}, 100);
   
   window.addEventListener("resize", () => {
   document.documentElement.style.height = `${window.innerHeight}px`;
@@ -1063,6 +1156,7 @@ function playQuoteSequence(quote, repeat = 2) {
   runOnce();
 }
 
+
 function checkTimeForQuotes() {
   const now = new Date();
   const day = now.getDay();
@@ -1138,9 +1232,31 @@ setInterval(() => {
   }
 }, 60000);
 
+// ==================== Queue system ====================
+let isPlaying = false; // menandai quote sedang berjalan
+
+function playQuoteOnce(quote, repeat = 2) {
+  if (isPlaying) return; // block tap selama quote sedang berjalan
+  isPlaying = true;
+
+  // Jalankan sequence quote
+  playQuoteSequence(quote, repeat);
+
+  // Hitung durasi total sequence
+  const textLen = quote.text.length;
+  const authorLen = quote.author.length;
+  const duration = ((textLen * 100 + 300) + (authorLen * 80 + 5000 + 800 + 1000)) * repeat;
+
+  // Setelah selesai, aktifkan tap lagi
+  setTimeout(() => {
+    isPlaying = false;
+  }, duration);
+}
+
 // ==================== Single Tap Random Quote + Ping ====================
 document.body.addEventListener('click', () => {
   if (!audioReady) return;
+  if (isPlaying) return; // ignore tap jika quote sedang berjalan
 
   const dayIndex = new Date().getDay();
   const todayQuotes = weeklyQuotes[dayIndex];
@@ -1149,15 +1265,14 @@ document.body.addEventListener('click', () => {
   const timeKeys = Object.keys(todayQuotes);
   if (timeKeys.length === 0) return;
 
-  const randomKey = timeKeys[Math.floor(Math.random()*timeKeys.length)];
+  const randomKey = timeKeys[Math.floor(Math.random() * timeKeys.length)];
   const randomQuote = todayQuotes[randomKey];
 
-  playQuoteSequence(randomQuote);
+  playQuoteOnce(randomQuote);
 
   const alarm = document.getElementById('alarmSound');
   alarm.play().catch(err => console.warn('❌ Gagal play ping:', err));
 });
-
 
 
 const visualEngineSettings = {
@@ -1266,9 +1381,6 @@ const visualEngineSettings = {
   animate();
   
 
-
-
-// ================= Snow + Birthday Medley + EQ =================
 // ================= Snow + Birthday Medley =================
 let snowManualEnabled = false;  
 let snowAutoEnabled = false;  
@@ -1287,7 +1399,7 @@ function initSnow() {
   snowCanvas.style.width = "100%";  
   snowCanvas.style.height = "100%";  
   snowCanvas.style.pointerEvents = "none";  
-  snowCanvas.style.zIndex = "-2";  
+  snowCanvas.style.zIndex = "0"; 
   snowCanvas.width = window.innerWidth;  
   snowCanvas.height = window.innerHeight;  
   ctx = snowCanvas.getContext("2d");  
