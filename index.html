@@ -1417,16 +1417,17 @@ function initSnow() {
   snowCanvas.height = window.innerHeight;  
   ctx = snowCanvas.getContext("2d");  
 
-  const snowCount = 121;  
+      const snowCount = 81;  
   snowflakes = Array.from({ length: snowCount }, () => ({  
     x: Math.random() * snowCanvas.width,  
     y: Math.random() * snowCanvas.height,  
     size: Math.random() * 2 + 1.5,  
-    speed: Math.random() * 0.8 + 0.2,  
-    sparkle:  Math.random() * Math.PI * 2,
-    sparkleSpeed: Math.random() * 0.02 + 0.005,  
+        speed: Math.random() * 0.5 + 0.2,
+        sparkle: Math.random(),
+        sparkleSpeed: Math.random() * 0.03 + 0.015,
     flashChance: Math.random() * 0.1 + 0.05,  
-    glowHue: Math.random() * 360  
+        glowHue: Math.random() * 360,
+        lightness: Math.random() * 30 + 50,
   }));  
 
   window.addEventListener("resize", () => {  
@@ -1447,13 +1448,13 @@ function renderSnow() {
     if (flake.y > snowCanvas.height) flake.y = 0;  
     flake.sparkle += flake.sparkleSpeed;  
     if (flake.sparkle > 1) flake.sparkle = 0;  
-    const flash = Math.random() < flake.flashChance ? 1 : 0;  
+            const flash = Math.random() < flake.flashChance ? 1 : 0;
     const alpha = 0.05 + flake.sparkle * 0.6 + flash * 0.8;  
     const sizeBoost = flake.size * (0.5 + flash * 0.7);  
     const hue = flake.glowHue;  
     ctx.fillStyle = `hsla(${hue}, 100%, 80%, ${alpha})`;  
     ctx.shadowColor = `hsla(${hue}, 100%, 80%, ${alpha})`;  
-    ctx.shadowBlur = 30 + 50 * flake.sparkle + flash * 70;  
+            ctx.shadowBlur = 20 + 30 * flake.sparkle + flash * 40;
     ctx.beginPath();  
     ctx.arc(flake.x, flake.y, sizeBoost, 0, Math.PI * 2);  
     ctx.fill();  
@@ -1513,7 +1514,7 @@ document.body.addEventListener("touchend", e => {
   }
 });
 
-
+// ==================== Swipe / Touch Handlers ====================
 initSnow();
 renderSnow();
 
