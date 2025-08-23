@@ -583,9 +583,7 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
 <!-- Audio Alarm Ping (online, dikomentarin dulu) -->
 <audio id="alarmSound" src="https://raw.githubusercontent.com/yuda2525/jamY-Z/main/quote-ping.mp3" preload="auto"></audio> 
 
-<!-- Audio Happy Birthday Medley (online) -->
-<audio id="birthdayAudio" src="https://raw.githubusercontent.com/yuda2525/jamY-Z/main/happy_birthday_medley.mp3" preload="auto"></audio>
-
+<audio id="jamAudio" preload="auto"></audio>
 
 <!-- Script Three.js -->
 <canvas id="hiddenCanvas" style="display: none;"></canvas>
@@ -1387,7 +1385,22 @@ let snowAutoEnabled = false;
 let snowCanvas, ctx, snowflakes;  
 let birthdayTriggered = localStorage.getItem('birthdayTriggered') === 'true';  
 let munchkinTriggered = false;  
-const birthdayAudio = document.getElementById("birthdayAudio");
+
+// ==================== Track list (online/offline) ====================
+const TRACKS = [
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/happy_birthday_medley.m4a", offline: "assets/happy_birthday_medley.m4a" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Moonlight%20Sonata%20(3rd%20Movement)-Beethoven.m4a", offline: "assets/Moonlight_Sonata_3rd.m4a" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Once%20Upon%20a%20December-Anastasia.m4a", offline: "assets/Once_Upon_a_December.m4a" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/The%20Promised%20Neverland.m4a", offline: "assets/The_Promised_Neverland.m4a" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Wiegenlied%20(Lullaby)-Brahms.m4a", offline: "assets/Wiegenlied_Brahms.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/cradle-song.mp3", offline: "assets/cradle-song.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/lullaby.mp3", offline: "assets/lullaby.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/twinkle-twinkle-little-star.mp3", offline: "assets/twinkle-twinkle-little-star.mp3" }
+];
+
+let trackIdx = 0;
+const audio = new Audio();
+let startY = 0;
 
 function initSnow() {  
   if (snowCanvas) return;  
@@ -1447,52 +1460,62 @@ function renderSnow() {
   });  
 }  
 
-function playBirthdayAudioTwice() {  
-  if (!birthdayAudio) return;  
-  let playCount = 0;  
-  birthdayAudio.currentTime = 0;  
-  birthdayAudio.play().catch(() => console.warn("⚠ Audio autoplay blocked"));  
-  birthdayAudio.onended = () => {  
-    playCount++;  
-    if (playCount < 2) {  
-      birthdayAudio.currentTime = 0;  
-      birthdayAudio.play().catch(() => console.warn("⚠ Audio autoplay blocked"));  
-    } else {  
-      snowAutoEnabled = false;  
-      if (ctx) ctx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);  
-      console.log("❄ Snow auto OFF (birthday audio selesai 2x)");  
-    }  
-  };  
-}  
+// ==================== Play Track 2x with fallback ====================
+function playCurrentTrackTwice() {
+  let playCount = 0;
 
-document.body.addEventListener('click', () => {  
-  if (!birthdayTriggered) {  
-    birthdayTriggered = true;  
-    localStorage.setItem('birthdayTriggered', 'true');  
-    snowAutoEnabled = true;  
-    playBirthdayAudioTwice();  
-  }  
-  if (!munchkinTriggered) {  
-    munchkinTriggered = true;  
-    console.log("🐾 Munchkin quotes triggered!");  
-  }  
-}, { once: true });  
+  function playSrc(src) {
+    audio.src = src;
+    audio.load(); // pastikan browser mengenali source baru
+    audio.play().catch(err => console.warn("⚠ Audio gagal main:", err));
+  }
 
-let startY = 0;  
-document.body.addEventListener("touchstart", e => startY = e.touches[0].clientY);  
-document.body.addEventListener("touchend", e => {  
-  const endY = e.changedTouches[0].clientY;  
-  if (startY - endY > 50) {  
-    snowManualEnabled = !snowManualEnabled;  
-    console.log("⛄ Snow toggle manual:", snowManualEnabled);  
-    if (snowManualEnabled) playBirthdayAudioTwice();  
-  }  
-});  
+  // coba mainkan online dulu
+  playSrc(TRACKS[trackIdx].online);
 
-initSnow();  
+  audio.onended = () => {
+    playCount++;
+    if (playCount < 2) {
+      audio.currentTime = 0;
+      audio.play().catch(() => console.warn("⚠ Audio autoplay blocked"));
+    } else {
+      snowAutoEnabled = false;
+      trackIdx = (trackIdx + 1) % TRACKS.length;
+      if (ctx) ctx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);
+    }
+  };
+
+  audio.onerror = () => {
+    console.warn("⚠ Online gagal, fallback offline");
+    playSrc(TRACKS[trackIdx].offline);
+  };
+}
+
+// ==================== Swipe / Touch Handlers ====================
+document.body.addEventListener("touchstart", e => startY = e.touches[0].clientY);
+document.body.addEventListener("touchend", e => {
+  const endY = e.changedTouches[0].clientY;
+  if (startY - endY > 50) { // swipe up
+    if (!snowAutoEnabled) {
+      snowAutoEnabled = true;
+      snowManualEnabled = true;
+      trackIdx = (trackIdx + 1) % TRACKS.length; // swap track dulu
+      console.log("⛄ Snow ON + track play:", TRACKS[trackIdx].online);
+      playCurrentTrackTwice(); // mainkan track baru
+    } else {
+      snowAutoEnabled = false;
+      snowManualEnabled = false;
+      audio.pause();
+      audio.currentTime = 0;
+      if (ctx) ctx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);
+      console.log("⛔ Snow OFF + audio STOP");
+    }
+  }
+});
+
+// ==================== Init ====================
+initSnow();
 renderSnow();
-
-
 
 
 
