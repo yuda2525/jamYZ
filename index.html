@@ -1449,17 +1449,27 @@ function renderSnow() {
     flake.sparkle += flake.sparkleSpeed;  
     if (flake.sparkle > 1) flake.sparkle = 0;  
             const flash = Math.random() < flake.flashChance ? 1 : 0;
-    const alpha = 0.05 + flake.sparkle * 0.6 + flash * 0.8;  
+const alpha = 0.05 + flake.sparkle * 0.7 + flash * 0.9;
     const sizeBoost = flake.size * (0.5 + flash * 0.7);  
-    const hue = flake.glowHue;  
+
+    const hue = (flake.glowHue + Date.now() * 0.02) % 360; // hue shift
+            const light = flake.lightness;
+    
     ctx.fillStyle = `hsla(${hue}, 100%, 80%, ${alpha})`;  
     ctx.shadowColor = `hsla(${hue}, 100%, 80%, ${alpha})`;  
             ctx.shadowBlur = 20 + 30 * flake.sparkle + flash * 40;
-    ctx.beginPath();  
-    ctx.arc(flake.x, flake.y, sizeBoost, 0, Math.PI * 2);  
-    ctx.fill();  
-  });  
-}  
+            
+// flake utama
+ctx.beginPath();
+ctx.arc(flake.x, flake.y, sizeBoost, 0, Math.PI * 2);
+ctx.fill();
+
+// inner glow
+ctx.beginPath();
+ctx.arc(flake.x, flake.y, sizeBoost * 0.4, 0, Math.PI * 2);
+ctx.fill();
+  }); 
+} 
 
 // ==================== Play Track 2x with fallback ====================
 function playCurrentTrackTwice() {
