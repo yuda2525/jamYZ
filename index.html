@@ -1395,7 +1395,23 @@ const TRACKS = [
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Wiegenlied%20(Lullaby)-Brahms.m4a", offline: "assets/Wiegenlied_Brahms.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/cradle-song.mp3", offline: "assets/cradle-song.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/lullaby.mp3", offline: "assets/lullaby.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/twinkle-twinkle-little-star.mp3", offline: "assets/twinkle-twinkle-little-star.mp3" }
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/twinkle-twinkle-little-star.mp3", offline: "assets/twinkle-twinkle-little-star.mp3" },
+  { 
+  online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Passacaglia-Handel-Halvorsen%20%5BMusic%20Box%5D.m4a", 
+  offline: "assets/Passacaglia-Handel-Halvorsen.m4a" 
+},
+{ 
+  online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/It%E2%80%99s%20a%20small%20world-Walt%20Disney%20%5BMusic%20Box%5D%20(Disney%20Parks%20'it's%20a%20small%20world.m4a", 
+  offline: "assets/its_a_small_world.m4a" 
+},
+{ 
+  online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Davy%20Jones-Pirates%20of%20the%20Caribbean%20%5BMusic%20Box%5D.m4a", 
+  offline: "assets/davy_jones.m4a" 
+},
+{ 
+  online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Canon%20in%20D-Johann%20Pachelbel%20%5BMusic%20Box%5D.m4a", 
+  offline: "assets/canon_in_d.m4a" 
+}
 ];
 
 let trackIdx = 0;
@@ -1471,34 +1487,49 @@ ctx.fill();
   }); 
 } 
 
-// ==================== Play Track 2x with fallback ====================
-function playCurrentTrackTwice() {
-  let playCount = 0;
+// ==================== Random Shuffle Player (1x play, no repeat) ====================
+// ==================== Random Shuffle Player (1x play, no repeat) ====================
+let shuffledTracks = [];
+let shuffleIdx = 0;
+
+// buat array acak (shuffle)
+function shuffleTracks() {
+  shuffledTracks = [...TRACKS];
+  for (let i = shuffledTracks.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledTracks[i], shuffledTracks[j]] = [shuffledTracks[j], shuffledTracks[i]];
+  }
+  shuffleIdx = 0;
+}
+
+// play track random berikutnya (hanya 1x, no repeat)
+function playRandomTrack() {
+  if (shuffleIdx >= shuffledTracks.length) {
+    shuffleTracks(); // kalau udah habis semua, acak ulang
+  }
+
+  const current = shuffledTracks[shuffleIdx];
+  shuffleIdx++;
 
   function playSrc(src) {
     audio.src = src;
-    audio.load(); // pastikan browser mengenali source baru
-    audio.play().catch(err => console.warn("⚠ Audio gagal main:", err));
+    audio.load();
+    audio.play().catch(err => console.warn("⚠ Audio gagal play:", err));
   }
 
-  // coba mainkan online dulu
-  playSrc(TRACKS[trackIdx].online);
+  // coba online dulu
+  playSrc(current.online);
 
   audio.onended = () => {
-    playCount++;
-    if (playCount < 2) {
-      audio.currentTime = 0;
-      audio.play().catch(() => console.warn("⚠ Audio autoplay blocked"));
-    } else {
-      snowAutoEnabled = false;
-      trackIdx = (trackIdx + 1) % TRACKS.length;
-      if (ctx) ctx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);
-    }
+    // track selesai → audio stop, snow tetap jalan
+    console.log("✅ Track selesai, audio off tapi snow masih jalan");
+    audio.pause();
+    audio.currentTime = 0;
   };
 
   audio.onerror = () => {
     console.warn("⚠ Online gagal, fallback offline");
-    playSrc(TRACKS[trackIdx].offline);
+    playSrc(current.offline);
   };
 }
 
@@ -1508,12 +1539,13 @@ document.body.addEventListener("touchend", e => {
   const endY = e.changedTouches[0].clientY;
   if (startY - endY > 50) { // swipe up
     if (!snowAutoEnabled) {
+      // Swipe ON → snow + 1x random track
       snowAutoEnabled = true;
       snowManualEnabled = true;
-      trackIdx = (trackIdx + 1) % TRACKS.length; // swap track dulu
-      console.log("⛄ Snow ON + track play:", TRACKS[trackIdx].online);
-      playCurrentTrackTwice(); // mainkan track baru
+      console.log("⛄ Snow ON + random track play");
+      playRandomTrack();
     } else {
+      // Swipe OFF → matiin snow + pastiin audio stop
       snowAutoEnabled = false;
       snowManualEnabled = false;
       audio.pause();
@@ -1523,6 +1555,9 @@ document.body.addEventListener("touchend", e => {
     }
   }
 });
+
+// acak awal
+shuffleTracks();
 
 
 initSnow();
