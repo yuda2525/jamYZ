@@ -1388,30 +1388,18 @@ let munchkinTriggered = false;
 
 // ==================== Track list (online/offline) ====================
 const TRACKS = [
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/happy_birthday_medley.m4a", offline: "assets/happy_birthday_medley.m4a" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Moonlight%20Sonata%20(3rd%20Movement)-Beethoven.m4a", offline: "assets/Moonlight_Sonata_3rd.m4a" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Once%20Upon%20a%20December-Anastasia.m4a", offline: "assets/Once_Upon_a_December.m4a" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/The%20Promised%20Neverland.m4a", offline: "assets/The_Promised_Neverland.m4a" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/happy_birthday_medley.m4a",   offline: "assets/happy_birthday_medley.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Moonlight%20Sonata%20(3rd%20Movement)-Beethoven.m4a",   offline: "assets/Moonlight_Sonata_3rd.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Once%20Upon%20a%20December-Anastasia.m4a",   offline: "assets/Once_Upon_a_December.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/The%20Promised%20Neverland.m4a",   offline: "assets/The_Promised_Neverland.mp3" },  
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Wiegenlied%20(Lullaby)-Brahms.m4a", offline: "assets/Wiegenlied_Brahms.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/cradle-song.mp3", offline: "assets/cradle-song.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/lullaby.mp3", offline: "assets/lullaby.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/twinkle-twinkle-little-star.mp3", offline: "assets/twinkle-twinkle-little-star.mp3" },
-  { 
-  online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Passacaglia-Handel-Halvorsen%20%5BMusic%20Box%5D.m4a", 
-  offline: "assets/Passacaglia-Handel-Halvorsen.m4a" 
-},
-{ 
-  online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/It%E2%80%99s%20a%20small%20world-Walt%20Disney%20%5BMusic%20Box%5D%20(Disney%20Parks%20'it's%20a%20small%20world.m4a", 
-  offline: "assets/its_a_small_world.m4a" 
-},
-{ 
-  online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Davy%20Jones-Pirates%20of%20the%20Caribbean%20%5BMusic%20Box%5D.m4a", 
-  offline: "assets/davy_jones.m4a" 
-},
-{ 
-  online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Canon%20in%20D-Johann%20Pachelbel%20%5BMusic%20Box%5D.m4a", 
-  offline: "assets/canon_in_d.m4a" 
-}
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Passacaglia-Handel-Halvorsen%20%5BMusic%20Box%5D.m4a", offline: "assets/Passacaglia-Handel-Halvorsen.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Its_a_small_world-Walt_Disney.m4a", offline: "assets/Its_a_small_world-Walt_Disney.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Davy%20Jones-Pirates%20of%20the%20Caribbean%20%5BMusic%20Box%5D.m4a", offline: "assets/Davy_Jones-Pirates_of_the_Caribbean.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Canon%20in%20D-Johann%20Pachelbel%20%5BMusic%20Box%5D.m4a", offline: "assets/Canon_in_D-Johann_Pachelbel.mp3" }
 ];
 
 let trackIdx = 0;
@@ -1487,12 +1475,139 @@ ctx.fill();
   }); 
 } 
 
-// ==================== Random Shuffle Player (1x play, no repeat) ====================
-// ==================== Random Shuffle Player (1x play, no repeat) ====================
+
+// ==================== AUDIO INIT ====================
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let trackSource = null;
+let convolver = null;
+let stereoPanner = null;
+let stereoGain = null;
+let crossfeed = null;
+let panTimer = null;
+let eqNodes = [];
+
+// ==================== SETUP EQ ====================
+function setupEQ() {
+  eqNodes = [];
+
+  const low = audioCtx.createBiquadFilter();
+  low.type = "lowshelf";
+  low.frequency.value = 120;
+  low.gain.value = 3;
+  eqNodes.push(low);
+
+  const mid = audioCtx.createBiquadFilter();
+  mid.type = "peaking";
+  mid.frequency.value = 1000;
+  mid.Q.value = 1;
+  mid.gain.value = 2;
+  eqNodes.push(mid);
+
+  const high = audioCtx.createBiquadFilter();
+  high.type = "highshelf";
+  high.frequency.value = 5000;
+  high.gain.value = 5;
+  eqNodes.push(high);
+}
+
+// ==================== LOAD REVERB ====================
+async function setupReverb() {
+  try {
+    const resp = await fetch("assets/ir_hall.wav");
+    const arrayBuffer = await resp.arrayBuffer();
+    const irBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+    convolver = audioCtx.createConvolver();
+    convolver.buffer = irBuffer;
+    console.log("✅ Reverb siap");
+  } catch(e) {
+    console.warn("⚠ Gagal load reverb:", e);
+  }
+}
+
+// ==================== CONNECT AUDIO NODES ====================
+function connectAudioNodes(source) {
+  if (!source) return;
+
+  let node = source;
+
+  // EQ chain
+  eqNodes.forEach(n => {
+    node.connect(n);
+    node = n;
+  });
+
+  // Reverb
+  if (convolver) {
+    const convolverGain = audioCtx.createGain();
+    convolverGain.gain.value = 0.25;
+    node.connect(convolver);
+    convolver.connect(convolverGain);
+    convolverGain.connect(audioCtx.destination);
+  }
+
+  // Stereo Pan
+  stereoPanner = audioCtx.createStereoPanner();
+  node.connect(stereoPanner);
+
+  // Stereo Gain
+  stereoGain = audioCtx.createGain();
+  stereoGain.gain.value = 0.6;
+  stereoPanner.connect(stereoGain);
+
+  // Compressor
+  const compressor = audioCtx.createDynamicsCompressor();
+  compressor.threshold.setValueAtTime(-3, audioCtx.currentTime);
+  compressor.knee.setValueAtTime(8, audioCtx.currentTime);
+  compressor.ratio.setValueAtTime(3, audioCtx.currentTime);
+  compressor.attack.setValueAtTime(0.03, audioCtx.currentTime);
+  compressor.release.setValueAtTime(0.25, audioCtx.currentTime);
+  stereoGain.connect(compressor);
+
+  // Master Gain
+  const masterGain = audioCtx.createGain();
+  masterGain.gain.value = 1.1;
+  compressor.connect(masterGain);
+  masterGain.connect(audioCtx.destination);
+
+  // Crossfeed
+  crossfeed = audioCtx.createGain();
+  crossfeed.gain.value = 0.03;
+  stereoGain.connect(crossfeed);
+  crossfeed.connect(audioCtx.destination);
+
+  startSlowPan();
+}
+
+// ==================== SLOW PAN ====================
+let panPos = 0;
+let panDir = 1;
+function startSlowPan() {
+  stopSlowPan();
+  if (!stereoPanner) return;
+
+  panPos = 0;
+  panDir = 1;
+
+  panTimer = setInterval(() => {
+    panPos += panDir * 0.0015;
+    if (panPos > 0.35 || panPos < -0.35) panDir *= -1;
+    stereoPanner.pan.setValueAtTime(panPos, audioCtx.currentTime);
+  }, 30);
+}
+
+function stopSlowPan() {
+  if (panTimer) clearInterval(panTimer);
+  panTimer = null;
+}
+
+// ==================== TRACKS & SHUFFLE ====================
+const offlineBuffers = {};
+let currentPreload = 0;
+
+// shuffle tracks
 let shuffledTracks = [];
 let shuffleIdx = 0;
-
-// buat array acak (shuffle)
 function shuffleTracks() {
   shuffledTracks = [...TRACKS];
   for (let i = shuffledTracks.length - 1; i > 0; i--) {
@@ -1501,67 +1616,129 @@ function shuffleTracks() {
   }
   shuffleIdx = 0;
 }
+shuffleTracks();
 
-// play track random berikutnya (hanya 1x, no repeat)
-function playRandomTrack() {
-  if (shuffleIdx >= shuffledTracks.length) {
-    shuffleTracks(); // kalau udah habis semua, acak ulang
+// Lazy preload setelah AudioContext unlock
+async function preloadNextTrack() {
+  if (currentPreload >= TRACKS.length) return;
+  const track = TRACKS[currentPreload++];
+  try {
+    const resp = await fetch(track.offline);
+    const arrayBuffer = await resp.arrayBuffer();
+    offlineBuffers[track.offline] = await audioCtx.decodeAudioData(arrayBuffer);
+    console.log("✅ Preloaded:", track.offline);
+  } catch(e) {
+    console.warn("⚠ Gagal preload:", track.offline, e);
   }
-
-  const current = shuffledTracks[shuffleIdx];
-  shuffleIdx++;
-
-  function playSrc(src) {
-    audio.src = src;
-    audio.load();
-    audio.play().catch(err => console.warn("⚠ Audio gagal play:", err));
-  }
-
-  // coba online dulu
-  playSrc(current.online);
-
-  audio.onended = () => {
-    // track selesai → audio stop, snow tetap jalan
-    console.log("✅ Track selesai, audio off tapi snow masih jalan");
-    audio.pause();
-    audio.currentTime = 0;
-  };
-
-  audio.onerror = () => {
-    console.warn("⚠ Online gagal, fallback offline");
-    playSrc(current.offline);
-  };
+  setTimeout(preloadNextTrack, 50); // jeda kecil supaya UI tidak nge-block
 }
 
-// ==================== Swipe / Touch Handlers ====================
+// Unlock AudioContext + mulai preload
+document.addEventListener('click', async () => {
+  if (!audioReady) {
+    await audioCtx.resume();
+    audioReady = true;
+    console.log("✅ AudioContext unlocked");
+    preloadNextTrack(); // mulai preload track pertama
+  }
+}, { once: true });
+
+// Play random track safe
+async function playRandomTrackSafe() {
+  if (!audioReady) return console.warn("⚠ Audio belum unlock");
+
+  if (shuffleIdx >= shuffledTracks.length) shuffleTracks();
+  const current = shuffledTracks[shuffleIdx++];
+
+  if (trackSource) { trackSource.stop(); trackSource.disconnect(); trackSource = null; }
+
+  let bufferToPlay = offlineBuffers[current.offline];
+  if (!bufferToPlay) {
+    // mainkan langsung sementara fetch + decode background
+    try {
+      const resp = await fetch(current.online);
+      const arrayBuffer = await resp.arrayBuffer();
+      bufferToPlay = await audioCtx.decodeAudioData(arrayBuffer);
+    } catch (e) {
+      return console.error("❌ Audio gagal play", e);
+    }
+  }
+
+  trackSource = audioCtx.createBufferSource();
+  trackSource.buffer = bufferToPlay;
+  setupEQ();
+  connectAudioNodes(trackSource);
+  trackSource.start();
+  trackSource.onended = () => { trackSource = null; console.log("✅ Track selesai"); };
+
+  // lanjut preload sisa
+  if (currentPreload < TRACKS.length) setTimeout(preloadNextTrack, 50);
+}
+
+// ==================== SAFE PLAY SINGLE TRACK ====================
+async function playTrack(url, fallbackUrl) {
+  let bufferToPlay;
+  try {
+    const resp = await fetch(url);
+    const arrayBuffer = await resp.arrayBuffer();
+    bufferToPlay = await audioCtx.decodeAudioData(arrayBuffer);
+  } catch {
+    bufferToPlay = offlineBuffers[fallbackUrl];
+  }
+
+  if (!bufferToPlay) return console.error("❌ Audio gagal play");
+
+  if (trackSource) {
+    trackSource.stop();
+    trackSource.disconnect();
+  }
+
+  trackSource = audioCtx.createBufferSource();
+  trackSource.buffer = bufferToPlay;
+
+  setupEQ();
+  connectAudioNodes(trackSource);
+
+  trackSource.start();
+}
+
+// ==================== SWIPE SNOW HANDLER ====================
 document.body.addEventListener("touchstart", e => startY = e.touches[0].clientY);
 document.body.addEventListener("touchend", e => {
   const endY = e.changedTouches[0].clientY;
   if (startY - endY > 50) { // swipe up
     if (!snowAutoEnabled) {
-      // Swipe ON → snow + 1x random track
       snowAutoEnabled = true;
       snowManualEnabled = true;
       console.log("⛄ Snow ON + random track play");
-      playRandomTrack();
+      playRandomTrackSafe();
     } else {
-      // Swipe OFF → matiin snow + pastiin audio stop
       snowAutoEnabled = false;
       snowManualEnabled = false;
-      audio.pause();
-      audio.currentTime = 0;
+
+      // stop audio
+      if (trackSource) {
+        trackSource.stop();
+        trackSource.disconnect();
+        trackSource = null;
+      }
+
+      // stop pan
+      stopSlowPan();
+
+      // bersihkan snow canvas
       if (ctx) ctx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);
+
       console.log("⛔ Snow OFF + audio STOP");
     }
   }
 });
 
-// acak awal
-shuffleTracks();
-
-
+// ==================== INIT SNOW ====================
 initSnow();
 renderSnow();
+setupReverb();
+setupEQ();
 
 
 
