@@ -22,7 +22,7 @@ const AUDIO_ASSETS = [
   '/assets/The_Promised_Neverland.mp3',
   '/assets/Wiegenlied_Brahms.mp3',
   '/assets/cradle-song.mp3',
-  '/assets/lullaby.mp3',
+  '/assets/Air_on_the_G_String-Johann_Sebastian_Bach.mp3',
   '/assets/twinkle-twinkle-little-star.mp3',
   '/assets/Passacaglia-Handel-Halvorsen.mp3',
   '/assets/Its_a_small_world-Walt_Disney.mp3',
