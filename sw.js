@@ -21,7 +21,7 @@ const AUDIO_ASSETS = [
   '/assets/Once_Upon_a_December.mp3',
   '/assets/The_Promised_Neverland.mp3',
   '/assets/Wiegenlied_Brahms.mp3',
-  '/assets/cradle_song.mp3',
+  '/assets/Love_of_My_Life-Queen.mp3',
   '/assets/Air_on_the_G_String-Johann_Sebastian_Bach.mp3',
   '/assets/twinkle-twinkle-little-star.mp3',
   '/assets/Passacaglia-Handel-Halvorsen.mp3',
