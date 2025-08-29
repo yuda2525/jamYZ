@@ -1386,29 +1386,6 @@ let snowCanvas, ctx, snowflakes;
 let birthdayTriggered = localStorage.getItem('birthdayTriggered') === 'true';  
 let munchkinTriggered = false;  
 
-// ==================== Track list (online/offline) ====================
-const TRACKS = [
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/happy_birthday_medley.m4a",   offline: "assets/happy_birthday_medley.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Moonlight%20Sonata%20(3rd%20Movement)-Beethoven.m4a",   offline: "assets/Moonlight_Sonata_3rd.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Once%20Upon%20a%20December-Anastasia.m4a",   offline: "assets/Once_Upon_a_December.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/The%20Promised%20Neverland.m4a",   offline: "assets/The_Promised_Neverland.mp3" },  
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Wiegenlied%20(Lullaby)-Brahms.m4a", offline: "assets/Wiegenlied_Brahms.mp3" },
-  {
-    online:  "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Love%20of%20My%20Life-Queen.m4a",
-    offline: "assets/Love_of_My_Life-Queen.mp3"
-  },
-{
-  title: "Air on the G String - Johann Sebastian Bach",
-  online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Air%20on%20the%20G%20String-Johann%20Sebastian%20Bach.m4a",
-  offline: "assets/Air_on_the_G_String-Johann_Sebastian_Bach.mp3"
-},
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/twinkle-twinkle-little-star.mp3", offline: "assets/twinkle-twinkle-little-star.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Passacaglia-Handel-Halvorsen%20%5BMusic%20Box%5D.m4a", offline: "assets/Passacaglia-Handel-Halvorsen.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Its_a_small_world-Walt_Disney.m4a", offline: "assets/Its_a_small_world-Walt_Disney.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Davy%20Jones-Pirates%20of%20the%20Caribbean%20%5BMusic%20Box%5D.m4a", offline: "assets/Davy_Jones-Pirates_of_the_Caribbean.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Canon%20in%20D-Johann%20Pachelbel%20%5BMusic%20Box%5D.m4a", offline: "assets/Canon_in_D-Johann_Pachelbel.mp3" }
-];
-
 let trackIdx = 0;
 const audio = new Audio();
 let startY = 0;
@@ -1608,13 +1585,29 @@ function stopSlowPan() {
   panTimer = null;
 }
 
-// ==================== TRACKS & SHUFFLE ====================
+// ==================== TRACKS ====================
+const TRACKS = [
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/happy_birthday_medley.m4a", offline: "assets/happy_birthday_medley.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Moonlight%20Sonata%20(3rd%20Movement)-Beethoven.m4a", offline: "assets/Moonlight_Sonata_3rd.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Once%20Upon%20a%20December-Anastasia.m4a", offline: "assets/Once_Upon_a_December.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/The%20Promised%20Neverland.m4a", offline: "assets/The_Promised_Neverland.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Wiegenlied%20(Lullaby)-Brahms.m4a", offline: "assets/Wiegenlied_Brahms.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Love%20of%20My%20Life-Queen.m4a", offline: "assets/Love_of_My_Life-Queen.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Air%20on%20the%20G%20String-Johann%20Sebastian%20Bach.m4a", offline: "assets/Air_on_the_G_String-Johann_Sebastian_Bach.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/twinkle-twinkle-little-star.mp3", offline: "assets/twinkle-twinkle-little-star.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Passacaglia-Handel-Halvorsen%20%5BMusic%20Box%5D.m4a", offline: "assets/Passacaglia-Handel-Halvorsen.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Its_a_small_world-Walt_Disney.m4a", offline: "assets/Its_a_small_world-Walt_Disney.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Davy%20Jones-Pirates%20of%20the%20Caribbean%20%5BMusic%20Box%5D.m4a", offline: "assets/Davy_Jones-Pirates_of_the_Caribbean.mp3" },
+  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Canon%20in%20D-Johann%20Pachelbel%20%5BMusic%20Box%5D.m4a", offline: "assets/Canon_in_D-Johann_Pachelbel.mp3" }
+];
+
+// ==================== OFFLINE BUFFERS ====================
 const offlineBuffers = {};
 let currentPreload = 0;
-
-// shuffle tracks
 let shuffledTracks = [];
 let shuffleIdx = 0;
+
+// ==================== SHUFFLE ====================
 function shuffleTracks() {
   shuffledTracks = [...TRACKS];
   for (let i = shuffledTracks.length - 1; i > 0; i--) {
@@ -1623,90 +1616,97 @@ function shuffleTracks() {
   }
   shuffleIdx = 0;
 }
-shuffleTracks();
 
-// Lazy preload setelah AudioContext unlock
-async function preloadNextTrack() {
-  if (currentPreload >= TRACKS.length) return;
-  const track = TRACKS[currentPreload++];
+// ==================== PRELOAD TRACK ====================
+async function preloadTrack(track) {
+  if (!track.offline) return console.warn("⚠ track.offline undefined:", track.online);
+  if (offlineBuffers[track.offline]) return; // sudah preload
+
   try {
     const resp = await fetch(track.offline);
+    if (!resp.ok) throw new Error("File offline tidak ditemukan");
     const arrayBuffer = await resp.arrayBuffer();
+    if (arrayBuffer.byteLength === 0) throw new Error("ArrayBuffer kosong");
     offlineBuffers[track.offline] = await audioCtx.decodeAudioData(arrayBuffer);
-    console.log("✅ Preloaded:", track.offline);
+    console.log("✅ Preloaded offline:", track.offline);
   } catch(e) {
-    console.warn("⚠ Gagal preload:", track.offline, e);
+    console.warn("⚠ Gagal preload offline:", track.offline, e);
   }
-  setTimeout(preloadNextTrack, 50); // jeda kecil supaya UI tidak nge-block
 }
 
-// Unlock AudioContext + mulai preload
+// ==================== PRELOAD NEXT ====================
+async function preloadNextTrack() {
+  if (currentPreload >= TRACKS.length) return;
+  await preloadTrack(TRACKS[currentPreload++]);
+  setTimeout(preloadNextTrack, 50);
+}
+
+// ==================== UNLOCK AUDIO ====================
 document.addEventListener('click', async () => {
   if (!audioReady) {
     await audioCtx.resume();
     audioReady = true;
-    console.log("✅ AudioContext unlocked");
-    preloadNextTrack(); // mulai preload track pertama
+    console.log("✅ AudioContext unlocked, mulai preload offline");
+    preloadNextTrack();
   }
 }, { once: true });
 
-// Play random track safe
+// ==================== PLAY BUFFER ====================
+function playTrackBuffer(buffer) {
+  if (trackSource) {
+    trackSource.stop();
+    trackSource.disconnect();
+    trackSource = null;
+  }
+
+  trackSource = audioCtx.createBufferSource();
+  trackSource.buffer = buffer;
+  trackSource.connect(audioCtx.destination);
+  trackSource.start();
+  trackSource.onended = () => { trackSource = null; console.log("✅ Track selesai"); };
+}
+
+// ==================== PLAY RANDOM OFFLINE-FIRST ====================
 async function playRandomTrackSafe() {
   if (!audioReady) return console.warn("⚠ Audio belum unlock");
-
   if (shuffleIdx >= shuffledTracks.length) shuffleTracks();
   const current = shuffledTracks[shuffleIdx++];
 
-  if (trackSource) { trackSource.stop(); trackSource.disconnect(); trackSource = null; }
-
   let bufferToPlay = offlineBuffers[current.offline];
+
   if (!bufferToPlay) {
-    // mainkan langsung sementara fetch + decode background
+    console.warn("⚠ Offline buffer belum siap, fallback online:", current.online);
     try {
       const resp = await fetch(current.online);
       const arrayBuffer = await resp.arrayBuffer();
       bufferToPlay = await audioCtx.decodeAudioData(arrayBuffer);
-    } catch (e) {
-      return console.error("❌ Audio gagal play", e);
+      console.log("⚠ Played online fallback:", current.online);
+    } catch(e) {
+      return console.error("❌ Audio gagal play:", current.online, e);
     }
   }
 
-  trackSource = audioCtx.createBufferSource();
-  trackSource.buffer = bufferToPlay;
-  setupEQ();
-  connectAudioNodes(trackSource);
-  trackSource.start();
-  trackSource.onended = () => { trackSource = null; console.log("✅ Track selesai"); };
+  playTrackBuffer(bufferToPlay);
 
-  // lanjut preload sisa
   if (currentPreload < TRACKS.length) setTimeout(preloadNextTrack, 50);
 }
 
-// ==================== SAFE PLAY SINGLE TRACK ====================
+// ==================== PLAY SINGLE TRACK ====================
 async function playTrack(url, fallbackUrl) {
-  let bufferToPlay;
-  try {
-    const resp = await fetch(url);
-    const arrayBuffer = await resp.arrayBuffer();
-    bufferToPlay = await audioCtx.decodeAudioData(arrayBuffer);
-  } catch {
-    bufferToPlay = offlineBuffers[fallbackUrl];
+  let bufferToPlay = offlineBuffers[fallbackUrl];
+
+  if (!bufferToPlay) {
+    try {
+      const resp = await fetch(url);
+      const arrayBuffer = await audioCtx.decodeAudioData(await resp.arrayBuffer());
+      bufferToPlay = arrayBuffer;
+      console.log("⚠ Played online single track");
+    } catch {
+      if (!bufferToPlay) return console.error("❌ Audio gagal play single track");
+    }
   }
 
-  if (!bufferToPlay) return console.error("❌ Audio gagal play");
-
-  if (trackSource) {
-    trackSource.stop();
-    trackSource.disconnect();
-  }
-
-  trackSource = audioCtx.createBufferSource();
-  trackSource.buffer = bufferToPlay;
-
-  setupEQ();
-  connectAudioNodes(trackSource);
-
-  trackSource.start();
+  playTrackBuffer(bufferToPlay);
 }
 
 // ==================== SWIPE SNOW HANDLER ====================
@@ -1747,7 +1747,7 @@ renderSnow();
 setupReverb();
 setupEQ();
 
-
+// ==================== INIT SNOW ====================
 
 
 if ('serviceWorker' in navigator) {
