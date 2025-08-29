@@ -27,7 +27,10 @@ const AUDIO_ASSETS = [
   '/assets/Passacaglia-Handel-Halvorsen.mp3',
   '/assets/Its_a_small_world-Walt_Disney.mp3',
   '/assets/Davy_Jones-Pirates_of_the_Caribbean.mp3',
-  '/assets/Canon_in_D-Johann_Pachelbel.mp3'
+  '/assets/Canon_in_D-Johann_Pachelbel.mp3',
+  '/assets/Mariage_D\'amour_Wedding_of_Love_Richard_Clayderman_Music_Box.mp3',
+  '/assets/Nocturne_op_9_No_2-Chopin.mp3',
+  '/assets/Auld_Lang_Syne_The_New_Year\'s_Anthem.mp3'
 ];
 
 // ===== INSTALL =====
