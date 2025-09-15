@@ -1878,7 +1878,7 @@ setupEQ();
     function typeTitleChar() {
       if(tIndex < titleText.length) {
         title.textContent += titleText[tIndex++];
-        setTimeout(typeTitleChar, 120);
+        setTimeout(typeTitleChar, 150);
       } else typeSubtitle(0);
     }
     typeTitleChar();
@@ -1894,8 +1894,8 @@ setupEQ();
       function typeChar() {
         if(charIndex < text.length) {
           p.textContent += text[charIndex++];
-          setTimeout(typeChar, 25);
-        } else setTimeout(()=> typeSubtitle(index+1), 350);
+          setTimeout(typeChar, 30);
+        } else setTimeout(()=> typeSubtitle(index+1), 400);
       }
       typeChar();
     }
@@ -1962,7 +1962,7 @@ function createDropdownMenu() {
   icon.innerHTML = '🎁';
   icon.style.cssText = `
     position: fixed; bottom: 15px; right: 15px;
-    font-size: 28px; cursor: pointer;
+    font-size: 20px; cursor: pointer;
     z-index: 9999;
   `;
   document.body.appendChild(icon);
@@ -2126,7 +2126,7 @@ footer.style.cssText = `
   transform: translateX(-50%);
   text-align: center;
   padding: 16px 10px;
-  font-size: 0.60rem;
+  font-size: 0.40rem;
   color: #fff;
   background: rgba(0,0,0,0);
   font-family: sans-serif;
