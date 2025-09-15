@@ -483,6 +483,8 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
   background: radial-gradient(circle at center, #111 10%, #000 100%);
 }
 
+
+
     </style>      
 </head>      
 
@@ -584,6 +586,9 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
 <audio id="alarmSound" src="https://raw.githubusercontent.com/yuda2525/jamY-Z/main/quote-ping.mp3" preload="auto"></audio> 
 
 <audio id="jamAudio" preload="auto"></audio>
+
+
+
 
 <!-- Script Three.js -->
 <canvas id="hiddenCanvas" style="display: none;"></canvas>
@@ -1761,7 +1766,399 @@ renderSnow();
 setupReverb();
 setupEQ();
 
-// ==================== INIT SNOW ====================
+
+// ==================== DROPDOWN + USER GUIDE + WELCOME ====================
+(function() {
+  const WELCOME_KEY = 'welcomeShown';
+  const BIRTHDAY_KEY = 'userBirthdays';
+
+  // ==== HELPER POPUP DROPDOWN ====
+  function createPopup(content, autoHide = 5000) {
+    const popup = document.createElement('div');
+    popup.innerHTML = content;
+    popup.style = `
+      position: fixed;
+      top: 10%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 90%;
+      text-align: center;
+      font-family: sans-serif;
+      z-index: 9999;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    `;
+    document.body.appendChild(popup);
+    if(autoHide) setTimeout(()=>popup.remove(), autoHide);
+    return popup;
+  }
+
+  // ==== LOCK PAGE INTERACTION ====
+  function lockPage() {
+    const lock = document.createElement('div');
+    lock.id = 'pageLock';
+    lock.style.cssText = `
+      position: fixed; top:0; left:0;
+      width:100vw; height:100vh;
+      z-index:2147483645;
+      background: rgba(0,0,0,0);
+    `;
+    document.body.appendChild(lock);
+  }
+
+  function unlockPage() {
+    const lock = document.getElementById('pageLock');
+    if(lock) lock.remove();
+  }
+
+  // ==== WELCOME ANIMATION ====
+  function showWelcomeAnimation(callback) {
+    if(localStorage.getItem(WELCOME_KEY)) {
+      if(callback) callback();
+      return;
+    }
+
+    lockPage(); // lock interaksi
+
+    const container = document.createElement('div');
+    container.style.cssText = `
+      position: fixed; top:0; left:0;
+      width:100vw; height:100vh;
+      background: #000;
+      opacity: 0;
+      transition: opacity 2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 2147483644;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+    `;
+    document.body.appendChild(container);
+
+    requestAnimationFrame(()=> container.style.opacity = 1);
+    setTimeout(()=> startWelcome(container, callback), 2000);
+  }
+
+  function startWelcome(container, callback) {
+    // TITLE
+    const title = document.createElement('h1');
+    title.style.cssText = `
+      font-size:2em; margin:0 20px; opacity:1;
+      letter-spacing: 2px; color:#0ff;
+      text-shadow: 0 0 5px #0ff,0 0 10px #0ff,0 0 20px #0ff,0 0 30px #0ff;
+      word-break: break-word; text-align: center;
+    `;
+    container.appendChild(title);
+
+    // SUBTITLE
+    const subtitle = document.createElement('div');
+    subtitle.style.cssText = `
+      font-size:1.2em; margin:20px; color:#0ff;
+      text-shadow: 0 0 3px #0ff,0 0 7px #0ff;
+      word-break: break-word; text-align: center;
+    `;
+    container.appendChild(subtitle);
+
+    const paragraphs = [
+      'Semoga anda dapat memaximalkan semua fitur yang telah kami sediakan.',
+      'Jangan lupa, like, coment, follow, dan support kami, di semua media sosial kami.',
+      'Kami tunggu masukan dan saran kreatif dari anda.',
+      'Tanpa anda, kami "is nothing."',
+      '- CorE-Y², 2025 -'
+    ];
+
+    // TYPEWRITER TITLE
+    const titleText = 'Hallo, selamat datang di dunia interaktiv kami!';
+    let tIndex = 0;
+    function typeTitleChar() {
+      if(tIndex < titleText.length) {
+        title.textContent += titleText[tIndex++];
+        setTimeout(typeTitleChar, 100);
+      } else typeSubtitle(0);
+    }
+    typeTitleChar();
+
+    // TYPEWRITER PARAGRAPH
+    function typeSubtitle(index) {
+      if(index >= paragraphs.length) return startFadeOut();
+      const p = document.createElement('p');
+      subtitle.appendChild(p);
+      let charIndex = 0;
+      const text = paragraphs[index];
+
+      function typeChar() {
+        if(charIndex < text.length) {
+          p.textContent += text[charIndex++];
+          setTimeout(typeChar, 15);
+        } else setTimeout(()=> typeSubtitle(index+1), 250);
+      }
+      typeChar();
+    }
+
+    // PARTICLE NEON
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const particleCount = 60;
+    const particles = [];
+    for(let i=0;i<particleCount;i++){
+      const p = document.createElement('div');
+      const isDot = Math.random()<0.5;
+      const startX = Math.random()*vw;
+      const startY = Math.random()*vh;
+      const hue = Math.floor(Math.random()*360);
+      p.style.cssText = `
+        position:absolute;
+        width:${isDot?3:2}px; height:${isDot?3:8}px;
+        border-radius:${isDot?'50%':'1px'};
+        left:0; top:0;
+        background:hsl(${hue},100%,70%);
+        pointer-events:none; opacity:0.8;
+        transform:translate3d(${startX}px,${startY}px,0);
+      `;
+      container.appendChild(p);
+      particles.push({el:p,x:startX,y:startY,vx:(Math.random()-0.5)*2,vy:Math.random()*1+0.5,life:Math.random()*600+400,blinkRate:Math.random()*0.2+0.05});
+    }
+
+    function animateParticles() {
+      particles.forEach(p=>{
+        if(p.life<=0 || p.y>vh){
+          p.x = Math.random()*vw; p.y=-10;
+          p.vx=(Math.random()-0.5)*2;
+          p.vy=Math.random()*1+0.5;
+          p.life=Math.random()*600+400;
+        }
+        p.x+=p.vx; p.y+=p.vy;
+        p.el.style.transform = `translate3d(${p.x}px,${p.y}px,0)`;
+        p.el.style.opacity = Math.random()<p.blinkRate?0:0.8;
+        p.life--;
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // FADE OUT
+    function startFadeOut() {
+      setTimeout(()=>{
+        container.style.transition = 'opacity 2s';
+        container.style.opacity = 0;
+        setTimeout(()=>{
+          container.remove();
+          localStorage.setItem(WELCOME_KEY,'true');
+          unlockPage();
+          if(callback) callback();
+        },2000);
+      },2000);
+    }
+  }
+
+// ==== MINI DROPDOWN MENU ====
+function createDropdownMenu() {
+  const icon = document.createElement('div');
+  icon.innerHTML = '🎁';
+  icon.style.cssText = `
+    position: fixed; bottom: 15px; right: 15px;
+    font-size: 28px; cursor: pointer;
+    z-index: 9999;
+  `;
+  document.body.appendChild(icon);
+
+  const menu = document.createElement('div');
+  menu.style.cssText = `
+    position: fixed; bottom: 55px; right: 15px;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    display: none;
+    flex-direction: column;
+    font-family: sans-serif;
+    z-index: 9999;
+    min-width: 160px;
+  `;
+  menu.innerHTML = `
+    <button id="clearDataBtn" style="margin:5px;">Clear Data</button>
+    <button id="clearCacheBtn" style="margin:5px;">Clear Cache</button>
+    <button id="userGuideBtn" style="margin:5px;">User Guide</button>
+    <button id="addBirthdayBtn" style="margin:5px;">Tambah Ultah</button>
+  `;
+  document.body.appendChild(menu);
+
+  icon.addEventListener('click', () => menu.style.display = menu.style.display==='flex'?'none':'flex');
+
+  menu.querySelector('#clearDataBtn').addEventListener('click', ()=> {
+    localStorage.clear();
+    createPopup('✅ Data berhasil dihapus',3000);
+  });
+
+  menu.querySelector('#clearCacheBtn').addEventListener('click', ()=> {
+    if(window.caches){
+      caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));
+    }
+    createPopup('✅ Cache berhasil dihapus',3000);
+  });
+
+  menu.querySelector('#userGuideBtn').addEventListener('click', showUserGuide);
+
+  menu.querySelector('#addBirthdayBtn').addEventListener('click', ()=> {
+    // FORM overlay untuk tambah ultah
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+      position: fixed; top:0; left:0; width:100vw; height:100vh;
+      background: rgba(0,0,0,0.95);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 99999; font-family: sans-serif;
+    `;
+
+    const form = document.createElement('div');
+    form.style.cssText = `
+      background: #111; padding: 25px 30px; border-radius:12px;
+      display:flex; flex-direction:column; align-items:flex-start;
+      color:#fff; min-width:280px;
+    `;
+
+    form.innerHTML = `
+      <h3 style="margin:0 0 15px 0;">🎂 Tambah Ultah</h3>
+      <label>Nama:</label>
+      <input type="text" id="birthdayName" style="margin-bottom:10px;width:100%;padding:5px;border-radius:5px;border:none;">
+      <label>Tanggal:</label>
+      <input type="date" id="birthdayDate" style="margin-bottom:15px;width:100%;padding:5px;border-radius:5px;border:none;">
+      <div style="align-self:flex-end;">
+        <button id="saveBirthdayBtn" style="margin-right:10px;padding:5px 10px;">Simpan</button>
+        <button id="closeFormBtn" style="padding:5px 10px;">Batal</button>
+      </div>
+    `;
+    overlay.appendChild(form);
+    document.body.appendChild(overlay);
+
+    overlay.querySelector('#closeFormBtn').addEventListener('click', ()=> overlay.remove());
+
+    overlay.querySelector('#saveBirthdayBtn').addEventListener('click', ()=> {
+      const name = overlay.querySelector('#birthdayName').value.trim();
+      const date = overlay.querySelector('#birthdayDate').value;
+      if(!name || !date) return alert('Nama & Tanggal wajib diisi');
+      const birthdays = JSON.parse(localStorage.getItem(BIRTHDAY_KEY) || '[]');
+      birthdays.push({name,date});
+      localStorage.setItem(BIRTHDAY_KEY, JSON.stringify(birthdays));
+      createPopup(`✅ Tersimpan: ${name} - ${date}`,3000);
+      overlay.remove();
+    });
+  });
+}
+
+// ==== USER GUIDE FULLSCREEN ====
+function showUserGuide() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed; top:0; left:0;
+    width:100vw; height:100vh;
+    background: rgba(0,0,0,0.95);
+    color: #fff;
+    font-family: sans-serif;
+    z-index: 99999;
+    display: flex; flex-direction: column;
+    overflow-y: auto; padding: 20px;
+  `;
+
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = '✖';
+  closeBtn.style.cssText = `
+    position: fixed; top:15px; right:20px;
+    font-size:24px; background:none; border:none;
+    color:#fff; cursor:pointer; z-index:100000;
+  `;
+  closeBtn.addEventListener('click', ()=> overlay.remove());
+  overlay.appendChild(closeBtn);
+
+  const content = document.createElement('div');
+  content.innerHTML = `
+    <h2>📖 Panduan Pengguna</h2>
+    <p>Terima kasih telah menggunakan aplikasi ini. Berikut beberapa panduan:</p>
+    <ul style="text-align:left; margin:0; padding:0 10px 0 20px;">
+      <li>🎶 Ketuk area: mainkan quote & ping audio</li>
+      <li>⛄ Geser ke atas: aktifkan/nonaktifkan efek snow</li>
+      <li>🖼 Double tap pada jam: ganti background</li>
+      <li>🎁 Icon gift: menu Clear Data, Clear Cache, User Guide, Tambah Ultah</li>
+      <li>🎂 Birthday surprise otomatis sesuai tanggal yang tersimpan</li>
+    </ul>
+  `;
+  overlay.appendChild(content);
+
+  document.body.appendChild(overlay);
+}
+
+  // ==== BIRTHDAY SURPRISE CHECK ====
+  function checkBirthdaySurprise() {
+    const birthdays = JSON.parse(localStorage.getItem(BIRTHDAY_KEY) || '[]');
+    const today = new Date();
+    birthdays.forEach(b => {
+      const d = new Date(b.date);
+      if(d.getDate() === today.getDate() && d.getMonth() === today.getMonth()) {
+        createPopup(`🎉 Selamat ulang tahun ${b.name}!!`, 7000);
+        if(typeof playTrack === 'function') playTrack('hbd.mp3');
+      }
+    });
+  }
+
+  // ==== INIT ====
+  window.addEventListener('load', () => {
+    createDropdownMenu();
+    if(!localStorage.getItem(WELCOME_KEY)) {
+      showWelcomeAnimation(() => console.log('Welcome animation done'));
+      localStorage.setItem(WELCOME_KEY, 'true');
+    }
+    setInterval(checkBirthdaySurprise, 60000);
+  });
+
+})();
+
+
+// buat footer di body, di luar container animasi
+const footer = document.createElement('footer');
+footer.style.cssText = `
+  position: fixed;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 18px 12px;
+  font-size: 0.60rem;
+  color: #fff;
+  background: rgba(0,0,0,0);
+  font-family: sans-serif;
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 9999;
+`;
+
+footer.innerHTML = `
+  © 2025 <span class="brand">CorE-Y²</span> · Powered by AI & Human Creativity
+  <br>
+  <a href="mailto:yudabastard84@gmail.com" class="brand">yudabastard84@gmail.com</a>
+`;
+
+// animasi rainbow via JS
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes animateText {  
+    0% { background-position: 0% 50%; }  
+    50% { background-position: 100% 50%; }  
+    100% { background-position: 0% 50%; }  
+  }
+  footer .brand {  
+    font-weight: 700;
+    background: linear-gradient(90deg,#00faff,#ff00e0,#00ff91,#ffd500,#ff00e0,#00faff);
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: animateText 5s ease-in-out infinite;
+  }
+`;
+document.head.appendChild(style);
+document.body.appendChild(footer);
 
 
 if ('serviceWorker' in navigator) {
