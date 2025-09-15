@@ -1204,19 +1204,21 @@ const alarmTimes = [
   { hour: 22, minute: 0 }
 ];
 
+const alarmKey = 'alarmTriggeredOnceEver';
+
 setInterval(() => {
   const now = new Date();
   const h = now.getHours();
   const m = now.getMinutes();
-  alarmTimes.forEach((time, i) => {
-    if (!alarmTriggered[i] && audioReady && h === time.hour && m === time.minute) {
-      const alarm = document.getElementById('alarmSound');
-      alarm.play().then(() => {
-        console.log(`🔔 Alarm ${i+1} bunyi: ${h}:${m}`);
-      }).catch(err => console.warn(`❌ Gagal play alarm ${i+1}:`, err));
-      alarmTriggered[i] = true;
-    }
-  });
+  if (audioReady && !localStorage.getItem(alarmKey)) {
+    alarmTimes.forEach((time, i) => {
+      if (h === time.hour && m === time.minute) {
+        const alarm = document.getElementById('alarmSound');
+        alarm.play().then(() => console.log(`🔔 Alarm sekali seumur hidup: ${h}:${m}`));
+        localStorage.setItem(alarmKey, 'true');
+      }
+    });
+  }
 }, 1000);
 
 // Reset tiap jam
