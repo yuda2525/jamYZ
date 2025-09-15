@@ -1878,7 +1878,7 @@ setupEQ();
     function typeTitleChar() {
       if(tIndex < titleText.length) {
         title.textContent += titleText[tIndex++];
-        setTimeout(typeTitleChar, 100);
+        setTimeout(typeTitleChar, 120);
       } else typeSubtitle(0);
     }
     typeTitleChar();
@@ -1894,8 +1894,8 @@ setupEQ();
       function typeChar() {
         if(charIndex < text.length) {
           p.textContent += text[charIndex++];
-          setTimeout(typeChar, 15);
-        } else setTimeout(()=> typeSubtitle(index+1), 250);
+          setTimeout(typeChar, 25);
+        } else setTimeout(()=> typeSubtitle(index+1), 350);
       }
       typeChar();
     }
@@ -2125,7 +2125,7 @@ footer.style.cssText = `
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
-  padding: 18px 12px;
+  padding: 16px 10px;
   font-size: 0.60rem;
   color: #fff;
   background: rgba(0,0,0,0);
@@ -2149,7 +2149,7 @@ style.textContent = `
     100% { background-position: 0% 50%; }  
   }
   footer .brand {  
-    font-weight: 700;
+    font-weight: 600;
     background: linear-gradient(90deg,#00faff,#ff00e0,#00ff91,#ffd500,#ff00e0,#00faff);
     background-size: 400% 100%;
     -webkit-background-clip: text;
