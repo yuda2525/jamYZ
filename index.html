@@ -1522,31 +1522,31 @@ function connectAudioNodes(source) {
 
   let node = source;
 
-  // EQ chain
+  // --- EQ chain ---
   eqNodes.forEach(n => {
     node.connect(n);
     node = n;
   });
 
-  // Reverb utama
+  // --- Reverb utama ---
   if (convolver) {
     const convolverGain = audioCtx.createGain();
     convolverGain.gain.value = 0.25;
     node.connect(convolver);
     convolver.connect(convolverGain);
-    convolverGain.connect(audioCtx.destination);
+    convolverGain.connect(audioCtx.destination); // tetap bisa kedengeran reverb
   }
 
-  // Stereo Pan
+  // --- Stereo Pan ---
   stereoPanner = audioCtx.createStereoPanner();
   node.connect(stereoPanner);
 
-  // Stereo Gain
+  // --- Stereo Gain ---
   stereoGain = audioCtx.createGain();
-stereoGain.gain.value = 0.8; // awalnya 0.6
+  stereoGain.gain.value = 0.9; // safe, masih bisa dinaikin
   stereoPanner.connect(stereoGain);
 
-  // Compressor
+  // --- Compressor ---
   const compressor = audioCtx.createDynamicsCompressor();
   compressor.threshold.setValueAtTime(-3, audioCtx.currentTime);
   compressor.knee.setValueAtTime(8, audioCtx.currentTime);
@@ -1555,22 +1555,34 @@ stereoGain.gain.value = 0.8; // awalnya 0.6
   compressor.release.setValueAtTime(0.25, audioCtx.currentTime);
   stereoGain.connect(compressor);
 
-  // Master Gain
+  // --- Master Gain + Limiter ---
   const masterGain = audioCtx.createGain();
-masterGain.gain.value = 1.4; // lebih keras, tetap lewat compressor
+  masterGain.gain.value = 1.3; // lebih aman, limiter akan handle puncak
   compressor.connect(masterGain);
-  masterGain.connect(audioCtx.destination);
 
-  // Crossfeed
+  const limiter = audioCtx.createDynamicsCompressor();
+  limiter.threshold.setValueAtTime(-2, audioCtx.currentTime);
+  limiter.knee.setValueAtTime(0.1, audioCtx.currentTime);
+  limiter.ratio.setValueAtTime(20, audioCtx.currentTime);
+  limiter.attack.setValueAtTime(0.001, audioCtx.currentTime);
+  limiter.release.setValueAtTime(0.05, audioCtx.currentTime);
+
+  masterGain.connect(limiter);
+  limiter.connect(audioCtx.destination);
+
+  // --- Crossfeed (via limiter juga) ---
   crossfeed = audioCtx.createGain();
   crossfeed.gain.value = 0.03;
   stereoGain.connect(crossfeed);
-  crossfeed.connect(audioCtx.destination);
+  crossfeed.connect(limiter); // ke limiter, supaya gak clipping
 
-  // Poly tweak (tambahan efek)
-  addPolyphonicTweak(stereoGain);
+  // --- Polyphonic Tweak Max ---
+  addPolyphonicTweakMax(stereoGain);
 
+  // --- Slow Pan ---
   startSlowPan();
+
+  console.log("🎶 Audio nodes connected: EQ → Reverb → Pan → Gain → Compressor → Master → Limiter → Destination");
 }
 
 // ==================== MAXIMAL DESPERATE HORROR POLY ====================
