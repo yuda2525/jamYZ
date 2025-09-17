@@ -1543,7 +1543,7 @@ function connectAudioNodes(source) {
 
   // Stereo Gain
   stereoGain = audioCtx.createGain();
-  stereoGain.gain.value = 0.6;
+stereoGain.gain.value = 0.8; // awalnya 0.6
   stereoPanner.connect(stereoGain);
 
   // Compressor
@@ -1557,7 +1557,7 @@ function connectAudioNodes(source) {
 
   // Master Gain
   const masterGain = audioCtx.createGain();
-  masterGain.gain.value = 1.1;
+masterGain.gain.value = 1.4; // lebih keras, tetap lewat compressor
   compressor.connect(masterGain);
   masterGain.connect(audioCtx.destination);
 
@@ -1665,31 +1665,44 @@ function stopSlowPan() {
   panTimer = null;
 }
 
-// ==================== TRACKS ====================
-const TRACKS = [
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/happy_birthday_medley.m4a", offline: "assets/happy_birthday_medley.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Once%20Upon%20a%20December-Anastasia.m4a", offline: "assets/Once_Upon_a_December.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/The%20Promised%20Neverland.m4a", offline: "assets/The_Promised_Neverland.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Wiegenlied%20(Lullaby)-Brahms.m4a", offline: "assets/Wiegenlied_Brahms.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Air%20on%20the%20G%20String-Johann%20Sebastian%20Bach.m4a", offline: "assets/Air_on_the_G_String-Johann_Sebastian_Bach.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/twinkle-twinkle-little-star.mp3", offline: "assets/twinkle-twinkle-little-star.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Passacaglia-Handel-Halvorsen%20%5BMusic%20Box%5D.m4a", offline: "assets/Passacaglia-Handel-Halvorsen.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Its_a_small_world-Walt_Disney.m4a", offline: "assets/Its_a_small_world-Walt_Disney.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Davy%20Jones-Pirates%20of%20the%20Caribbean%20%5BMusic%20Box%5D.m4a", offline: "assets/Davy_Jones-Pirates_of_the_Caribbean.mp3" },
-  {
-  online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Nocturne%20op.9%20No.2-Chopin.m4a",
-  offline: "assets/Nocturne_op_9_No_2-Chopin.mp3"
-},
-  {
-    online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Auld%20Lang%20Syne%20(The%20New%20Year's%20Anthem).m4a",
-    offline: "assets/Auld_Lang_Syne_The_New_Year's_Anthem.mp3"
-  },
-  {
-    online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Mariage%20D'amour%20(Wedding%20of%20Love)-Richard%20Clayderman%20%5BMusic%20Box%5D.m4a",
-    offline: "assets/Mariage_D'amour_Wedding_of_Love_Richard_Clayderman_Music_Box.mp3"
-  },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Canon%20in%20D-Johann%20Pachelbel%20%5BMusic%20Box%5D.m4a", offline: "assets/Canon_in_D-Johann_Pachelbel.mp3" }
+// ==================== DYNAMIC TRACKS ====================
+const ONLINE_LINKS = [
+  "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/happy_birthday_medley.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Once%20Upon%20a%20December-Anastasia.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/The%20Promised%20Neverland.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Wiegenlied%20(Lullaby)-Brahms.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Air%20on%20the%20G%20String-Johann%20Sebastian%20Bach.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/twinkle-twinkle-little-star.mp3",
+  "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Passacaglia-Handel-Halvorsen%20%5BMusic%20Box%5D.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Nocturne%20op.9%20No.2-Chopin.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Auld%20Lang%20Syne%20(The%20New%20Year's%20Anthem).m4a",
+
+  // repo jamYZ (harus RAW juga)
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Mariage%20D'amour%20(Wedding%20of%20Love)-Richard%20Clayderman.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Canon%20in%20D-Johann%20Pachelbel.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Davy%20Jones-Pirates%20of%20the%20Caribbean.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/It%E2%80%99s%20a%20small%20world-Walt%20Disney.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Greensleeves-English%20Folk%20Song.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Hide%20and%20Seek-Ho-ong-i%20feat.%20SeeU.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Hymne%20%C3%A0%20l'amour-%C3%89dith%20Piaf.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/La%20Vie%20En%20Rose.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Memories.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Old%20Doll-Amacha%20Music%20Studio.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Over%20the%20Rainbow.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Toreador%20Song-Bizet%20.m4a"
 ];
+
+// Auto generate TRACKS array
+const TRACKS = ONLINE_LINKS.map(url => {
+  const fileName = url.split("/").pop();
+  const baseName = fileName.replace(/\.[^/.]+$/, ""); // buang ekstensi
+  return {
+    online: url,
+    offline: `assets/${baseName}.mp3`
+  };
+});
+
+console.log(TRACKS);
 
 // ==================== OFFLINE BUFFERS ====================
 const offlineBuffers = {};
