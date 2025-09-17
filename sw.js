@@ -17,20 +17,28 @@ const BG_VIDEO = '/assets/bg.mp4';
 
 const AUDIO_ASSETS = [
   '/assets/happy_birthday_medley.mp3',
-  '/assets/Moonlight_Sonata_3rd.mp3',
-  '/assets/Once_Upon_a_December.mp3',
+  '/assets/Once_Upon_a_December-Anastasia.mp3',
   '/assets/The_Promised_Neverland.mp3',
-  '/assets/Wiegenlied_Brahms.mp3',
-  '/assets/Love_of_My_Life-Queen.mp3',
+  '/assets/Wiegenlied_Lullaby-Brahms.mp3',
   '/assets/Air_on_the_G_String-Johann_Sebastian_Bach.mp3',
   '/assets/twinkle-twinkle-little-star.mp3',
   '/assets/Passacaglia-Handel-Halvorsen.mp3',
   '/assets/Its_a_small_world-Walt_Disney.mp3',
   '/assets/Davy_Jones-Pirates_of_the_Caribbean.mp3',
-  '/assets/Canon_in_D-Johann_Pachelbel.mp3',
-  '/assets/Mariage_D\'amour_Wedding_of_Love_Richard_Clayderman_Music_Box.mp3',
   '/assets/Nocturne_op_9_No_2-Chopin.mp3',
-  '/assets/Auld_Lang_Syne_The_New_Year\'s_Anthem.mp3'
+  '/assets/Auld_Lang_Syne_The_New_Year_Anthem.mp3',
+  '/assets/Canon_in_D-Johann_Pachelbel.mp3',
+
+  // Tambahan sinkron sama ONLINE_LINKS
+  '/assets/Greensleeves-English_Folk_Song.mp3',
+  '/assets/Hide_and_Seek-Ho-ong-i_feat_SeeU.mp3',
+  '/assets/Hymne_a_l_amour-Edith_Piaf.mp3',
+  '/assets/La_Vie_En_Rose.mp3',
+  '/assets/Mariage_D_amour_Wedding_of_Love-Richard_Clayderman.mp3',
+  '/assets/Memories.mp3',
+  '/assets/Old_Doll-Amacha_Music_Studio.mp3',
+  '/assets/Over_the_Rainbow.mp3',
+  '/assets/Toreador_Song-Bizet.mp3'
 ];
 
 // ===== INSTALL =====
