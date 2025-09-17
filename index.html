@@ -1528,7 +1528,7 @@ function connectAudioNodes(source) {
     node = n;
   });
 
-  // Reverb
+  // Reverb utama
   if (convolver) {
     const convolverGain = audioCtx.createGain();
     convolverGain.gain.value = 0.25;
@@ -1567,7 +1567,80 @@ function connectAudioNodes(source) {
   stereoGain.connect(crossfeed);
   crossfeed.connect(audioCtx.destination);
 
+  // Poly tweak (tambahan efek)
+  addPolyphonicTweak(stereoGain);
+
   startSlowPan();
+}
+
+// ==================== MAXIMAL DESPERATE HORROR POLY ====================
+let chorus = null;
+let stereoDelay = null;
+let extraReverb = null;
+let lfo = null;
+let pitchWobble = null;
+
+function addPolyphonicTweakMax(node) {
+    if (!node) return;
+
+    // --- Chorus ---
+    chorus = audioCtx.createDelay();
+    chorus.delayTime.value = 0.03; // 30ms dreamy
+    const chorusGain = audioCtx.createGain();
+    chorusGain.gain.value = 0.2; // subtle
+
+    node.connect(chorus);
+    chorus.connect(chorusGain);
+    chorusGain.connect(audioCtx.destination);
+
+    // --- Stereo widen (tiny delay L-R) ---
+    const splitter = audioCtx.createChannelSplitter(2);
+    const merger = audioCtx.createChannelMerger(2);
+    stereoDelay = audioCtx.createDelay();
+    stereoDelay.delayTime.value = 0.025; // 25ms
+
+    node.connect(splitter);
+    splitter.connect(merger, 0, 0); // left normal
+    splitter.connect(stereoDelay);
+    stereoDelay.connect(merger, 0, 1); // right delayed
+
+    const widenGain = audioCtx.createGain();
+    widenGain.gain.value = 0.45;
+    merger.connect(widenGain);
+    widenGain.connect(audioCtx.destination);
+
+    // --- Extra subtle reverb send ---
+    if (convolver) {
+        extraReverb = audioCtx.createGain();
+        extraReverb.gain.value = 0.25; // sedikit naik
+        node.connect(extraReverb);
+        extraReverb.connect(convolver);
+    }
+
+    // --- LFO slow pan untuk ambience ---
+    if (!stereoPanner) stereoPanner = audioCtx.createStereoPanner();
+    node.connect(stereoPanner);
+
+    lfo = audioCtx.createOscillator();
+    const lfoGain = audioCtx.createGain();
+    lfo.frequency.value = 0.015; // super slow, creepy
+    lfoGain.gain.value = 0.3;
+    lfo.connect(lfoGain);
+    lfoGain.connect(stereoPanner.pan);
+    lfo.start();
+
+    // --- Pitch/Itch Wobble ---
+    const wobbleOsc = audioCtx.createOscillator();
+    const wobbleGain = audioCtx.createGain();
+    wobbleOsc.type = "triangle";
+    wobbleOsc.frequency.value = 0.8; // fast subtle
+    wobbleGain.gain.value = 0.002; // tiny pitch deviation
+    wobbleOsc.connect(wobbleGain);
+    wobbleGain.connect(node.detune || node.frequency || node.playbackRate); // support depending node type
+    wobbleOsc.start();
+    pitchWobble = wobbleOsc;
+
+    console.log("💀 Polyphonic desperate horror tweak maximal aktif (chorus + widen + reverb + LFO + itch wobble)");
 }
 
 // ==================== SLOW PAN ====================
@@ -1595,11 +1668,9 @@ function stopSlowPan() {
 // ==================== TRACKS ====================
 const TRACKS = [
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/happy_birthday_medley.m4a", offline: "assets/happy_birthday_medley.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Moonlight%20Sonata%20(3rd%20Movement)-Beethoven.m4a", offline: "assets/Moonlight_Sonata_3rd.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Once%20Upon%20a%20December-Anastasia.m4a", offline: "assets/Once_Upon_a_December.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/The%20Promised%20Neverland.m4a", offline: "assets/The_Promised_Neverland.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Wiegenlied%20(Lullaby)-Brahms.m4a", offline: "assets/Wiegenlied_Brahms.mp3" },
-  { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Love%20of%20My%20Life-Queen.m4a", offline: "assets/Love_of_My_Life-Queen.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Air%20on%20the%20G%20String-Johann%20Sebastian%20Bach.m4a", offline: "assets/Air_on_the_G_String-Johann_Sebastian_Bach.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/twinkle-twinkle-little-star.mp3", offline: "assets/twinkle-twinkle-little-star.mp3" },
   { online: "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Passacaglia-Handel-Halvorsen%20%5BMusic%20Box%5D.m4a", offline: "assets/Passacaglia-Handel-Halvorsen.mp3" },
