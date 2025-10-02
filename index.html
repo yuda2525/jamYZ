@@ -483,7 +483,15 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
   background: radial-gradient(circle at center, #111 10%, #000 100%);
 }
 
-
+.brand-name {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
     </style>      
 </head>      
@@ -568,7 +576,18 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
       <div class="hand hour" id="hourHand"></div>      
       <div class="hand minute" id="minuteHand"></div>      
       <div id="numerals"></div>      
-      <div class="brand-name">Y&Z®</div>      
+<div class="brand-name">
+  <svg viewBox="0 0 500 200" width="220" height="80">
+    <defs>
+<path id="logoCurve" d="M 50 180 Q 250 20 450 180" fill="none"/>
+    </defs>
+    <text font-size="38" font-family="Cinzel Decorative, Arial Black, sans-serif" font-weight="bold" fill="#fff">
+      <textPath href="#logoCurve" startOffset="50%" text-anchor="middle">
+        CorE-Y²
+      </textPath>
+    </text>
+  </svg>
+</div>
       <div class="date-info" id="dateInfo"></div>      
     </div>      
   </div>      
