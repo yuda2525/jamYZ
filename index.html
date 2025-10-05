@@ -576,17 +576,32 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
       <div class="hand hour" id="hourHand"></div>      
       <div class="hand minute" id="minuteHand"></div>      
       <div id="numerals"></div>      
-<div class="brand-name">
-  <svg viewBox="0 0 500 200" width="220" height="80">
+<div class="brand-name" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+  <!-- Logo utama -->
+  <svg viewBox="0 0 500 150" width="240" height="100">
     <defs>
-<path id="logoCurve" d="M 50 180 Q 250 20 450 180" fill="none"/>
+      <path id="logoCurveTop" d="M 50 100 Q 250 0 450 100" fill="none"/>
     </defs>
-    <text font-size="38" font-family="Cinzel Decorative, Arial Black, sans-serif" font-weight="bold" fill="#fff">
-      <textPath href="#logoCurve" startOffset="50%" text-anchor="middle">
+
+    <text font-size="38" font-family="Arial, sans-serif" fill="#fff">
+      <textPath href="#logoCurveTop" startOffset="50%" text-anchor="middle">
         CorE-Y²
       </textPath>
     </text>
   </svg>
+
+<div id="daily-tagline" class="brand-tagline" 
+     style="text-align:center; 
+            font-family:Arial, sans-serif; 
+            font-size:10px; 
+            color:#00FFFF; 
+            font-weight:200; 
+            line-height:1; 
+            transform:translateY(-50px);
+            text-shadow: 0 0 2px #000;
+            opacity:0;"> <!-- Mulai dari transparan -->
+</div>
+
 </div>
       <div class="date-info" id="dateInfo"></div>      
     </div>      
@@ -2230,6 +2245,46 @@ function showUserGuide() {
   });
 
 })();
+
+
+  // Array tagline per hari Minggu–Sabtu
+  const taglines = [
+    "Счастье внутри тебя.",                     // Minggu → Rusia
+    "Haz lo que amas.",                          // Senin → Spanyol
+    "相信自己",                                 // Selasa → Mandarin
+    "كن أفضل نسخة منك",                          // Rabu → Arab
+    "La vie est belle.",                         // Kamis → Prancis
+    "今日を大切に",                               // Jumat → Jepang
+    "Percaya, coba, dan wujudkan impianmu."     // Sabtu → Indonesia
+  ];
+
+  let today = new Date().getDay();
+   // today = 4; // untuk tes manual, misal hari Kamis
+  const dailyTagline = document.getElementById('daily-tagline');
+  dailyTagline.textContent = taglines[today];
+
+  // Animasi fade in/out loop
+  const fadeDuration = 3000;   // durasi fade in/out (ms)
+  const visibleDuration = 10000; // durasi tetap terlihat (ms)
+
+  function fadeInOut(element) {
+    // Fade in
+    element.style.transition = `opacity ${fadeDuration}ms`;
+    element.style.opacity = 1;
+
+    // Setelah fade in + visibleDuration, fade out
+    setTimeout(() => {
+      element.style.opacity = 0;
+    }, fadeDuration + visibleDuration);
+
+    // Loop ulang
+    setTimeout(() => {
+      fadeInOut(element);
+    }, fadeDuration*2 + visibleDuration);
+  }
+
+  // Mulai animasi
+  fadeInOut(dailyTagline);
 
 
 // buat footer di body, di luar container animasi
