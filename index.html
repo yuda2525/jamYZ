@@ -607,6 +607,8 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
     </div>      
   </div>      
   
+  
+  
 <!-- Input file disembunyikan -->      
 <input id="bgUpload" type="file" accept="image/*,video/mp4"style="display: none;">
 
@@ -1046,12 +1048,12 @@ const weeklyQuotes = [
       author: "- Najwa Shihab -"
     },
     "12:00": {
-      text: "Aku ingin menjadi alasan di balik senyummu, bahkan saat kamu sedang makan siang sendirian.",
-      author: "- Raditya Dika -"
+      text: "愛は心の中で最も強い力です。",
+      author: "- Miyamoto Musashi -"
     },
     "22:00": {
-      text: "Jangan lupa istirahat, sayang. Mimpimu malam ini semoga tentang kita.",
-      author: "- Boy Candra -"
+      text: "Yang membekas dari lilin bukan lelehnya, tapi wajah sebelum gelap.",
+      author: "- Sujiwo Tejo -"
     }
   },
   // Senin (1)
@@ -1061,12 +1063,12 @@ const weeklyQuotes = [
       author: "- Jane Austen -"
     },
     "12:00": {
-      text: "You make my heart smile even on the busiest of days.",
-      author: "- A.R. Asher -"
+      text: "L’amore è composto da un’unica anima che abita due corpi.",
+      author: "- Aristotele -"
     },
     "22:00": {
-      text: "You’re my favorite notification before I sleep.",
-      author: "- Beau Taplin -"
+      text: "Любовь побеждает все.",
+      author: "- Александр Пушкин -"
     }
   },
   // Selasa (2)
@@ -1087,11 +1089,11 @@ const weeklyQuotes = [
   // Rabu (3)
   {
     "09:00": {
-      text: "When you arise in the morning, think of what a precious privilege it is to be alive—to breathe, to think, to enjoy, to love.",
+     text: "ὅταν ἀναστῇς τὸ πρωί, σκέψαι τί σπουδαῖον πρᾶγμα ἐστὶν ζῆν· πνεῖν, νοεῖν, ἀπολαμβάνειν, ἀγαπᾶν.",
       author: "- Marcus Aurelius -"
     },
     "12:00": {
-      text: "Being deeply loved by someone gives you strength, while loving someone deeply gives you courage.",
+     text: "被人深深爱着会给你力量，深深地爱人会给你勇气。",
       author: "- Lao Tzu -"
     },
     "22:00": {
@@ -1106,11 +1108,11 @@ const weeklyQuotes = [
       author: "- Wira Nagara -"
     },
     "12:00": {
-      text: "Cinta adalah kekuatan terbesar yang pernah dikenal manusia.",
+      text: "પ્રેમ એ વિશ્વમાં જાણીતી સૌથી શક્તિશાળી શક્તિ છે.",
       author: "- Mahatma Gandhi -"
     },
     "22:00": {
-      text: "Tak ada yang lebih indah dari diamnya malam yang dipenuhi doa dan cinta.",
+     text: "ليس هناك ما هو أجمل من صمت الليل المملوء بالدعاء والحب.",
       author: "- Imam Al-Ghazali -"
     }
   },
@@ -1125,14 +1127,14 @@ const weeklyQuotes = [
       author: "- Dian Sastro -"
     },
     "22:00": {
-      text: "Barangsiapa mencintai karena Allah, maka malamnya akan penuh damai dalam pelukan doa.",
+     text: "من أحب لله، فستملأ ليله السكينة في أحضان الدعاء.",
       author: "- Syekh Abdul Qodir Jaelani -"
     }
   },
   // Sabtu (6)
   {
     "09:00": {
-      text: "One word frees us of all the weight and pain of life: That word is love.",
+      text: "ἓν ῥῆμα ἡμᾶς ἐλευθεροῖ ἀπὸ παντὸς βάρους καὶ πόνου τῆς ζωῆς· ἐκεῖνο τὸ ῥῆμα ἀγάπη ἐστίν.",
       author: "- Sophocles -"
     },
     "12:00": {
@@ -1140,25 +1142,33 @@ const weeklyQuotes = [
       author: "- William Shakespeare -"
     },
     "22:00": {
-      text: "You don’t find love, it finds you. It’s got a little bit to do with destiny, fate, and what’s written in the stars.",
-      author: "- Anaïs Nin -"
+      text: "Amar no es mirarse el uno al otro, sino mirar juntos en la misma dirección.",
+      author: "- Antoine de Saint-Exupéry -"
     }
   }
 ];
 
 let quotePlayedToday = {}; // buat tracking per waktu
 
-function typeText(el, txt, speed = 120, onComplete = null) {
+function typeText(el, txt, baseSpeed = 400, onComplete = null) {
   el.textContent = "";
   let i = 0;
-  const intv = setInterval(() => {
+
+  function nextChar() {
     el.textContent += txt.charAt(i++);
-    if (i >= txt.length) {
-      clearInterval(intv);
-      if (onComplete) onComplete();
+    if (i < txt.length) {
+      // Delay random ±150ms agar lebih natural
+      let speed = baseSpeed + Math.random() * 150 - 75;
+      if (txt.charAt(i) === " ") speed /= 1.5; // spasi sedikit lebih cepat
+      setTimeout(nextChar, speed);
+    } else if (onComplete) {
+      onComplete();
     }
-  }, speed);
+  }
+
+  nextChar();
 }
+
 
 function playQuoteSequence(quote, repeat = 2) {
   const textEl = document.getElementById("typedQuote");
