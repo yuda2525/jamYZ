@@ -286,10 +286,6 @@ body {
 }
 
     .brand-name {      
-      position: absolute;      
-      top: 50px;      
-      left: 53%;      
-      transform: translateX(-50%);      
       font-size: 30px;      
       font-weight: 500;      
 color: #f5f5f5;       
@@ -298,7 +294,14 @@ text-shadow:
   0 0 5px #aaa,      
   1px 1px 2px rgba(0,0,0,0.6);      
       font-family: 'Cinzel Decorative', cursive;      
-    }      
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
       
     .circular-text {      
       position: absolute;      
@@ -481,16 +484,6 @@ background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
           blur(0.3px);
   transition: all 1s ease-in-out;
   background: radial-gradient(circle at center, #111 10%, #000 100%);
-}
-
-.brand-name {
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
     </style>      
@@ -1746,8 +1739,6 @@ const ONLINE_LINKS = [
   "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Passacaglia-Handel-Halvorsen%20%5BMusic%20Box%5D.m4a",
   "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Nocturne%20op.9%20No.2-Chopin.m4a",
   "https://raw.githubusercontent.com/yuda2525/jamY-Z/main/Auld%20Lang%20Syne%20(The%20New%20Year's%20Anthem).m4a",
-
-  // repo jamYZ (harus RAW juga)
   "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Mariage%20D'amour%20(Wedding%20of%20Love)-Richard%20Clayderman.m4a",
   "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Canon%20in%20D-Johann%20Pachelbel.m4a",
   "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Davy%20Jones-Pirates%20of%20the%20Caribbean.m4a",
@@ -1756,10 +1747,10 @@ const ONLINE_LINKS = [
   "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Hide%20and%20Seek-Ho-ong-i%20feat.%20SeeU.m4a",
   "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Hymne%20%C3%A0%20l'amour-%C3%89dith%20Piaf.m4a",
   "https://raw.githubusercontent.com/yuda2525/jamYZ/main/La%20Vie%20En%20Rose.m4a",
-  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Memories.m4a",
   "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Old%20Doll-Amacha%20Music%20Studio.m4a",
   "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Over%20the%20Rainbow.m4a",
-  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Toreador%20Song-Bizet%20.m4a"
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Toreador%20Song-Bizet%20.m4a",
+  "https://raw.githubusercontent.com/yuda2525/jamYZ/main/Terbaik_untukmu.mp3"
 ];
 
 // Auto generate TRACKS array
